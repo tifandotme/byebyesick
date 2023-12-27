@@ -3,6 +3,7 @@ import { SWRConfig } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
 import { fetcher } from "@/lib/fetchers"
+import { Toaster } from "@/components/ui/sonner"
 
 import "@/styles/globals.css"
 
@@ -17,7 +18,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
       }}
     >
       <ThemeProvider attribute="class">
-        {getLayout(<Component {...pageProps} />)}
+        {getLayout(
+          <>
+            <Component {...pageProps} /> <Toaster richColors closeButton />
+          </>,
+        )}
       </ThemeProvider>
     </SWRConfig>
   )
