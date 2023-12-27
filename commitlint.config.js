@@ -1,5 +1,5 @@
 /** @type {import("@commitlint/types").UserConfig} */
-export default {
+const config = {
   rules: {
     "body-leading-blank": [1, "always"],
     "body-max-line-length": [2, "always", 100],
@@ -72,3 +72,5 @@ export default {
     },
   },
 }
+
+export default config
