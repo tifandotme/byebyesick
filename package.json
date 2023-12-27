@@ -9,10 +9,11 @@
     "lint": "eslint --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --cache --cache-strategy content --cache-location=node_modules/.cache/eslint/.eslint-cache src",
     "format": "prettier --check --log-level warn --cache --cache-strategy content '**/*.{js,ts,tsx,css}'",
     "format:write": "prettier --write --log-level warn --cache --cache-strategy content '**/*.{js,ts,tsx,css}'",
-    "check-all": "npm run typecheck && npm run lint && npm run format"
+    "check-all": "npm run typecheck && npm run lint && npm run format",
+    "postinstall": "husky install"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.2",
+    "@hookform/resolvers": "^3.3.3",
     "js-cookie": "^3.0.5",
     "next": "14.0.4",
     "next-themes": "^0.2.1",
@@ -25,6 +26,8 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/types": "^18.4.3",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/js-cookie": "^3.0.6",
@@ -36,6 +39,8 @@
     "eslint-config-next": "14.0.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-tailwindcss": "^3.13.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
     "postcss": "^8",
     "prettier": "^3.1.1",
     "prettier-plugin-tailwindcss": "^0.5.9",
