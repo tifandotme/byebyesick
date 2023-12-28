@@ -4,6 +4,17 @@ import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 
 import type { ProductElement } from "@/types/fakedata"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header"
@@ -37,11 +48,6 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),
-        cell: ({ cell }) => {
-          const id = cell.getValue() as Data["id"]
-
-          return <span>{id}</span>
-        },
       },
 
       {
@@ -77,19 +83,43 @@ export function ProductTable({ data: products }: ProductsTableProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
-                {/* <Link
-                  href={`/${row.original.slug}`}
+                <Link
+                  // href={`/${row.original.slug}`}
+                  href={""}
                   target="_blank"
                   className="flex justify-between"
                 >
                   View
                   <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
-                </Link> */}
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={`/dashboard/posts/edit/${row.original.id}`}>
                   Edit
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <AlertDialog>
+                  <AlertDialogTrigger className="mb-1.5 ml-2 text-sm">
+                    Delete
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
