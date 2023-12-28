@@ -35,3 +35,9 @@ export type DashboardConfig = {
 }
 
 export type ProductInputs = z.infer<typeof productSchema>
+
+export type Response<TData = unknown> = {
+  success: boolean
+  message: string
+  data?: TData
+}

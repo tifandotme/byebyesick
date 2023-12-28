@@ -44,7 +44,6 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "id",
         minSize: 200,
         maxSize: 200,
-        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),
@@ -54,7 +53,6 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "title",
         minSize: 200,
         maxSize: 200,
-        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Title" />
         ),
@@ -63,7 +61,6 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "description",
         minSize: 250,
         maxSize: 250,
-        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Description" />
         ),
@@ -94,7 +91,7 @@ export function ProductTable({ data: products }: ProductsTableProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/posts/edit/${row.original.id}`}>
+                <Link href={`/dashboard/products/edit/${row.original.id}`}>
                   Edit
                 </Link>
               </DropdownMenuItem>
