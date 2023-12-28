@@ -13,16 +13,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 240 5.9% 10%;
+    --primary: 110, 68%, 37%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4.8% 95.9%;
+    --secondary: 111 68% 26%;
     --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 240 4.8% 95.9%;
+    --muted: 111 100% 90%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 240 4.8% 95.9%;
+    --accent: 112 100% 80%;
     --accent-foreground: 240 5.9% 10%;
     --accent-premium: 37 95% 44%;
 
@@ -72,6 +72,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply min-h-screen bg-background font-sans text-foreground antialiased;
   }
