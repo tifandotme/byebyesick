@@ -3,7 +3,11 @@ import { fontFamily } from "tailwindcss/defaultTheme"
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: ["class"],
-  content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+  content: [
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/features/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -42,7 +46,6 @@ const config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          premium: "hsl(var(--accent-premium))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
