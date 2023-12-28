@@ -15,7 +15,21 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
           height={1800}
         />
       </div>
-      <div className="container flex flex-auto items-center justify-center lg:w-1/2">
+      <div className="container relative flex flex-auto flex-col lg:w-1/2 lg:items-center lg:justify-center">
+        <Image
+          className="absolute right-5 top-0 hidden lg:block"
+          src="/logo.png"
+          alt="Logo png"
+          width={200}
+          height={200}
+        />
+        <Image
+          className="lg:hidden"
+          src="/logo.png"
+          alt="Logo png"
+          width={200}
+          height={200}
+        />
         {children}
       </div>
     </div>

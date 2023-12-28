@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -67,9 +68,15 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button variant={"outline"} type="submit">
+        <Button className="w-full" type="submit">
           Login
         </Button>
+        <div className="flex justify-end gap-2 text-apple-800">
+          Don&apos;t have an account?{" "}
+          <Link href={"/register"} className="font-bold text-apple-600">
+            Register
+          </Link>
+        </div>
       </form>
     </Form>
   )
