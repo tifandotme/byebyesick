@@ -1,10 +1,12 @@
 import React from "react"
 import { ProductTable } from "@/features/admin/table/product-table"
+import ProductLayout from "@/features/products/components/layout"
 import useSWR from "swr"
 
 import type { Product } from "@/types/fakedata"
 import { fetcher } from "@/lib/fetchers"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
+import { DashboardLayout } from "@/components/layouts/dashboard"
 
 export const useFakeData = () => {
   const { data, isLoading } = useSWR<Product>(
@@ -19,8 +21,6 @@ export const useFakeData = () => {
 }
 
 export default function ProductTablePage() {
-  //   const { data, isLoading } = useSWR<ProductElement[]>("products")
-
   const { data, isLoading } = useFakeData()
 
   return (
@@ -30,5 +30,13 @@ export default function ProductTablePage() {
         {!isLoading && data?.products && <ProductTable data={data.products} />}
       </div>
     </>
+  )
+}
+
+ProductTablePage.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <DashboardLayout>
+      <ProductLayout>{page}</ProductLayout>
+    </DashboardLayout>
   )
 }

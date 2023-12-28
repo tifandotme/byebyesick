@@ -1,3 +1,6 @@
+import type { z } from "zod"
+
+import type { productSchema } from "@/lib/validations/products"
 import type { Icons } from "@/components/icons"
 
 export interface Option {
@@ -30,3 +33,5 @@ export type DashboardConfig = {
   sidebarNav: NavItem[]
   sidebarNavAdmin: NavItem[]
 }
+
+export type ProductInputs = z.infer<typeof productSchema>

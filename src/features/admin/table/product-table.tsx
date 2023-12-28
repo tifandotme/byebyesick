@@ -44,7 +44,7 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "id",
         minSize: 200,
         maxSize: 200,
-        enableHiding: false,
+        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),
@@ -54,7 +54,7 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "title",
         minSize: 200,
         maxSize: 200,
-        enableHiding: false,
+        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Title" />
         ),
@@ -63,7 +63,7 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         accessorKey: "description",
         minSize: 250,
         maxSize: 250,
-        enableHiding: false,
+        // enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Description" />
         ),
@@ -129,5 +129,16 @@ export function ProductTable({ data: products }: ProductsTableProps) {
     [],
   )
 
-  return <DataTable columns={columns} data={dat} />
+  return (
+    <DataTable
+      columns={columns}
+      data={dat}
+      searchableColumns={[
+        {
+          id: "title",
+          title: "Title",
+        },
+      ]}
+    />
+  )
 }

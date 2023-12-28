@@ -1,5 +1,4 @@
 import { siteConfig } from "@/config"
-import { ThemeToggle } from "@/components/layouts/theme-toggle"
 
 export function SiteFooter() {
   return (
@@ -22,8 +21,6 @@ export function SiteFooter() {
             © {new Date().getFullYear()} {siteConfig.name}
           </span>
         </div>
-
-        <ThemeToggle />
       </section>
     </footer>
   )
