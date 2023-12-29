@@ -1,7 +1,21 @@
-import React from "react"
+import React, { type ReactElement } from "react"
+import Head from "next/head"
+import RegisterForm from "@/features/auth/components/form/registerForm"
+import AuthLayout from "@/features/auth/components/layout/layout"
 
-function Register() {
-  return <div>Register</div>
+function RegisterPage() {
+  return (
+    <>
+      <Head>
+        <title>ByeByeSick | Register</title>
+      </Head>
+      <RegisterForm />
+    </>
+  )
 }
 
-export default Register
+RegisterPage.getLayout = function getLayout(page: ReactElement) {
+  return <AuthLayout>{page}</AuthLayout>
+}
+
+export default RegisterPage

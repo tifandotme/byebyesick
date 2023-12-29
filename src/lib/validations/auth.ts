@@ -16,4 +16,18 @@ export const loginFormSchema = z
   })
   .required()
 
+export const registerFormSchema = z
+  .object({
+    email: z
+      .string()
+      .min(1, {
+        message: "Email is requred",
+      })
+      .email({
+        message: "Please input valid email",
+      }),
+  })
+  .required()
+
 export type LoginFormSchemaType = z.infer<typeof loginFormSchema>
+export type RegisterFormSchemaType = z.infer<typeof registerFormSchema>
