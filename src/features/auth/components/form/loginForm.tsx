@@ -71,10 +71,15 @@ export default function LoginForm() {
         <Button className="w-full" type="submit">
           Login
         </Button>
-        <div className="flex justify-end gap-2 text-apple-800">
-          Don&apos;t have an account?{" "}
-          <Link href={"/register"} className="font-bold text-apple-600">
-            Register
+        <div className="flex justify-between text-sm md:text-base">
+          <div className="flex gap-2">
+            Don&apos;t have an account?{" "}
+            <Link href={"/auth/register"} className="text-apple-600">
+              Register
+            </Link>
+          </div>
+          <Link href={"/"} className="text-apple-600">
+            Reset Password
           </Link>
         </div>
       </form>
