@@ -9,6 +9,7 @@ import { toast } from "sonner"
 
 import type { ProductInputs } from "@/types"
 import type { Products } from "@/types/api"
+import { productCategories, productClass, productManufacturers } from "@/config"
 import { updatePost } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productSchema } from "@/lib/validations/products"
@@ -24,6 +25,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
 interface ProductFormProps {
@@ -38,10 +47,27 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   const form = useForm<ProductInputs>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      title: initialData?.title ?? "",
+      name: initialData?.name ?? "",
+      generic_name: initialData?.generic_name ?? "",
       content: initialData?.content ?? "",
       image: initialData?.image ?? "",
-      isPremium: initialData?.isPremium ?? false,
+      manufacturer_id:
+        initialData?.manufacturer_id ??
+        productSchema.shape.manufacturer_id._def.defaultValue(),
+      description: initialData?.description ?? "",
+      drug_classification_id:
+        initialData?.drug_classification_id ??
+        productSchema.shape.drug_classification_id._def.defaultValue(),
+      product_category_id:
+        initialData?.product_category_id ??
+        productSchema.shape.product_category_id._def.defaultValue(),
+      drug_form: initialData?.drug_form ?? "",
+      unit_in_pack: initialData?.unit_in_pack ?? "",
+      selling_unit: initialData?.selling_unit ?? "",
+      weight: initialData?.weight ?? "",
+      length: initialData?.length ?? "",
+      width: initialData?.width ?? "",
+      height: initialData?.height ?? "",
     },
   })
 
@@ -57,8 +83,9 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   }
 
   React.useEffect(() => {
-    form.setFocus("title")
+    form.setFocus("name")
   }, [form])
+
   return (
     <>
       <div>
@@ -69,16 +96,25 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Where Great Ideas Begin"
-                      {...field}
-                    />
+                    <Input type="text" placeholder="OBH Combi" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generic_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Generic Name</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="OBH Combi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,22 +128,22 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                   <FormLabel>Content</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Unleash your ideas here..."
+                      placeholder="paracetamol, aaa"
                       {...field}
-                      rows={10}
+                      rows={5}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* <div className="flex flex-col items-start gap-6 sm:flex-row">
+            <div className="flex flex-col items-start gap-6 sm:flex-row">
               <FormField
                 control={form.control}
-                name="category"
+                name="manufacturer_id"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>Manufacturer</FormLabel>
                     <Select
                       value={field.value}
                       onValueChange={(value: typeof field.value) =>
@@ -121,7 +157,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {postCategories.map((option) => (
+                          {productManufacturers.map((option) => (
                             <SelectItem
                               key={option}
                               value={option}
@@ -137,6 +173,218 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                   </FormItem>
                 )}
               />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Obat ini dapat digunakan untuk sakit kepala"
+                      {...field}
+                      rows={5}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex flex-col items-start gap-6 sm:flex-row">
+              <FormField
+                control={form.control}
+                name="drug_classification_id"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Drug Classification</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value: typeof field.value) =>
+                        field.onChange(value)
+                      }
+                    >
+                      <FormControl>
+                        <SelectTrigger className="capitalize">
+                          <SelectValue placeholder={field.value} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {productClass.map((option) => (
+                            <SelectItem
+                              key={option}
+                              value={option}
+                              className="capitalize"
+                            >
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-6 sm:flex-row">
+              <FormField
+                control={form.control}
+                name="product_category_id"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Product Category</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value: typeof field.value) =>
+                        field.onChange(value)
+                      }
+                    >
+                      <FormControl>
+                        <SelectTrigger className="capitalize">
+                          <SelectValue placeholder={field.value} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          {productCategories.map((option) => (
+                            <SelectItem
+                              key={option}
+                              value={option}
+                              className="capitalize"
+                            >
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="drug_form"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Drug Form</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Capsule" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="unit_in_pack"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Unit in Pack</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="10" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="selling_unit"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Drug Form</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="Bottle" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex space-x-2">
+              <div className="">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="weight"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product Weight</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="in grams"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="length"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product Length</FormLabel>
+                        <FormControl>
+                          <Input type="text" placeholder="in cm" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="width"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Width</FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="in cm" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="height"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Height</FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="in cm" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Price</FormLabel>
+                  <FormControl>
+                    <Input type="text" placeholder="100000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/*             
               <FormField
                 control={form.control}
                 name="image"
@@ -208,32 +456,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-            </div> */}
-            <FormField
-              control={form.control}
-              name="isPremium"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Premium ✨</FormLabel>
-                    <FormDescription>
-                      Posts marked as premium will only be available to
-                      subscribed users.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
+            </div>  */}
+
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="w-fit">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {toSentenceCase(mode)} post
+                {toSentenceCase(mode)} product
               </Button>
               {mode === "edit" && initialData && (
                 <>
@@ -244,7 +472,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                     asChild
                   >
                     <Link href={`/${initialData?.slug}`} target="_blank">
-                      View Post
+                      View product
                       <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
                     </Link>
                   </Button>

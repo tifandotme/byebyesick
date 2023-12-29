@@ -32,3 +32,21 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
 }
+export const productManufacturers = [
+  "Soho Industri Pharmas",
+  "Amarox Pharma Global",
+] as const
+export type PostCategories = (typeof productManufacturers)[number]
+
+export const productClass = [
+  "Obat Keras",
+  "Obat Terbatas",
+  "Obat Bebas Terbatas",
+  "Non Obat",
+] as const
+
+export type ProductClassification = (typeof productClass)[number]
+
+export const productCategories = ["Obat", "Non Obat"] as const
+
+export type ProductCategories = (typeof productCategories)[number]
