@@ -12,7 +12,6 @@ import type { ProductsCategories } from "@/types/api"
 import { updateProductCategory } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
-import { productSchema } from "@/lib/validations/products-schema"
 import { Button } from "@/components/ui/button"
 import {
   Form,
