@@ -2,7 +2,8 @@
 
 import type { z } from "zod"
 
-import type { productSchema } from "@/lib/validations/products"
+import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
+import type { productSchema } from "@/lib/validations/products-schema"
 
 export type User = {
   id: number
@@ -46,4 +47,19 @@ export type Item = {
   price: string
   created_at: Date
   updated_at: Date
+}
+
+// GET ALL PRODUCT CATEGORIES
+
+export type ProductsCategories = {
+  id: number
+} & z.infer<typeof productCategoriesSchema>
+
+export type ProductCategoriesResponse = {
+  data: Categories[]
+}
+
+export type Categories = {
+  id: number
+  name: string
 }
