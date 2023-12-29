@@ -8,15 +8,16 @@ export const siteConfig: SiteConfig = {
 export const dashboardConfig: DashboardConfig = {
   sidebarNav: [
     {
-      title: "Account",
-      href: "/dashboard/account",
-      icon: "Avatar",
+      title: "Products",
+      href: "/dashboard/products",
+      icon: "Product",
     },
     {
-      title: "Billing",
-      href: "/dashboard/billing",
-      icon: "CreditCard",
+      title: "Products Categories",
+      href: "/dashboard/productcategories",
+      icon: "ProductCategory",
     },
+
     {
       title: "Settings",
       href: "/dashboard/settings",

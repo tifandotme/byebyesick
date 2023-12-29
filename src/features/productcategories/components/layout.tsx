@@ -16,18 +16,18 @@ export default function ProductCategoriesLayout({
 
   return (
     <section className="grid items-center gap-8 pb-8 pt-6 md:py-8">
-      <PageHeader separated className="relative">
+      <PageHeader separated className="block md:relative">
         <PageHeaderHeading size="sm">Products Categories</PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Manage your products categories
         </PageHeaderDescription>
         {router.pathname === "/dashboard/productcategories" && (
-          <div className="absolute right-1 top-3.5">
+          <div className="right-1 top-3.5 mt-2 block md:absolute md:mt-0">
             <Button
               size="sm"
               onClick={() => router.push("/dashboard/productcategories/add")}
             >
-              <Pencil1Icon className="mr-2" /> Create new products categories
+              <Pencil1Icon className="mr-2" /> Create new categories
             </Button>
           </div>
         )}

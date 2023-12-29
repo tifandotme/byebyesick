@@ -14,13 +14,13 @@ export default function ProductLayout({ children }: React.PropsWithChildren) {
 
   return (
     <section className="grid items-center gap-8 pb-8 pt-6 md:py-8">
-      <PageHeader separated className="relative">
+      <PageHeader separated className="block md:relative">
         <PageHeaderHeading size="sm">Products</PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Manage your products
         </PageHeaderDescription>
         {router.pathname === "/dashboard/products" && (
-          <div className="absolute right-1 top-3.5">
+          <div className="right-1 top-3.5 mt-2 block md:absolute md:mt-0">
             <Button
               size="sm"
               onClick={() => router.push("/dashboard/products/add")}

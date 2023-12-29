@@ -14,7 +14,7 @@ import type { Products } from "@/types/api"
 import { productCategories, productClass, productManufacturers } from "@/config"
 import { updatePost } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
-import { productSchema } from "@/lib/validations/products"
+import { productSchema } from "@/lib/validations/products-schema"
 import { Button } from "@/components/ui/button"
 import {
   Form,
