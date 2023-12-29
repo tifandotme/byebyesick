@@ -36,7 +36,7 @@ export const productManufacturers = [
   "Soho Industri Pharmas",
   "Amarox Pharma Global",
 ] as const
-export type PostCategories = (typeof productManufacturers)[number]
+export type ProductManufacturers = (typeof productManufacturers)[number]
 
 export const productClass = [
   "Obat Keras",

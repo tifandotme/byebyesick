@@ -38,9 +38,9 @@ export default function EditPostPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
-  const { data, isLoading } = useSWR<Products>(`/posts/${id}`, {
+  const { data, isLoading } = useSWR<Products>(`/products/${id}`, {
     onError: () => {
-      router.push("/dashboard/posts")
+      router.push("/dashboard/products")
     },
   })
 
@@ -85,7 +85,7 @@ export default function EditPostPage({
             <CardTitle className="text-2xl">Edit post</CardTitle>
           </CardHeader>
           <CardContent>
-            <ProductForm mode="edit" initialData={data} />
+            <ProductForm mode="edit" initialProductData={data} />
           </CardContent>
         </Card>
       )}
