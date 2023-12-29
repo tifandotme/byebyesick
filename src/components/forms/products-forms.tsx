@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ExternalLinkIcon } from "@radix-ui/react-icons"
-import { Loader2 } from "lucide-react"
+import { Loader2, UploadCloudIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -14,15 +16,14 @@ import { updatePost } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productSchema } from "@/lib/validations/products"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
@@ -37,44 +38,51 @@ import { Textarea } from "@/components/ui/textarea"
 
 interface ProductFormProps {
   mode: "add" | "edit"
-  initialData?: Products
+  initialProductData?: Products
 }
 
-export default function ProductForm({ mode, initialData }: ProductFormProps) {
+export default function ProductForm({
+  mode,
+  initialProductData,
+}: ProductFormProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
 
   const form = useForm<ProductInputs>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      name: initialData?.name ?? "",
-      generic_name: initialData?.generic_name ?? "",
-      content: initialData?.content ?? "",
-      image: initialData?.image ?? "",
+      name: initialProductData?.name ?? "",
+      generic_name: initialProductData?.generic_name ?? "",
+      content: initialProductData?.content ?? "",
+      image: initialProductData?.image ?? "",
       manufacturer_id:
-        initialData?.manufacturer_id ??
+        initialProductData?.manufacturer_id ??
         productSchema.shape.manufacturer_id._def.defaultValue(),
-      description: initialData?.description ?? "",
+      description: initialProductData?.description ?? "",
       drug_classification_id:
-        initialData?.drug_classification_id ??
+        initialProductData?.drug_classification_id ??
         productSchema.shape.drug_classification_id._def.defaultValue(),
       product_category_id:
-        initialData?.product_category_id ??
+        initialProductData?.product_category_id ??
         productSchema.shape.product_category_id._def.defaultValue(),
-      drug_form: initialData?.drug_form ?? "",
-      unit_in_pack: initialData?.unit_in_pack ?? "",
-      selling_unit: initialData?.selling_unit ?? "",
-      weight: initialData?.weight ?? "",
-      length: initialData?.length ?? "",
-      width: initialData?.width ?? "",
-      height: initialData?.height ?? "",
+      drug_form: initialProductData?.drug_form ?? "",
+      unit_in_pack: initialProductData?.unit_in_pack ?? "",
+      selling_unit: initialProductData?.selling_unit ?? "",
+      weight: initialProductData?.weight ?? 0,
+      length: initialProductData?.length ?? 0,
+      width: initialProductData?.width ?? 0,
+      height: initialProductData?.height ?? 0,
     },
   })
 
   const onSubmit = async (data: ProductInputs) => {
     setIsLoading(true)
 
-    const { success, message } = await updatePost(mode, data, initialData?.id)
+    const { success, message } = await updatePost(
+      mode,
+      data,
+      initialProductData?.id,
+    )
     success ? toast.success(message) : toast.error(message)
 
     setIsLoading(false)
@@ -383,8 +391,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                 </FormItem>
               )}
             />
-
-            {/*             
+            <div>
               <FormField
                 control={form.control}
                 name="image"
@@ -421,11 +428,11 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                           <label htmlFor="imageUpload" className="w-full">
                             <Button
                               variant="outline"
-                              className="w-full font-medium cursor-pointer"
+                              className="w-full cursor-pointer font-medium"
                               asChild
                             >
                               <div>
-                                <UploadIcon className="mr-1.5 h-3.5 w-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
+                                <UploadCloudIcon className="mr-1.5 h-3.5 w-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
                                 Upload
                               </div>
                             </Button>
@@ -434,19 +441,16 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                       </FormControl>
                       {mode === "add" &&
                         form.getFieldState("image").isDirty && (
-                          <ViewImageButton
-                            src={field.value}
-                            alt={"Image preview"}
-                          />
+                          <img src={field.value} alt={"Image preview"} />
                         )}
-                      {mode === "edit" && initialData && (
-                        <ViewImageButton
+                      {mode === "edit" && initialProductData && (
+                        <img
                           src={
                             form.getFieldState("image").isDirty
                               ? field.value
-                              : initialData.image
+                              : initialProductData.image
                           }
-                          alt={initialData.title}
+                          alt={initialProductData.name}
                         />
                       )}
                     </div>
@@ -456,14 +460,14 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                   </FormItem>
                 )}
               />
-            </div>  */}
+            </div>
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="w-fit">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {toSentenceCase(mode)} product
               </Button>
-              {mode === "edit" && initialData && (
+              {mode === "edit" && initialProductData && (
                 <>
                   <Button
                     type="button"
@@ -471,7 +475,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                     className="w-fit"
                     asChild
                   >
-                    <Link href={`/${initialData?.slug}`} target="_blank">
+                    <Link href={`/${initialProductData?.id}`} target="_blank">
                       View product
                       <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
                     </Link>

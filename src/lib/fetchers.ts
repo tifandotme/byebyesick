@@ -32,21 +32,17 @@ export async function updatePost(
     // }
 
     const url = new URL(
-      `/posts/${mode === "edit" ? id : ""}`,
+      `/products/${mode === "edit" ? id : ""}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
-      method: mode === "add" ? "POST" : "PATCH",
+      method: mode === "add" ? "POST" : "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         ...data,
         // image: convertedImage,
-        likers: mode === "add" ? [] : undefined,
-        shareCount: mode === "add" ? 0 : undefined,
-        updatedAt: new Date().toString(),
-        createdAt: mode === "add" ? new Date().toString() : undefined,
         // slug: mode === "add" ? slugify(data.title) : undefined,
       } satisfies Partial<Omit<Products, "id">>),
     }
@@ -66,7 +62,32 @@ export async function updatePost(
 
     return {
       success: true,
-      message: `Post ${mode === "add" ? "added" : "updated"}`,
+      message: `Product ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function deletePost(id: number): Promise<Response> {
+  try {
+    const url = new URL(`/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a post")
+    }
+
+    return {
+      success: true,
+      message: "Products deleted",
     }
   } catch (err) {
     return {

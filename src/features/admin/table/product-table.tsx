@@ -1,9 +1,13 @@
 import React from "react"
 import Link from "next/link"
+// import { useRouter } from "next/navigation"
 import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
+import { toast } from "sonner"
+import type { KeyedMutator } from "swr"
 
-import type { ProductElement } from "@/types/fakedata"
+import type { ProductsResponse } from "@/types/api"
+import { deletePost } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,15 +29,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = ProductElement[]> {
+interface ProductsTableProps<TData = ProductsResponse> {
   data: TData
+  mutate: KeyedMutator<TData>
 }
 
-export function ProductTable({ data: products }: ProductsTableProps) {
+export function ProductTable({ data, mutate }: ProductsTableProps) {
+  const products = data.items
+
   const dat = products.map((m) => ({
     id: m.id,
-    title: m.title,
-    description: m.description,
+    name: m.name,
+    generic_name: m.generic_name,
   }))
 
   type Data = (typeof dat)[number]
@@ -50,19 +57,19 @@ export function ProductTable({ data: products }: ProductsTableProps) {
       },
 
       {
-        accessorKey: "title",
+        accessorKey: "name",
         minSize: 200,
         maxSize: 200,
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Title" />
+          <DataTableColumnHeader column={column} title="Name" />
         ),
       },
       {
-        accessorKey: "description",
+        accessorKey: "generic_name",
         minSize: 250,
         maxSize: 250,
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Description" />
+          <DataTableColumnHeader column={column} title="Generic Name" />
         ),
       },
       {
@@ -81,8 +88,8 @@ export function ProductTable({ data: products }: ProductsTableProps) {
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
                 <Link
-                  // href={`/${row.original.slug}`}
-                  href={""}
+                  href={`/${row.original.id}`}
+                  // href={""}
                   target="_blank"
                   className="flex justify-between"
                 >
@@ -113,7 +120,26 @@ export function ProductTable({ data: products }: ProductsTableProps) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={() => {
+                          const handleDeletion = async () => {
+                            const { success } = await deletePost(
+                              row.original.id,
+                            )
+
+                            if (!success) throw new Error()
+                            await mutate()
+                          }
+
+                          toast.promise(handleDeletion(), {
+                            loading: "Deleting post...",
+                            success: "Post deleted successfully",
+                            error: "Failed to delete post",
+                          })
+                        }}
+                      >
+                        Delete
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -123,7 +149,7 @@ export function ProductTable({ data: products }: ProductsTableProps) {
         ),
       },
     ],
-    [],
+    [mutate],
   )
 
   return (
@@ -132,8 +158,8 @@ export function ProductTable({ data: products }: ProductsTableProps) {
       data={dat}
       searchableColumns={[
         {
-          id: "title",
-          title: "Title",
+          id: "name",
+          title: "Name",
         },
       ]}
     />
