@@ -33,6 +33,7 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
 }
+
 export const productManufacturers = [
   "Soho Industri Pharmas",
   "Amarox Pharma Global",

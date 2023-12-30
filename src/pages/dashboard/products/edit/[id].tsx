@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import ProductLayout from "@/features/products/components/layout"
 import useSWR from "swr"
 
-import type { Products } from "@/types/api"
+import type { Products, ProductsResponse } from "@/types/api"
 import {
   Card,
   CardContent,
@@ -15,12 +15,32 @@ import { Skeleton } from "@/components/ui/skeleton"
 import ProductForm from "@/components/forms/products-forms"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
-  context,
-) => {
-  const id = context.params?.id as string | undefined
+// export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
+//   context,
+// ) => {
+//   const id = context.params?.id as string | undefined
 
-  if (!id || isNaN(Number(id))) {
+//   if (!id || isNaN(Number(id))) {
+//     return {
+//       notFound: true,
+//     }
+//   }
+
+//   return {
+//     props: {
+//       id,
+//     },
+//   }
+// }
+
+export const getServerSideProps: GetServerSideProps<{
+  data: Products
+}> = async (context) => {
+  const id = context.query.id as string
+  const res = await fetch(`http://localhost:8080/items/${id}`)
+  const data = await res.json()
+
+  if (!data) {
     return {
       notFound: true,
     }
@@ -28,46 +48,46 @@ export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
 
   return {
     props: {
-      id,
+      data,
     },
   }
 }
 
 export default function EditPostPage({
-  id,
+  data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
-  const { data, isLoading } = useSWR<Products>(`/products/${id}`, {
-    onError: () => {
-      router.push("/dashboard/products")
-    },
-  })
+  // const { data, isLoading } = useSWR<Products>(`/items/${id}`, {
+  //   onError: () => {
+  //     router.push("/dashboard/products")
+  //   },
+  // })
 
   return (
     <>
-      {isLoading && (
+      {/* {isLoading && (
         <Card>
           <CardHeader className="space-y-1">
-            <Skeleton className="h-8 w-1/5" />
+            <Skeleton className="w-1/5 h-8" />
           </CardHeader>
           <CardContent>
             <div className="grid w-full max-w-2xl gap-5">
               <div className="space-y-2.5">
-                <Skeleton className="h-5 w-32" />
+                <Skeleton className="w-32 h-5" />
                 <Skeleton className="h-10" />
               </div>
               <div className="space-y-2.5">
-                <Skeleton className="h-5 w-32" />
+                <Skeleton className="w-32 h-5" />
                 <Skeleton className="h-[218px]" />
               </div>
               <div className="flex gap-2">
                 <div className="w-full space-y-2.5">
-                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="w-32 h-5" />
                   <Skeleton className="h-10" />
                 </div>
                 <div className="w-full space-y-2.5">
-                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="w-32 h-5" />
                   <Skeleton className="h-10" />
                 </div>
               </div>
@@ -75,20 +95,20 @@ export default function EditPostPage({
             </div>
           </CardContent>
           <CardFooter>
-            <Skeleton className="h-10 w-24" />
+            <Skeleton className="w-24 h-10" />
           </CardFooter>
         </Card>
       )}
-      {!isLoading && data && (
-        <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Edit post</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProductForm mode="edit" initialProductData={data} />
-          </CardContent>
-        </Card>
-      )}
+      {!isLoading && data && ( */}
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Edit post</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProductForm mode="edit" initialProductData={data} />
+        </CardContent>
+      </Card>
+      {/* )} */}
     </>
   )
 }

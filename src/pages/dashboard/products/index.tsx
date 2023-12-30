@@ -8,7 +8,7 @@ import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleto
 import { DashboardLayout } from "@/components/layouts/dashboard"
 
 export const useProductData = () => {
-  const { data, isLoading, mutate } = useSWR<ProductsResponse>(`/products`)
+  const { data, isLoading, mutate } = useSWR<ProductsResponse>(`/data`)
 
   return {
     data,

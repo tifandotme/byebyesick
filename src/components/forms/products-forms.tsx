@@ -8,10 +8,16 @@ import { ExternalLinkIcon } from "@radix-ui/react-icons"
 import { Loader2, UploadCloudIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import useSWR from "swr"
 
 import type { ProductInputs } from "@/types"
-import type { Products } from "@/types/api"
-import { productCategories, productClass, productManufacturers } from "@/config"
+import type {
+  Categories,
+  DrugClasses,
+  Manufacturers,
+  Products,
+} from "@/types/api"
+import { productClass, productManufacturers } from "@/config"
 import { updatePost } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productSchema } from "@/lib/validations/products-schema"
@@ -48,6 +54,11 @@ export default function ProductForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
 
+  const { data: prodcat } = useSWR<Categories[]>(`/category`)
+  const { data: prodmanuf } = useSWR<Manufacturers[]>(`/manufacturers`)
+
+  const { data: drugclass } = useSWR<DrugClasses[]>(`/drugclass`)
+
   const form = useForm<ProductInputs>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -55,16 +66,10 @@ export default function ProductForm({
       generic_name: initialProductData?.generic_name ?? "",
       content: initialProductData?.content ?? "",
       image: initialProductData?.image ?? "",
-      manufacturer_id:
-        initialProductData?.manufacturer_id ??
-        productSchema.shape.manufacturer_id._def.defaultValue(),
+      manufacturer_id: initialProductData?.manufacturer_id ?? 1,
       description: initialProductData?.description ?? "",
-      drug_classification_id:
-        initialProductData?.drug_classification_id ??
-        productSchema.shape.drug_classification_id._def.defaultValue(),
-      product_category_id:
-        initialProductData?.product_category_id ??
-        productSchema.shape.product_category_id._def.defaultValue(),
+      drug_classification_id: initialProductData?.drug_classification_id ?? 1,
+      product_category_id: initialProductData?.product_category_id ?? 1,
       drug_form: initialProductData?.drug_form ?? "",
       unit_in_pack: initialProductData?.unit_in_pack ?? "",
       selling_unit: initialProductData?.selling_unit ?? "",
@@ -72,6 +77,7 @@ export default function ProductForm({
       length: initialProductData?.length ?? 0,
       width: initialProductData?.width ?? 0,
       height: initialProductData?.height ?? 0,
+      price: initialProductData?.price ?? "0",
     },
   })
 
@@ -153,25 +159,27 @@ export default function ProductForm({
                   <FormItem className="w-full">
                     <FormLabel>Manufacturer</FormLabel>
                     <Select
-                      value={field.value}
-                      onValueChange={(value: typeof field.value) =>
-                        field.onChange(value)
+                      value={String(field.value)}
+                      onValueChange={(value: string) =>
+                        field.onChange(Number(value))
                       }
                     >
                       <FormControl>
                         <SelectTrigger className="capitalize">
-                          <SelectValue placeholder={field.value} />
+                          <SelectValue placeholder={String(field.value)} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {productManufacturers.map((option) => (
+                          {prodmanuf?.map((option) => (
                             <SelectItem
-                              key={option}
-                              value={option}
+                              key={option.id}
+                              value={String(option.id)}
                               className="capitalize"
                             >
-                              {option}
+                              {initialProductData?.manufacturer_id === option.id
+                                ? option.name
+                                : option.name}{" "}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -208,25 +216,25 @@ export default function ProductForm({
                   <FormItem className="w-full">
                     <FormLabel>Drug Classification</FormLabel>
                     <Select
-                      value={field.value}
-                      onValueChange={(value: typeof field.value) =>
-                        field.onChange(value)
+                      value={String(field.value)}
+                      onValueChange={(value: string) =>
+                        field.onChange(Number(value))
                       }
                     >
                       <FormControl>
                         <SelectTrigger className="capitalize">
-                          <SelectValue placeholder={field.value} />
+                          <SelectValue placeholder={String(field.value)} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {productClass.map((option) => (
+                          {drugclass?.map((option) => (
                             <SelectItem
-                              key={option}
-                              value={option}
+                              key={option.id}
+                              value={String(option.id)}
                               className="capitalize"
                             >
-                              {option}
+                              {option.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -245,25 +253,28 @@ export default function ProductForm({
                   <FormItem className="w-full">
                     <FormLabel>Product Category</FormLabel>
                     <Select
-                      value={field.value}
-                      onValueChange={(value: typeof field.value) =>
-                        field.onChange(value)
+                      value={String(field.value)}
+                      onValueChange={(value: string) =>
+                        field.onChange(Number(value))
                       }
                     >
                       <FormControl>
                         <SelectTrigger className="capitalize">
-                          <SelectValue placeholder={field.value} />
+                          <SelectValue placeholder={String(field.value)} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {productCategories.map((option) => (
+                          {prodcat?.map((option) => (
                             <SelectItem
-                              key={option}
-                              value={option}
+                              key={option.id}
+                              value={String(option.id)}
                               className="capitalize"
                             >
-                              {option}
+                              {initialProductData?.product_category_id ===
+                              option.id
+                                ? option.name
+                                : option.name}{" "}
                             </SelectItem>
                           ))}
                         </SelectGroup>

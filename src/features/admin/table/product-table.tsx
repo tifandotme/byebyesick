@@ -36,6 +36,7 @@ interface ProductsTableProps<TData = ProductsResponse> {
 
 export function ProductTable({ data, mutate }: ProductsTableProps) {
   const products = data.items
+  // const products = data.data.items -> for real backend use
 
   const dat = products.map((m) => ({
     id: m.id,
