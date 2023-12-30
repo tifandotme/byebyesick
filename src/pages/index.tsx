@@ -1,7 +1,8 @@
 import type { ReactElement } from "react"
 import Head from "next/head"
-import ClientLayout from "@/features/landing/component/layout/layout"
 import Hero from "@/features/landing/component/section/hero"
+
+import MainLayout from "@/components/layout/mainLayout"
 
 export default function HomePage() {
   return (
@@ -15,5 +16,5 @@ export default function HomePage() {
 }
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
-  return <ClientLayout>{page}</ClientLayout>
+  return <MainLayout>{page}</MainLayout>
 }
