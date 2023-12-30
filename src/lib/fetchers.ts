@@ -38,7 +38,7 @@ export async function updatePost(
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
-      method: mode === "add" ? "POST" : "PUT",
+      method: mode === "add" ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -52,7 +52,7 @@ export async function updatePost(
     const res = await fetch(url, options)
 
     if (!res.ok) {
-      throw new Error("Failed to update a post")
+      throw new Error("Failed to update a product")
     }
 
     // Revalidate path if edited

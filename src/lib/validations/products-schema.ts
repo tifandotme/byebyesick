@@ -22,9 +22,9 @@ export const productSchema = z.object({
     }),
   content: z
     .string()
-    .min(500, { message: "Content must be at least 500 characters long" })
-    .max(5000, {
-      message: "Content must be no more than 5000 characters long",
+    .min(10, { message: "Content must be at least 10 characters long" })
+    .max(500, {
+      message: "Content must be no more than 500 characters long",
     }),
   description: z
     .string()
@@ -69,9 +69,9 @@ export const productSchema = z.object({
   image: z.string().url({ message: "Image is required" }),
   price: z
     .string()
-    .min(2, { message: "Drug Form must be at least 2 characters long" })
+    .min(2, { message: "Price must be at least 2 characters long" })
     .max(100, { message: "Drug Form must be no more than 100 characters long" })
-    .refine((drug_form) => !/[^a-zA-Z0-9 ]/.test(drug_form), {
+    .refine((price) => !/[^a-zA-Z0-9 ]/.test(price), {
       message: "Drug Form can only contain alphanumeric characters and spaces",
     }),
   selling_unit: z
@@ -80,34 +80,12 @@ export const productSchema = z.object({
     .max(100, {
       message: "Seling Unit must be no more than 100 characters long",
     })
-    .refine((drug_form) => !/[^a-zA-Z0-9 ]/.test(drug_form), {
+    .refine((selling_unit) => !/[^a-zA-Z0-9 ]/.test(selling_unit), {
       message: "Seling Unit can only contain alphabetic characters and spaces",
     }),
-  manufacturer_id: z
-    .enum(productManufacturers)
-    .default(productManufacturers[0]),
-  drug_classification_id: z.enum(productClass).default(productClass[0]),
-  product_category_id: z.enum(productCategories).default(productCategories[0]),
+  manufacturer_id: z.number().int(), // Ensure it's an integer
+  drug_classification_id: z.number().int(), // Ensure it's an integer
+  product_category_id: z
+    .number() // Use number instead of enum for product_category_id
+    .int(), // Ensure it's an integer
 })
-
-// MANUFACTURERS, DRUG CLASS, PRODUCT CATE SHOULD BE FROM BACKEND
-// manufacturer_id: z
-// .number() // Use number instead of enum for manufacturer_id
-// .int() // Ensure it's an integer
-// .refine((manufacturer_id) => productManufacturers.includes(manufacturer_id), {
-//   message: "Invalid manufacturer_id",
-// }),
-
-// drug_classification_id: z
-// .number() // Use number instead of enum for drug_classification_id
-// .int() // Ensure it's an integer
-// .refine((drug_classification_id) => productClass.includes(drug_classification_id), {
-//   message: "Invalid drug_classification_id",
-// }),
-
-// product_category_id: z
-// .number() // Use number instead of enum for product_category_id
-// .int() // Ensure it's an integer
-// .refine((product_category_id) => productCategories.includes(product_category_id), {
-//   message: "Invalid product_category_id",
-// }),

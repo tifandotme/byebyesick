@@ -10,7 +10,8 @@
     "format": "prettier --check --log-level warn --cache --cache-strategy content '**/*.{js,ts,tsx,css}'",
     "format:write": "prettier --write --log-level warn --cache --cache-strategy content '**/*.{js,ts,tsx,css}'",
     "check-all": "npm run typecheck && npm run lint && npm run format",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "db": "json-server --watch db.json --port 8080"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.3",
@@ -33,6 +34,7 @@
     "@tanstack/react-table": "^8.11.2",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "faker": "^6.6.6",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.302.0",
     "next": "14.0.4",
@@ -50,6 +52,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
     "@commitlint/types": "^18.4.3",
+    "@faker-js/faker": "^8.3.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/js-cookie": "^3.0.6",
