@@ -1,5 +1,6 @@
 import React from "react"
 
+import { SiteFooter } from "@/components/layouts/site-footer"
 import MainNavbar from "@/components/navbar/navbar"
 
 function MainLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
         <MainNavbar />
       </div>
       <div className="container p-11">{children}</div>
+      <SiteFooter />
     </div>
   )
 }
