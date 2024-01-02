@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ExitIcon } from "@radix-ui/react-icons"
 import { toast } from "sonner"
 
-import type { User } from "@/types/api"
+// import type { User } from "@/types/api"
 import { siteConfig } from "@/config"
 import avatarImg from "@/assets/images/avatar.webp"
 import { Avatar } from "@/components/ui/avatar"
@@ -24,7 +24,7 @@ import { MobileNav } from "@/components/layouts/mobile-nav"
 export function SiteHeader() {
   // from zustand or else
   const loading = false
-  const user: User = {
+  const user = {
     id: 1,
     name: "John Doe",
     email: "foo@bar.com",
