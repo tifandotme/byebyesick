@@ -5,20 +5,18 @@ import type { z } from "zod"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 
-export type User = {
-  id: number
-  role: "admin" | "user" | "pharmacy_admin" | "doctor"
-  name: string
-  email: string
-  password: string
+// FOR SCHEMAS
+export type ProductsSchema = {
+  data: {
+    id: number
+  } & z.infer<typeof productSchema>
 }
 
-export type Products = {
+export type ProductsCategoriesSchema = {
   id: number
-} & z.infer<typeof productSchema>
+} & z.infer<typeof productCategoriesSchema>
 
 // USE THIS FOR FAKE DATA
-
 export type ProductsResponse = {
   total_items?: number
   total_pages?: number
@@ -51,44 +49,7 @@ export type Item = {
   updated_at: Date
 }
 
-// FOR REAL BACKEND USES
-// export interface IProduct {
-//   id: number
-//   name: string
-//   generic_name: string
-//   content: string
-//   manufacturer_id: number
-//   description: string
-//   drug_classification_id: number
-//   product_category_id: number
-//   drug_form: string
-//   unit_in_pack: string
-//   selling_unit: string
-//   weight: number
-//   length: number
-//   width: number
-//   height: number
-//   image: string
-//   price: string
-//   created_at: string
-//   updated_at: string
-// }
-
-// export interface ProductsApiResponse {
-//   data: {
-//     total_items: number
-//     total_pages: number
-//     current_page_total_items: number
-//     current_page: number
-//     items: IProduct[]
-//   }
-// }
-
 // GET ALL PRODUCT CATEGORIES FOR FAKER
-
-export type ProductsCategories = {
-  id: number
-} & z.infer<typeof productCategoriesSchema>
 
 export type ProductCategoriesResponse = {
   data: Categories[]
@@ -125,18 +86,47 @@ export type DrugClasses = {
   name: string
 }
 
-// USE THIS FOR REAL BACKEND
-// interface Category {
-//   id: number;
-//   name: string;
-// }
+// FOR REAL BACKEND USES
+export interface ApiResponse<T> {
+  data: {
+    total_items: number
+    total_pages: number
+    current_page_total_items: number
+    current_page: number
+    items: T[]
+  }
+}
+export interface IDrugClassification {
+  id: number
+  name: string
+}
 
-// interface CategoriesApiResponse {
-//   data: {
-//     total_items: number;
-//     total_pages: number;
-//     current_page_total_items: number;
-//     current_page: number;
-//     items: Category[];
-//   };
-// }
+export interface IManufacturer {
+  id: number
+  name: string
+}
+export interface IProductCategory {
+  id: number
+  name: string
+}
+export interface IProduct {
+  id: number
+  name: string
+  generic_name: string
+  content: string
+  manufacturer_id: number
+  description: string
+  drug_classification_id: number
+  product_category_id: number
+  drug_form: string
+  unit_in_pack: string
+  selling_unit: string
+  weight: number
+  length: number
+  width: number
+  height: number
+  image: string
+  price: string
+  created_at: string
+  updated_at: string
+}

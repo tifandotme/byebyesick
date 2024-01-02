@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { ProductCategoriesInputs } from "@/types"
-import type { ProductsCategories } from "@/types/api"
+import type { ProductsCategoriesSchema } from "@/types/api"
 import { updateProductCategory } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 
 interface ProductCategoryFormProps {
   mode: "add" | "edit"
-  initialProductData?: ProductsCategories
+  initialProductData?: ProductsCategoriesSchema
 }
 
 export default function ProductCategoriesForm({

@@ -114,27 +114,6 @@
   },
   "items": [
     {
-      "id": 1,
-      "name": "Product 1",
-      "generic_name": "Product 1",
-      "content": "Product 1",
-      "manufacturer_id": 1,
-      "description": "This is product 1",
-      "drug_classification_id": 1,
-      "product_category_id": 1,
-      "drug_form": "amplexus",
-      "unit_in_pack": "3",
-      "selling_unit": "vitiosus",
-      "weight": 202.91044919285923,
-      "length": 42.60534079745412,
-      "width": 23.862809827551246,
-      "height": 38.78581312485039,
-      "image": "https://picsum.photos/seed/KuglBbB75C/640/480",
-      "price": "29135.00",
-      "created_at": "2023-11-24T12:46:08.204Z",
-      "updated_at": "2023-12-29T21:02:50.560Z"
-    },
-    {
       "id": 2,
       "name": "Product 2",
       "generic_name": "Product 2",
@@ -198,23 +177,42 @@
       "updated_at": "2023-12-30T07:16:39.743Z"
     },
     {
-      "id": 5,
-      "name": "Product 5",
-      "generic_name": "Product 5",
-      "content": "Product 5",
-      "manufacturer_id": 5,
-      "description": "This is product 5",
-      "drug_classification_id": 2,
-      "product_category_id": 4,
-      "drug_form": "ullam",
-      "unit_in_pack": "18",
-      "selling_unit": "tum",
-      "weight": 874.6634545503184,
-      "length": 24.820237578824162,
-      "width": 41.24273735098541,
-      "height": 40.694425804540515,
-      "image": "https://picsum.photos/seed/Ow4xlM/640/480",
-      "price": "27190.00",
+      "name": "Product 6",
+      "generic_name": "Product 6 Generic",
+      "content": "onChange={(event) => {\nconst numericValue = +event.target.value\n                              field.onChange(\n                                isNaN(numericValue) ? 0 : numericValue,\n                              )\n                            }}",
+      "description": "onChange={(event) => {\nconst numericValue = +event.target.value\n                              field.onChange(\n                                isNaN(numericValue) ? 0 : numericValue,\n                              )\n                            }}",
+      "drug_form": "Capsule",
+      "unit_in_pack": "10",
+      "weight": 8.2,
+      "length": 8.2,
+      "width": 7,
+      "height": 8.2,
+      "price": "90000",
+      "selling_unit": "Bottle",
+      "manufacturer_id": 1,
+      "drug_classification_id": 1,
+      "product_category_id": 1,
+      "id": 6,
+      "created_at": "2023-10-27T15:04:18.041Z",
+      "updated_at": "2023-12-29T16:14:47.345Z"
+    },
+    {
+      "name": "Product 6",
+      "generic_name": "Product 6 Generic",
+      "content": "aijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjd",
+      "description": "aijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjdaijdiwjd",
+      "drug_form": "Capsule",
+      "unit_in_pack": "10",
+      "weight": 8.2,
+      "length": 8.2,
+      "width": 7,
+      "height": 8.2,
+      "price": "90000",
+      "selling_unit": "Bottle",
+      "manufacturer_id": 1,
+      "drug_classification_id": 1,
+      "product_category_id": 1,
+      "id": 7,
       "created_at": "2023-10-27T15:04:18.041Z",
       "updated_at": "2023-12-29T16:14:47.345Z"
     }
@@ -245,24 +243,20 @@
   ],
   "drugclass": [
     {
-      "data": [
-        {
-          "id": 1,
-          "name": "Obat Bebas"
-        },
-        {
-          "id": 2,
-          "name": "Obat Keras"
-        },
-        {
-          "id": 3,
-          "name": "Obat Bebas Terbatas"
-        },
-        {
-          "id": 4,
-          "name": "Non Obat"
-        }
-      ]
+      "id": 1,
+      "name": "Obat Bebas"
+    },
+    {
+      "id": 2,
+      "name": "Obat Keras"
+    },
+    {
+      "id": 3,
+      "name": "Obat Bebas Terbatas"
+    },
+    {
+      "id": 4,
+      "name": "Non Obat"
     }
   ]
 }

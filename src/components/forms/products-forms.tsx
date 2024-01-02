@@ -11,13 +11,13 @@ import { toast } from "sonner"
 import useSWR from "swr"
 
 import type { ProductInputs } from "@/types"
-import type {
-  Categories,
-  DrugClasses,
-  Manufacturers,
-  Products,
+import {
+  type ApiResponse,
+  type IDrugClassification,
+  type IManufacturer,
+  type IProductCategory,
+  type ProductsSchema,
 } from "@/types/api"
-import { productClass, productManufacturers } from "@/config"
 import { updatePost } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productSchema } from "@/lib/validations/products-schema"
@@ -44,7 +44,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 interface ProductFormProps {
   mode: "add" | "edit"
-  initialProductData?: Products
+  initialProductData?: ProductsSchema
 }
 
 export default function ProductForm({
@@ -54,30 +54,36 @@ export default function ProductForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const { data: prodcat } = useSWR<Categories[]>(`/category`)
-  const { data: prodmanuf } = useSWR<Manufacturers[]>(`/manufacturers`)
-
-  const { data: drugclass } = useSWR<DrugClasses[]>(`/drugclass`)
+  const { data: prodcat } = useSWR<ApiResponse<IProductCategory>>(
+    `/v1/product-categories/no-params`,
+  )
+  const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer>>(
+    `/v1/manufacturers/no-params`,
+  )
+  const { data: drugclass } = useSWR<ApiResponse<IDrugClassification>>(
+    `/v1/drug-classifications/no-params`,
+  )
 
   const form = useForm<ProductInputs>({
     resolver: zodResolver(productSchema),
     defaultValues: {
-      name: initialProductData?.name ?? "",
-      generic_name: initialProductData?.generic_name ?? "",
-      content: initialProductData?.content ?? "",
-      image: initialProductData?.image ?? "",
-      manufacturer_id: initialProductData?.manufacturer_id ?? 1,
-      description: initialProductData?.description ?? "",
-      drug_classification_id: initialProductData?.drug_classification_id ?? 1,
-      product_category_id: initialProductData?.product_category_id ?? 1,
-      drug_form: initialProductData?.drug_form ?? "",
-      unit_in_pack: initialProductData?.unit_in_pack ?? "",
-      selling_unit: initialProductData?.selling_unit ?? "",
-      weight: initialProductData?.weight ?? 0,
-      length: initialProductData?.length ?? 0,
-      width: initialProductData?.width ?? 0,
-      height: initialProductData?.height ?? 0,
-      price: initialProductData?.price ?? "0",
+      name: initialProductData?.data.name ?? "",
+      generic_name: initialProductData?.data.generic_name ?? "",
+      content: initialProductData?.data.content ?? "",
+      // image: initialProductData?.data.image ?? "",
+      manufacturer_id: initialProductData?.data.manufacturer_id ?? 1,
+      description: initialProductData?.data.description ?? "",
+      drug_classification_id:
+        initialProductData?.data.drug_classification_id ?? 1,
+      product_category_id: initialProductData?.data.product_category_id ?? 1,
+      drug_form: initialProductData?.data.drug_form ?? "",
+      unit_in_pack: initialProductData?.data.unit_in_pack ?? "",
+      selling_unit: initialProductData?.data.selling_unit ?? "",
+      weight: initialProductData?.data.weight ?? 0,
+      length: initialProductData?.data.length ?? 0,
+      width: initialProductData?.data.width ?? 0,
+      height: initialProductData?.data.height ?? 0,
+      price: initialProductData?.data.price ?? "0",
     },
   })
 
@@ -87,13 +93,13 @@ export default function ProductForm({
     const { success, message } = await updatePost(
       mode,
       data,
-      initialProductData?.id,
+      initialProductData?.data.id,
     )
     success ? toast.success(message) : toast.error(message)
 
     setIsLoading(false)
 
-    router.push("/dashboard/posts")
+    router.push("/dashboard/products")
   }
 
   React.useEffect(() => {
@@ -171,15 +177,13 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodmanuf?.map((option) => (
+                          {prodmanuf?.data.items.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
                               className="capitalize"
                             >
-                              {initialProductData?.manufacturer_id === option.id
-                                ? option.name
-                                : option.name}{" "}
+                              {option.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -228,7 +232,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {drugclass?.map((option) => (
+                          {drugclass?.data.items.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -265,16 +269,13 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodcat?.map((option) => (
+                          {prodcat?.data.items.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
                               className="capitalize"
                             >
-                              {initialProductData?.product_category_id ===
-                              option.id
-                                ? option.name
-                                : option.name}{" "}
+                              {option.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -336,9 +337,15 @@ export default function ProductForm({
                         <FormLabel>Product Weight</FormLabel>
                         <FormControl>
                           <Input
-                            type="text"
+                            type="number"
                             placeholder="in grams"
                             {...field}
+                            onChange={(event) => {
+                              const numericValue = +event.target.value
+                              field.onChange(
+                                isNaN(numericValue) ? 0 : numericValue,
+                              )
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -352,7 +359,17 @@ export default function ProductForm({
                       <FormItem>
                         <FormLabel>Product Length</FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="in cm" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="in cm"
+                            {...field}
+                            onChange={(event) => {
+                              const numericValue = +event.target.value
+                              field.onChange(
+                                isNaN(numericValue) ? 0 : numericValue,
+                              )
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -368,7 +385,17 @@ export default function ProductForm({
                     <FormItem>
                       <FormLabel>Product Width</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="in cm" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="in cm"
+                          {...field}
+                          onChange={(event) => {
+                            const numericValue = +event.target.value
+                            field.onChange(
+                              isNaN(numericValue) ? 0 : numericValue,
+                            )
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -381,7 +408,17 @@ export default function ProductForm({
                     <FormItem>
                       <FormLabel>Product Height</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="in cm" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="in cm"
+                          {...field}
+                          onChange={(event) => {
+                            const numericValue = +event.target.value
+                            field.onChange(
+                              isNaN(numericValue) ? 0 : numericValue,
+                            )
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -402,7 +439,7 @@ export default function ProductForm({
                 </FormItem>
               )}
             />
-            <div>
+            {/* <div>
               <FormField
                 control={form.control}
                 name="image"
@@ -439,7 +476,7 @@ export default function ProductForm({
                           <label htmlFor="imageUpload" className="w-full">
                             <Button
                               variant="outline"
-                              className="w-full cursor-pointer font-medium"
+                              className="w-full font-medium cursor-pointer"
                               asChild
                             >
                               <div>
@@ -471,7 +508,7 @@ export default function ProductForm({
                   </FormItem>
                 )}
               />
-            </div>
+            </div> */}
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="w-fit">
@@ -486,7 +523,10 @@ export default function ProductForm({
                     className="w-fit"
                     asChild
                   >
-                    <Link href={`/${initialProductData?.id}`} target="_blank">
+                    <Link
+                      href={`/${initialProductData?.data.id}`}
+                      target="_blank"
+                    >
                       View product
                       <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
                     </Link>

@@ -6,7 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { ProductsResponse } from "@/types/api"
+import type { ApiResponse, IProduct, ProductsResponse } from "@/types/api"
 import { deletePost } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -29,16 +29,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = ProductsResponse> {
+interface ProductsTableProps<TData = ApiResponse<IProduct>> {
   data: TData
   mutate: KeyedMutator<TData>
 }
 
 export function ProductTable({ data, mutate }: ProductsTableProps) {
-  const products = data.items
-  // const products = data.data.items -> for real backend use
-
-  const dat = products.map((m) => ({
+  const dat = data.map((m) => ({
     id: m.id,
     name: m.name,
     generic_name: m.generic_name,

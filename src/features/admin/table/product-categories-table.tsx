@@ -88,7 +88,9 @@ export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/products/edit/${row.original.id}`}>
+                <Link
+                  href={`/dashboard/productcategories/edit/${row.original.id}`}
+                >
                   Edit
                 </Link>
               </DropdownMenuItem>
