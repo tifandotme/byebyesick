@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import CartSheet from "@/components/checkout/cart-sheet"
 import { Icons } from "@/components/icons"
 
 function MainNavbar() {
@@ -31,9 +32,9 @@ function MainNavbar() {
             <Link href={"#"}>History</Link>
           </div>
           <div className="flex items-center space-x-2 sm:justify-end lg:flex-1">
-            <button type="button" className="rounded-md border p-1.5">
-              <ShoppingCart className="h-6 w-6 text-primary" />
-            </button>
+            <CartSheet />
+
+            {/* <ShoppingCart className="w-6 h-6 text-primary" /> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
