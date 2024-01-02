@@ -18,7 +18,7 @@ export const loginFormSchema = z
 
 export const verifyFormSchema = z
   .object({
-    role: z.number().min(1, {
+    role: z.string().min(1, {
       message: "Role is required",
     }),
     password: z.string().min(1, {

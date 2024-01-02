@@ -12,7 +12,7 @@ export const getServerSideProps = (async (context) => {
     const verify = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/verify-register?token=${token}`,
     )
-    if (!verify.ok || verify.status === 404) {
+    if (!verify.ok || verify.status === 400) {
       throw new Error("Invalid Token")
     }
     const props = await verify.json()
