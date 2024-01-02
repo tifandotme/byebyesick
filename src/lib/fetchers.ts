@@ -1,7 +1,6 @@
 import { mutate } from "swr"
 
 import type { ProductCategoriesInputs, ProductInputs, Response } from "@/types"
-import type { ProductsCategoriesSchema, ProductsSchema } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
