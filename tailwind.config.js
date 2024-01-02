@@ -3,7 +3,11 @@ import { fontFamily } from "tailwindcss/defaultTheme"
 /** @type {import('tailwindcss').Config} */
 const config = {
   darkMode: ["class"],
-  content: ["./src/pages/**/*.{ts,tsx}", "./src/components/**/*.{ts,tsx}"],
+  content: [
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/features/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -42,7 +46,6 @@ const config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          premium: "hsl(var(--accent-premium))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -51,6 +54,19 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        apple: {
+          50: "hsl(104, 65%, 97%)",
+          100: "hsl(109, 74%, 93%)",
+          200: "hsl(109, 71%, 85%)",
+          300: "hsl(110, 69%, 73%)",
+          400: "hsl(110, 62%, 58%)",
+          500: "hsl(110, 63%, 45%)",
+          600: "hsl(110, 68%, 37%)",
+          700: "hsl(110, 64%, 29%)",
+          800: "hsl(111, 58%, 24%)",
+          900: "hsl(112, 55%, 20%)",
+          950: "hsl(112, 73%, 10%)",
         },
       },
       fontFamily: {
