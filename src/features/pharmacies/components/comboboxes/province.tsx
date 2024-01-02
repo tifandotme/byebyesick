@@ -21,20 +21,35 @@ export function ProvinceCombobox({
   value,
   onValueChange,
 }: ProvinceComboboxProps) {
+  const isHydrating = useStore((state) => state.isHydrating)
+  const provinces = useStore((state) => state.provinces)
+  const updateProvinces = useStore((state) => state.updateProvinces)
   const updateProvinceId = useStore((state) => state.updateProvinceId)
 
   const { data, isLoading } = useSWR(
-    "/api/rajaongkir/province",
+    !provinces && !isHydrating ? "/api/rajaongkir/province" : null,
     async (url: string) => {
       const res = await fetch(url)
       const data: Response<Province[]> = await res.json()
 
-      return data.data?.map((province) => ({
-        label: province.province,
-        value: province.province_id,
-      }))
+      return data.data
+    },
+    {
+      onSuccess: (data) => {
+        data && updateProvinces(data)
+      },
+      fallbackData: provinces ?? undefined,
     },
   )
+
+  const mappedData = React.useMemo(() => {
+    if (!data) return
+
+    return data.map((province) => ({
+      label: province.province,
+      value: province.province_id,
+    }))
+  }, [data])
 
   return (
     <ComboboxFormItem
@@ -45,7 +60,7 @@ export function ProvinceCombobox({
         onValueChange(value)
         updateProvinceId(value)
       }}
-      data={data}
+      data={mappedData}
       isLoading={isLoading}
     />
   )
