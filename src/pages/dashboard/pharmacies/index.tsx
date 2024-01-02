@@ -14,7 +14,9 @@ export default function PharmacyPage() {
 
   return (
     <div className="space-y-6 overflow-auto">
-      {isLoading && <DataTableSkeleton columnCount={5} />}
+      {isLoading && (
+        <DataTableSkeleton columnCount={4} filterableFieldCount={0} />
+      )}
       {!isLoading && data && <PharmacyTable data={data} />}
     </div>
   )

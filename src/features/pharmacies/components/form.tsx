@@ -1,9 +1,7 @@
 import React from "react"
 import dynamic from "next/dynamic"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ExternalLinkIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -393,62 +391,46 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
             {toSentenceCase(mode)} pharmacy
           </Button>
           {mode === "edit" && initialData && (
-            <>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button type="button" variant="destructive" className="w-fit">
-                    Delete
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="max-w-[250px] space-y-4 text-center">
-                  <span>Are you sure?</span>
-                  <div className="flex gap-2 [&>*]:w-full">
-                    <PopoverClose asChild>
-                      <Button
-                        onClick={() => {
-                          const handleDeletion = async () => {
-                            // const { success } = await deletePost(initialData.id)
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="destructive" className="w-fit">
+                  Delete
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="max-w-[250px] space-y-4 text-center">
+                <span>Are you sure?</span>
+                <div className="flex gap-2 [&>*]:w-full">
+                  <PopoverClose asChild>
+                    <Button
+                      onClick={() => {
+                        const handleDeletion = async () => {
+                          // const { success } = await deletePost(initialData.id)
 
-                            // if (!success) throw new Error()
+                          // if (!success) throw new Error()
 
-                            router.push("/dashboard/pharmacies")
-                          }
+                          router.push("/dashboard/pharmacies")
+                        }
 
-                          toast.promise(handleDeletion(), {
-                            loading: "Deleting pharmacy...",
-                            success: "Pharmacy deleted successfully",
-                            error: "Failed to delete pharmacy",
-                          })
-                        }}
-                        size="sm"
-                        variant="destructive"
-                      >
-                        Yes
-                      </Button>
-                    </PopoverClose>
-                    <PopoverClose asChild>
-                      <Button size="sm" variant="secondary">
-                        No
-                      </Button>
-                    </PopoverClose>
-                  </div>
-                </PopoverContent>
-              </Popover>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-fit"
-                asChild
-              >
-                <Link
-                  href={`/dashboard/pharmacies/${initialData.id}`}
-                  target="_blank"
-                >
-                  View Detail
-                  <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
-                </Link>
-              </Button>
-            </>
+                        toast.promise(handleDeletion(), {
+                          loading: "Deleting pharmacy...",
+                          success: "Pharmacy deleted successfully",
+                          error: "Failed to delete pharmacy",
+                        })
+                      }}
+                      size="sm"
+                      variant="destructive"
+                    >
+                      Yes
+                    </Button>
+                  </PopoverClose>
+                  <PopoverClose asChild>
+                    <Button size="sm" variant="secondary">
+                      No
+                    </Button>
+                  </PopoverClose>
+                </div>
+              </PopoverContent>
+            </Popover>
           )}
         </div>
       </form>
