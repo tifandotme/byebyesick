@@ -30,26 +30,10 @@ function MainNavbar() {
             <Link href={"#"}>Shop</Link>
             <Link href={"#"}>History</Link>
           </div>
-          <div className="flex items-center justify-between gap-8 sm:justify-end lg:flex-1">
-            <button type="button">
-              <ShoppingCart className="h-7 w-7 text-primary" />
+          <div className="flex items-center space-x-2 sm:justify-end lg:flex-1">
+            <button type="button" className="rounded-md border p-1.5">
+              <ShoppingCart className="h-6 w-6 text-primary" />
             </button>
-            {/* <button
-              type="button"
-              className="flex items-center transition rounded-lg group shrink-0"
-            >
-              <span className="sr-only">Menu</span>
-              <img
-                alt="Man"
-                src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                className="object-cover w-10 h-10 rounded-full"
-              />
-              <p className="hidden text-xs text-left ms-2 sm:block">
-                <strong className="block font-medium">Eric Frusciante</strong>
-
-                <span className="text-gray-500"> eric@frusciante.com </span>
-              </p>
-            </button> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
