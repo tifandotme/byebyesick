@@ -80,3 +80,13 @@
     @apply px-4;
   }
 }
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
