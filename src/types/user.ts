@@ -6,3 +6,7 @@ export interface UserI {
   image: string
   id: number
 }
+
+export interface RegisterToken {
+  data: string
+}
