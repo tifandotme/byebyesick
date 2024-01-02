@@ -1,7 +1,7 @@
 import { mutate } from "swr"
 
 import type { ProductCategoriesInputs, ProductInputs, Response } from "@/types"
-import type { Products, ProductsCategories } from "@/types/api"
+import type { ProductsCategoriesSchema, ProductsSchema } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -26,19 +26,18 @@ export async function updatePost(
   id?: number,
 ): Promise<Response> {
   try {
-    const { image, ...data } = payload
+    const { ...data } = payload
     // const convertedImage = await convertToCloudinaryURL(image)
 
     // if (!convertedImage) {
     //   throw new Error("Failed to upload the image. Try again later")
     // }
-
     const url = new URL(
-      `/products/${mode === "edit" ? id : ""}`,
+      `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
-      method: mode === "add" ? "POST" : "PATCH",
+      method: mode === "add" ? "POST" : "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -46,7 +45,7 @@ export async function updatePost(
         ...data,
         // image: convertedImage,
         // slug: mode === "add" ? slugify(data.name) : undefined,
-      } satisfies Partial<Omit<Products, "id">>),
+      } satisfies Partial<Omit<ProductsSchema, "id">>),
     }
 
     const res = await fetch(url, options)
@@ -80,7 +79,7 @@ export async function updatePost(
 
 export async function deletePost(id: number): Promise<Response> {
   try {
-    const url = new URL(`/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
     const options: RequestInit = {
       method: "DELETE",
     }
@@ -88,8 +87,10 @@ export async function deletePost(id: number): Promise<Response> {
     const res = await fetch(url, options)
 
     if (!res.ok) {
-      throw new Error("Failed to delete a post")
+      throw new Error("Failed to delete a product")
     }
+
+    mutate(url)
 
     return {
       success: true,
@@ -123,7 +124,7 @@ export async function updateProductCategory(
       body: JSON.stringify({
         ...data,
         // slug: mode === "add" ? slugify(data.name) : undefined,
-      } satisfies Partial<Omit<ProductsCategories, "id">>),
+      } satisfies Partial<Omit<ProductsCategoriesSchema, "id">>),
     }
 
     const res = await fetch(url, options)
