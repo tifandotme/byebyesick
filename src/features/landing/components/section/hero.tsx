@@ -32,9 +32,7 @@ function Hero() {
                   <Card>
                     <CardContent className="flex items-center justify-center p-6">
                       <span className="text-4xl font-semibold ">
-                        {contentText.map((c, index) => (
-                          <div key={index}>{c}</div>
-                        ))}
+                        {contentText}
                       </span>
                     </CardContent>
                   </Card>
