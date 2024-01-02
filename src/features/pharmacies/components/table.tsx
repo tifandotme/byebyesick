@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "next/link"
-import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import type { Pharmacy } from "@/types/api"
@@ -23,25 +23,6 @@ import {
 interface PharmacyTableProps {
   data: Pharmacy[]
 }
-
-/**
-  id: number
-  pharmacy_admin_id: number
-  name: string
-  address: string
-  sub_district: string
-  district: string
-  city: string
-  province: string
-  postal_code: string
-  latitude: string
-  longitude: string
-  pharmacist_name: string
-  pharmacist_license_no: string
-  pharmacist_phone_no: string
-  operational_hours: string
-  operational_days: string[]
- */
 
 export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
   const data = pharmacies.map((pharmacy) => ({
@@ -110,16 +91,6 @@ export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/pharmacies/${row.original.id}`}
-                  target="_blank"
-                  className="flex justify-between"
-                >
-                  View
-                  <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={`/dashboard/pharmacies/edit/${row.original.id}`}>
                   Edit
