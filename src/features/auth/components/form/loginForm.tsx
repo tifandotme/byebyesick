@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { signIn } from "next-auth/react"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import {
@@ -26,14 +27,28 @@ export default function LoginForm() {
     },
   })
 
-  function onSubmit(data: LoginFormSchemaType) {
-    toast.success("You have submitted the following data", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data) => {
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        password: data.password,
+        email: data.email,
+      })
+      if (!result?.ok) {
+        throw new Error("Invalid email or password")
+      }
+      // toast.success("You have submitted the following data", {
+      //   description: (
+      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+      //     </pre>
+      //   ),
+      // })
+      toast.success("Login Successfull", { duration: 2000 })
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    }
   }
 
   return (
