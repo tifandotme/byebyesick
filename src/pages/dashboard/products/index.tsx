@@ -9,7 +9,7 @@ import { DashboardLayout } from "@/components/layouts/dashboard"
 
 export const useProductData = () => {
   const { data, isLoading, mutate } =
-    useSWR<ApiResponse<IProduct>>(`/v1/products`)
+    useSWR<ApiResponse<IProduct[]>>(`/v1/products`)
 
   return {
     data,
@@ -25,7 +25,7 @@ export default function ProductTablePage() {
     <>
       <div className="space-y-6 overflow-auto">
         {isLoading && <DataTableSkeleton columnCount={5} />}
-        {!isLoading && data?.data.items && (
+        {!isLoading && data && (
           <ProductTable data={data?.data.items} mutate={mutate} />
         )}
       </div>

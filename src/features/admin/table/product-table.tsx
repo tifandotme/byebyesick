@@ -1,12 +1,11 @@
 import React from "react"
 import Link from "next/link"
-// import { useRouter } from "next/navigation"
 import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { ApiResponse, IProduct, ProductsResponse } from "@/types/api"
+import type { ApiResponse, IProduct } from "@/types/api"
 import { deletePost } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -29,19 +28,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = ApiResponse<IProduct>> {
+interface ProductsTableProps<TData = IProduct[]> {
   data: TData
-  mutate: KeyedMutator<TData>
+  mutate: KeyedMutator<ApiResponse<TData>>
 }
 
 export function ProductTable({ data, mutate }: ProductsTableProps) {
-  const dat = data.map((m) => ({
+  const product = data.map((m) => ({
     id: m.id,
     name: m.name,
     generic_name: m.generic_name,
   }))
 
-  type Data = (typeof dat)[number]
+  type Data = (typeof product)[number]
 
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
@@ -153,7 +152,7 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
   return (
     <DataTable
       columns={columns}
-      data={dat}
+      data={product}
       searchableColumns={[
         {
           id: "name",

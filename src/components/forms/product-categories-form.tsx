@@ -38,7 +38,7 @@ export default function ProductCategoriesForm({
   const form = useForm<ProductCategoriesInputs>({
     resolver: zodResolver(productCategoriesSchema),
     defaultValues: {
-      name: initialProductData?.name ?? "",
+      name: initialProductData?.data.name ?? "",
     },
   })
 
@@ -48,7 +48,7 @@ export default function ProductCategoriesForm({
     const { success, message } = await updateProductCategory(
       mode,
       data,
-      initialProductData?.id,
+      initialProductData?.data.id,
     )
     success ? toast.success(message) : toast.error(message)
 

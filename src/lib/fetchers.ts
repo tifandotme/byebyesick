@@ -45,8 +45,10 @@ export async function updatePost(
         ...data,
         // image: convertedImage,
         // slug: mode === "add" ? slugify(data.name) : undefined,
-      } satisfies Partial<Omit<ProductsSchema, "id">>),
+      }),
     }
+
+    // satisfies Partial<Omit<ProductsSchema, "id">>
 
     const res = await fetch(url, options)
 
@@ -113,7 +115,11 @@ export async function updateProductCategory(
     const { ...data } = payload
 
     const url = new URL(
-      `/product-categories/${mode === "edit" ? id : ""}`,
+      `${
+        mode === "edit"
+          ? `/v1/product-categories/${id}`
+          : "/v1/product-categories"
+      }`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
@@ -124,7 +130,7 @@ export async function updateProductCategory(
       body: JSON.stringify({
         ...data,
         // slug: mode === "add" ? slugify(data.name) : undefined,
-      } satisfies Partial<Omit<ProductsCategoriesSchema, "id">>),
+      }),
     }
 
     const res = await fetch(url, options)
@@ -135,9 +141,7 @@ export async function updateProductCategory(
 
     // Revalidate path if edited
     // if (mode === "edit") {
-
     //   const slug = (await res.json()).slug as string
-
     //   await fetch(`/api/revalidate?slug=${slug}`)
     // }
 
@@ -163,7 +167,7 @@ export async function updateProductCategory(
 export async function deleteProductCategory(id: number): Promise<Response> {
   try {
     const url = new URL(
-      `/product-categories/${id}`,
+      `/v1/product-categories/${id}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
