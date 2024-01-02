@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 
 function DetailProduct() {
   return (
-    <div className="flex gap-16">
+    <div className="flex flex-col gap-16 md:flex-row">
       <div className="flex max-h-[336px] flex-auto justify-center md:w-1/2">
         <Image width={362} height={336} src={"/Enervon.jpg"} alt="Enervon C" />
       </div>
