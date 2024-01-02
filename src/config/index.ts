@@ -24,11 +24,14 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
   sidebarNavAdmin: [
-    { title: "Posts", href: "/dashboard/posts", icon: "File" },
+    {
+      title: "Pharmacies",
+      href: "/dashboard/pharmacies",
+      icon: "Home",
+    },
     {
       title: "Users",
       href: "/dashboard/users",
-      icon: "Person",
     },
   ],
 }
