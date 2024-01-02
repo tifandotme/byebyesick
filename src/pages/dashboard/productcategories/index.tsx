@@ -3,13 +3,14 @@ import { ProductCategoriesTable } from "@/features/admin/table/product-categorie
 import ProductCategoriesLayout from "@/features/productcategories/components/layout"
 import useSWR from "swr"
 
-import type { ProductCategoriesResponse } from "@/types/api"
+import type { ApiResponse, IProductCategory } from "@/types/api"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 
 export const useProductData = () => {
-  const { data, isLoading, mutate } =
-    useSWR<ProductCategoriesResponse>(`/category`)
+  const { data, isLoading, mutate } = useSWR<ApiResponse<IProductCategory[]>>(
+    `/v1/product-categories`,
+  )
 
   return {
     data,
@@ -26,7 +27,7 @@ export default function ProductCategoriesTablePage() {
       <div className="space-y-6 overflow-auto">
         {isLoading && <DataTableSkeleton columnCount={5} />}
         {!isLoading && data && (
-          <ProductCategoriesTable data={data} mutate={mutate} />
+          <ProductCategoriesTable data={data?.data.items} mutate={mutate} />
         )}
       </div>
     </>

@@ -13,8 +13,10 @@ export type ProductsSchema = {
 }
 
 export type ProductsCategoriesSchema = {
-  id: number
-} & z.infer<typeof productCategoriesSchema>
+  data: {
+    id: number
+  } & z.infer<typeof productCategoriesSchema>
+}
 
 // USE THIS FOR FAKE DATA
 export type ProductsResponse = {
@@ -89,11 +91,11 @@ export type DrugClasses = {
 // FOR REAL BACKEND USES
 export interface ApiResponse<T> {
   data: {
-    total_items: number
-    total_pages: number
-    current_page_total_items: number
-    current_page: number
-    items: T[]
+    total_items?: number
+    total_pages?: number
+    current_page_total_items?: number
+    current_page?: number
+    items: T
   }
 }
 export interface IDrugClassification {

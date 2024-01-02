@@ -5,11 +5,10 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { ProductCategoriesResponse } from "@/types/api"
-import { deletePost } from "@/lib/fetchers"
+import type { ApiResponse, IProductCategory } from "@/types/api"
+import { deleteProductCategory } from "@/lib/fetchers"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -28,20 +27,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = ProductCategoriesResponse> {
+interface ProductsTableProps<TData = IProductCategory[]> {
   data: TData
-  mutate: KeyedMutator<TData>
+  mutate: KeyedMutator<ApiResponse<TData>>
 }
 
 export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
-  const products = data
-
-  const dat = data.map((m) => ({
+  const productscategories = data.map((m) => ({
     id: m.id,
     name: m.name,
   }))
 
-  type Data = (typeof dat)[number]
+  type Data = (typeof productscategories)[number]
 
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
@@ -112,10 +109,12 @@ export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
+
+                      <Button
+                        variant="destructive"
                         onClick={() => {
                           const handleDeletion = async () => {
-                            const { success } = await deletePost(
+                            const { success } = await deleteProductCategory(
                               row.original.id,
                             )
 
@@ -131,7 +130,7 @@ export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
                         }}
                       >
                         Delete
-                      </AlertDialogAction>
+                      </Button>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -147,7 +146,7 @@ export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
   return (
     <DataTable
       columns={columns}
-      data={dat}
+      data={productscategories}
       searchableColumns={[
         {
           id: "name",

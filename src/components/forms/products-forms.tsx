@@ -54,13 +54,13 @@ export default function ProductForm({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
 
-  const { data: prodcat } = useSWR<ApiResponse<IProductCategory>>(
+  const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
     `/v1/product-categories/no-params`,
   )
-  const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer>>(
+  const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer[]>>(
     `/v1/manufacturers/no-params`,
   )
-  const { data: drugclass } = useSWR<ApiResponse<IDrugClassification>>(
+  const { data: drugclass } = useSWR<ApiResponse<IDrugClassification[]>>(
     `/v1/drug-classifications/no-params`,
   )
 
