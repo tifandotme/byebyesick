@@ -55,7 +55,7 @@ export default function ProductForm({
   const [isLoading, setIsLoading] = React.useState(false)
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
-    `/v1/product-categories/no-params`,
+    `/v1/product-categories`,
   )
   const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer[]>>(
     `/v1/manufacturers/no-params`,
@@ -63,6 +63,8 @@ export default function ProductForm({
   const { data: drugclass } = useSWR<ApiResponse<IDrugClassification[]>>(
     `/v1/drug-classifications/no-params`,
   )
+
+  console.log(prodcat?.data.items, "prodcat")
 
   const form = useForm<ProductInputs>({
     resolver: zodResolver(productSchema),
@@ -83,7 +85,6 @@ export default function ProductForm({
       length: initialProductData?.data.length ?? 0,
       width: initialProductData?.data.width ?? 0,
       height: initialProductData?.data.height ?? 0,
-      price: initialProductData?.data.price ?? "0",
     },
   })
 
@@ -177,7 +178,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodmanuf?.data.items.map((option) => (
+                          {prodmanuf?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -232,7 +233,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {drugclass?.data.items.map((option) => (
+                          {drugclass?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -269,7 +270,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodcat?.data.items.map((option) => (
+                          {prodcat?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -426,19 +427,7 @@ export default function ProductForm({
                 />
               </div>
             </div>
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Price</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="100000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             {/* <div>
               <FormField
                 control={form.control}
@@ -524,7 +513,7 @@ export default function ProductForm({
                     asChild
                   >
                     <Link
-                      href={`/${initialProductData?.data.id}`}
+                      href={`/products/${initialProductData?.data.id}`}
                       target="_blank"
                     >
                       View product

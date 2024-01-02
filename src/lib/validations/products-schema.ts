@@ -52,13 +52,7 @@ export const productSchema = z.object({
 
   height: z.number().min(2, { message: "Height must be at least 2" }),
   // image: z.string().url({ message: "Image is required" }),
-  price: z
-    .string()
-    .min(2, { message: "Price must be at least 2 characters long" })
-    .max(100, { message: "Drug Form must be no more than 100 characters long" })
-    .refine((price) => !/[^a-zA-Z0-9 ]/.test(price), {
-      message: "Drug Form can only contain alphanumeric characters and spaces",
-    }),
+
   selling_unit: z
     .string()
     .min(2, { message: "Seling Unit must be at least 2 characters long" })

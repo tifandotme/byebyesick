@@ -128,7 +128,6 @@ export interface IProduct {
   width: number
   height: number
   image: string
-  price: string
   created_at: string
   updated_at: string
 }

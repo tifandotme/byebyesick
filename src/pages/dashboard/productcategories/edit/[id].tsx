@@ -2,13 +2,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import ProductCategoriesLayout from "@/features/productcategories/components/layout"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ProductCategoriesForm from "@/components/forms/product-categories-form"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 
