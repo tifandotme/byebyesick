@@ -1,8 +1,10 @@
 import React from "react"
 import Image from "next/image"
+import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
 import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
-import { ChevronDown, MapPin, PlusIcon } from "lucide-react"
+import { MapPin, PlusIcon } from "lucide-react"
 
+import { truncate } from "@/lib/truncate"
 import { Button } from "@/components/ui/button"
 
 function DetailProduct() {
@@ -51,21 +53,12 @@ function DetailProduct() {
               <div className="font-semibold">PT. Suka Duka</div>
             </InfoBlock>
           </div>
-          <h2>Description</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente,
-            consequatur reiciendis. Odit consequuntur asperiores veritatis
-            ducimus minus! Similique, temporibus! Voluptate soluta error fugit
-            eius voluptatem ab natus atque porro consequatur....
-          </p>
-          <div className="ps-6">
-            <Button variant={"link"} size={"icon"}>
-              See More{" "}
-              <span>
-                <ChevronDown />
-              </span>
-            </Button>
-          </div>
+          <CollapsableBlock
+            label="Description"
+            value={
+              "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, consequatur reiciendis. Odit consequuntur asperiores veritatis ducimus minus! Similique, temporibus! Voluptate soluta error fugit eius voluptatem ab natus atque porro consequatur"
+            }
+          />
         </div>
       </div>
     </div>
