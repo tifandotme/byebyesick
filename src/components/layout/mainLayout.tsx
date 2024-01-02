@@ -8,7 +8,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="sticky w-full">
         <MainNavbar />
       </div>
-      <div className="container h-screen p-11">{children}</div>
+      <div className="container p-11">{children}</div>
     </div>
   )
 }
