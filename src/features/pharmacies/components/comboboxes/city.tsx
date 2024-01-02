@@ -41,8 +41,6 @@ export function CityCombobox({
     },
   )
 
-  console.log("provinceId", provinceId)
-
   const filteredData = React.useMemo(() => {
     if (!data || !provinceId) return
 
