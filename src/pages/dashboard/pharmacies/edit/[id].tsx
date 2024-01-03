@@ -38,7 +38,7 @@ export default function EditPharmacyPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
-  const { data, isLoading } = useSWR<Pharmacy>(`/v1/pharmacies/${id}`, {
+  const { data, isLoading } = useSWR<Pharmacy>(`/pharmacies/${id}`, {
     onError: () => {
       router.push("/dashboard/pharmacies")
     },
