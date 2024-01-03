@@ -7,7 +7,6 @@ import { z } from "zod"
 import { cn, formatPrice } from "@/lib/utils"
 import type { productSchema } from "@/lib/validations/products-schema"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 
 // import { UpdateCart } from "@/components/checkout/update-cart"
 

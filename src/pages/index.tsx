@@ -44,7 +44,7 @@ export default function HomePage({
   error: string | undefined
 }) {
   if (error) {
-    return <div>Error: {error}</div>
+    return <div>Error: </div>
   }
   return (
     <div>
