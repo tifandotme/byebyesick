@@ -29,7 +29,9 @@ export function CategoryCard({ category, icon }: CategoryCardProps) {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center space-y-1.5">
-            <CardTitle className="text-xl capitalize">{category}</CardTitle>
+            <CardTitle className="text-center text-xl capitalize">
+              {category}
+            </CardTitle>
             <React.Suspense fallback={<Skeleton className="h-4 w-20" />}>
               <CardDescription>number products</CardDescription>
             </React.Suspense>
