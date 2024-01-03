@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { register } from "@/features/auth/api/register"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -27,14 +28,18 @@ export default function RegisterForm() {
     },
   })
 
-  function onSubmit(data: RegisterFormSchemaType) {
-    toast.success("You have submitted the following data", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  async function onSubmit(data: RegisterFormSchemaType) {
+    try {
+      const signup = await register(data.email)
+      const decoded = await signup.json()
+      if (!signup.ok) {
+        throw new Error(decoded.error ?? "Something went wrong")
+      }
+      toast.success(`Verification email has been sent to ${data.email}`)
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message)
+    }
   }
 
   return (

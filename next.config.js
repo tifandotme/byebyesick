@@ -2,7 +2,7 @@
 const config = {
   reactStrictMode: false,
   env: {
-    PUBLIC_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
   images: {
     dangerouslyAllowSVG: true,
