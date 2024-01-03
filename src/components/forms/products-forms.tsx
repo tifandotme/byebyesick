@@ -55,7 +55,7 @@ export default function ProductForm({
   const [isLoading, setIsLoading] = React.useState(false)
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
-    `/v1/product-categories/no-params`,
+    `/v1/product-categories`,
   )
   const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer[]>>(
     `/v1/manufacturers/no-params`,
@@ -83,18 +83,19 @@ export default function ProductForm({
       length: initialProductData?.data.length ?? 0,
       width: initialProductData?.data.width ?? 0,
       height: initialProductData?.data.height ?? 0,
-      price: initialProductData?.data.price ?? "0",
     },
   })
 
   const onSubmit = async (data: ProductInputs) => {
+    console.log("tes")
     setIsLoading(true)
-
+    console.log(data)
     const { success, message } = await updatePost(
       mode,
       data,
       initialProductData?.data.id,
     )
+
     success ? toast.success(message) : toast.error(message)
 
     setIsLoading(false)
@@ -177,7 +178,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodmanuf?.data.items.map((option) => (
+                          {prodmanuf?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -232,7 +233,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {drugclass?.data.items.map((option) => (
+                          {drugclass?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -269,7 +270,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodcat?.data.items.map((option) => (
+                          {prodcat?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -448,14 +449,7 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
-                              form.setValue(
-                                "image",
-                                URL.createObjectURL(file),
-                                {
-                                  shouldDirty: true,
-                                  shouldValidate: true,
-                                },
-                              )
+                              form.setValue("image", files[0])
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -490,16 +484,22 @@ export default function ProductForm({
                         />
                       )}
                     </div>
-                    <UncontrolledFormMessage
+                    {/* <UncontrolledFormMessage
                       message={form.formState.errors.image?.message}
-                    />
+                    /> */}
                   </FormItem>
                 )}
               />
             </div>
 
             <div className="flex gap-4">
-              <Button type="submit" disabled={isLoading} className="w-fit">
+              <Button
+                onClick={() => {
+                  onSubmit(form.getValues())
+                }}
+                disabled={isLoading}
+                className="w-fit"
+              >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {toSentenceCase(mode)} product
               </Button>
@@ -512,7 +512,7 @@ export default function ProductForm({
                     asChild
                   >
                     <Link
-                      href={`/${initialProductData?.data.id}`}
+                      href={`/products/${initialProductData?.data.id}`}
                       target="_blank"
                     >
                       View product
