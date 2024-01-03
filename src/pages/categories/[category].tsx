@@ -1,7 +1,6 @@
 import React, { useState, type ReactElement } from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useRouter } from "next/router"
-import { ProductCard } from "@/features/products/components/products-card"
 
 import { useProductData } from "@/lib/fetchers"
 import { unslugify } from "@/lib/utils"
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/pagination"
 import MainLayout from "@/components/layout/mainLayout"
 import Loader from "@/components/loader"
+import { ProductCard } from "@/features/products/components/products-card"
 
 export const categories = {
   "obat-bebas": 1,

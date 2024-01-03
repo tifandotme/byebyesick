@@ -1,25 +1,27 @@
 import Image from "next/image"
 import { Slot } from "@radix-ui/react-slot"
 import { ImageIcon } from "lucide-react"
+import { z } from "zod"
 
-import type { CartLineItem } from "@/types"
+// import type { CartLineItem } from "@/types"
 import { cn, formatPrice } from "@/lib/utils"
+import type { productSchema } from "@/lib/validations/products-schema"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 // import { UpdateCart } from "@/components/checkout/update-cart"
+
+export type CartLineItem = z.infer<typeof productSchema>
 
 interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   items: CartLineItem[]
   isScrollable?: boolean
   isEditable?: boolean
-  variant?: "default" | "minimal"
 }
 
 export function CartLineItems({
   items,
   isScrollable = true,
   isEditable = true,
-  variant = "default",
   className,
   ...props
 }: CartLineItemsProps) {
@@ -35,8 +37,8 @@ export function CartLineItems({
         )}
         {...props}
       >
-        {items.map((item) => (
-          <div key={item.id} className="space-y-3">
+        {items.map((item, index) => (
+          <div key={index} className="space-y-3">
             <div
               className={cn(
                 "flex items-start justify-between gap-4",
@@ -44,53 +46,47 @@ export function CartLineItems({
               )}
             >
               <div className="flex items-center space-x-4">
-                {variant === "default" ? (
-                  <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
-                    {item?.images?.length ? (
-                      <Image
-                        src={
-                          item.images[0]?.url ??
-                          "/images/product-placeholder.webp"
-                        }
-                        alt={item.images[0]?.name ?? item.name}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        fill
-                        className="absolute object-cover"
-                        loading="lazy"
+                <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
+                  {item?.image?.length ? (
+                    <Image
+                      src={item.image ?? "/images/product-placeholder.webp"}
+                      alt={item.name ?? item.name}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      fill
+                      className="absolute object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center bg-secondary">
+                      <ImageIcon
+                        className="h-4 w-4 text-muted-foreground"
+                        aria-hidden="true"
                       />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-secondary">
-                        <ImageIcon
-                          className="h-4 w-4 text-muted-foreground"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ) : null}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex flex-col space-y-1 self-start">
                   <span className="line-clamp-1 text-sm font-medium">
                     {item.name}
                   </span>
-                  {isEditable ? (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
+                  {/* {isEditable ? (
+                    <span className="text-xs line-clamp-1 text-muted-foreground">
                       {formatPrice(item.price)} x {item.quantity} ={" "}
                       {formatPrice(
                         (Number(item.price) * Number(item.quantity)).toFixed(2),
                       )}
                     </span>
                   ) : (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
+                    <span className="text-xs line-clamp-1 text-muted-foreground">
                       Qty {item.quantity}
                     </span>
-                  )}
-                  {variant === "default" ? (
-                    <span className="line-clamp-1 text-xs capitalize text-muted-foreground">
-                      {`${item.category} ${
-                        item.subcategory ? `/ ${item.subcategory}` : ""
-                      }`}
-                    </span>
-                  ) : null}
+                  )} */}
+                  {/* <span className="text-xs capitalize line-clamp-1 text-muted-foreground">
+                    {`${item.category} ${
+                      item.subcategory ? `/ ${item.subcategory}` : ""
+                    }`}
+                  </span> */}
                 </div>
               </div>
               {isEditable ? (
@@ -99,9 +95,9 @@ export function CartLineItems({
               ) : (
                 <div className="flex flex-col space-y-1 font-medium">
                   <span className="ml-auto line-clamp-1 text-sm">
-                    {formatPrice(
+                    {/* {formatPrice(
                       (Number(item.price) * item.quantity).toFixed(2),
-                    )}
+                    )} */}
                   </span>
                   <span className="line-clamp-1 text-xs text-muted-foreground">
                     {formatPrice(item.price)} each
@@ -109,7 +105,7 @@ export function CartLineItems({
                 </div>
               )}
             </div>
-            {variant === "default" ? <Separator /> : null}
+            {/* {variant === "default" ? <Separator /> : null} */}
           </div>
         ))}
       </div>
