@@ -1,19 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
+import type { Response } from "@/types"
 import type {
   Province,
   Response as RajaOngkirResponse,
 } from "@/types/rajaongkir"
 
-export type Response<TData = unknown> = {
-  success: boolean
-  message?: string
-  data?: TData
-}
-
 export default async function handler(
   _: NextApiRequest,
-  res: NextApiResponse<Response>,
+  res: NextApiResponse<Response<Province[]>>,
 ) {
   try {
     const url = new URL("https://api.rajaongkir.com/starter/province")

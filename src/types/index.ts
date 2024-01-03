@@ -3,6 +3,12 @@ import type { z } from "zod"
 import type { pharmacySchema } from "@/lib/validations/pharmacy"
 import type { Icons } from "@/components/icons"
 
+export type Response<TData = unknown> = {
+  success: boolean
+  message?: string
+  data?: TData
+}
+
 export interface Option {
   label: string
   value: string

@@ -1,12 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
+import type { Response } from "@/types"
 import type { City, Response as RajaOngkirResponse } from "@/types/rajaongkir"
-
-export type Response<TData = unknown> = {
-  success: boolean
-  message?: string
-  data?: TData
-}
 
 export default async function handler(
   _: NextApiRequest,
