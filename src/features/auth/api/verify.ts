@@ -1,6 +1,9 @@
 import type { UserI } from "@/types/user"
 
-export function register(body: Partial<UserI>, token: string) {
+export function verify(
+  body: Partial<UserI>,
+  token: string | string[] | undefined,
+) {
   var requestOptions = {
     method: "POST",
     body: JSON.stringify(body),

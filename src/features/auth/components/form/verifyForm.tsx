@@ -1,10 +1,13 @@
 import React from "react"
 import Image from "next/image"
+import { useRouter } from "next/router"
+import { verify } from "@/features/auth/api/verify"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
-import type { RegisterToken } from "@/types/user"
+import type { ApiResponse } from "@/types/api"
+import type { RegisterToken, UserI } from "@/types/user"
 import doctor from "@/assets/backgrounds/doctor.svg"
 import patient from "@/assets/backgrounds/patient.svg"
 import {
@@ -24,23 +27,37 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 function VerifyForm({ data }: RegisterToken) {
+  const router = useRouter()
+
   const form = useForm<VerifyFormSchemaType>({
     resolver: zodResolver(verifyFormSchema),
   })
 
   const [isDoctor, setIsDoctor] = React.useState<boolean>(false)
+  const [loading, setIsLoading] = React.useState<boolean>(false)
 
-  const onSubmit: SubmitHandler<VerifyFormSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<VerifyFormSchemaType> = async (formData) => {
     try {
-      // const result = await signIn("credentials", { redirect: false, password: data.password, email: data.email })
-      // if (!result?.ok) {
-      //     throw new Error("Invalid email or password")
-      // }
-      // toast.success("User Successfully Registered", { duration: 2000 })
-      toast.success(JSON.stringify(data), { duration: 2000 })
+      setIsLoading(true)
+      const signup = await verify(
+        {
+          email: data,
+          user_role_id: parseInt(formData.role),
+          password: formData.password,
+        },
+        router.query.token,
+      )
+      const decoded: ApiResponse<UserI> = await signup.json()
+      if (!signup.ok) {
+        throw new Error(decoded.errors[0] ?? "Something went wrong")
+      }
+      toast.success("Account successfully registred", { duration: 1000 })
+      router.replace("/auth/login")
     } catch (error) {
       const err = error as Error
       toast.error(err.message, { duration: 2000 })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -142,7 +159,7 @@ function VerifyForm({ data }: RegisterToken) {
             <Input id="picture" type="file" />
           </div>
         )}
-        <Button className="w-full" type="submit">
+        <Button className="w-full" type="submit" disabled={loading}>
           Submit
         </Button>
       </form>
