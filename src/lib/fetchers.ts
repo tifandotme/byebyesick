@@ -1,7 +1,7 @@
-import { mutate } from "swr"
+import useSWR, { mutate } from "swr"
 
 import type { ProductCategoriesInputs, ProductInputs, Response } from "@/types"
-import type { ProductsCategoriesSchema, ProductsSchema } from "@/types/api"
+import type { ApiResponse, IProduct } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -20,6 +20,42 @@ export async function fetcher<TData>(
   return res.json()
 }
 
+interface ProductsFilter {
+  drug_class?: number
+  search?: string
+  limit?: number
+  sort?: "name" | "date"
+  sort_by?: "asc" | "desc"
+  page?: number
+}
+
+export const useProductData = (filters: ProductsFilter) => {
+  const { drug_class, search, limit, sort, sort_by, page } = filters
+
+  let url = "/v1/products?"
+  if (search) url += `search=${search}&`
+  if (limit) url += `limit=${limit}&`
+  if (sort) url += `sort=${sort}&`
+  if (sort_by) url += `sort_by=${sort_by}&`
+  if (drug_class) url += `drug_class=${drug_class}&`
+  if (page) url += `page=${page}`
+
+  const { data, isLoading, mutate, error } =
+    useSWR<ApiResponse<IProduct[]>>(url)
+
+  const resetFilters = () => {
+    mutate()
+  }
+
+  return {
+    data,
+    error,
+    isLoading,
+    mutate,
+    resetFilters,
+  }
+}
+
 export async function updatePost(
   mode: "add" | "edit",
   payload: ProductInputs,
@@ -32,6 +68,7 @@ export async function updatePost(
     // if (!convertedImage) {
     //   throw new Error("Failed to upload the image. Try again later")
     // }
+
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,

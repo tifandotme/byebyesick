@@ -14,6 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { CartLineItems } from "@/components/checkout/cart-items"
 
 export default function CartSheet() {
   const itemCount = 0
@@ -46,7 +47,7 @@ export default function CartSheet() {
         </SheetHeader>
         {itemCount > 0 ? (
           <>
-            {/* <CartLineItems items={cartLineItems} className="flex-1" /> */}
+            {/* <CartLineItems items={CartLineItems} className="flex-1" /> */}
             <div className="space-y-4 pr-6">
               <Separator />
               <div className="space-y-1.5 text-sm">
