@@ -51,7 +51,10 @@ export const productSchema = z.object({
   width: z.number().min(2, { message: "Width must be at least 2" }),
 
   height: z.number().min(2, { message: "Height must be at least 2" }),
-  image: z.string().url({ message: "Image is required" }),
+  // image: z.string().url({ message: "Image is required" }),
+  image: z.any().refine((image) => image.length > 0, {
+    message: "Image is required",
+  }),
   price: z
     .string()
     .min(2, { message: "Price must be at least 2 characters long" })
