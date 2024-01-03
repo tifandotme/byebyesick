@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import { Pencil1Icon } from "@radix-ui/react-icons"
+import { PlusIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,15 +16,15 @@ export function PharmaciesLayout({ children }: React.PropsWithChildren) {
       <PageHeader separated className="relative">
         <PageHeaderHeading size="sm">Pharmacies</PageHeaderHeading>
         <PageHeaderDescription size="sm">
-          Manage pharmacies
+          Manage my pharmacies
         </PageHeaderDescription>
-        {router.pathname === "/dashboard/posts" && (
+        {router.pathname === "/dashboard/pharmacies" && (
           <div className="absolute right-1 top-3.5">
             <Button
               size="sm"
-              onClick={() => router.push("/dashboard/posts/add")}
+              onClick={() => router.push("/dashboard/pharmacies/add")}
             >
-              <Pencil1Icon className="mr-2" /> Create pharmacy
+              <PlusIcon className="mr-1.5" /> Create pharmacy
             </Button>
           </div>
         )}
