@@ -2,7 +2,7 @@ export interface UserI {
   email: string
   name: string
   password: string
-  role: string
+  user_role_id: number
   image: string
   id: number
 }
