@@ -51,13 +51,6 @@ export function slugify(text: string): string {
     .toLowerCase()
 }
 
-export function readingTime(text: string): number {
-  const wpm = 190 // adult reading speed
-  const words = text.trim().split(/\s+/).length
-
-  return Math.ceil(words / wpm)
-}
-
 export function updateQueryParams(
   router: NextRouter,
   newQuery: Record<string, string | null>,
