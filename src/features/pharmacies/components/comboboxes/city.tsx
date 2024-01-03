@@ -1,10 +1,10 @@
 import React from "react"
 import useSWR from "swr"
 
+import type { Response } from "@/types"
 import type { City } from "@/types/rajaongkir"
 import { useStore } from "@/lib/stores/pharmacies"
 import { ComboboxFormItem } from "@/components/combobox-form"
-import type { Response } from "@/pages/api/rajaongkir/province"
 
 type FormItemProps = Pick<
   React.ComponentProps<typeof ComboboxFormItem>,

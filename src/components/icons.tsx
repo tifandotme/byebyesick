@@ -1,10 +1,10 @@
 import {
   AvatarIcon,
-  CardStackPlusIcon,
   FileIcon,
   GearIcon,
   PersonIcon,
 } from "@radix-ui/react-icons"
+import { MdOutlineLocalHospital } from "react-icons/md"
 
 type IconProps = React.SVGAttributes<SVGElement>
 
@@ -69,5 +69,5 @@ export const Icons = {
   Person: PersonIcon,
   Avatar: AvatarIcon,
   Gear: GearIcon,
-  Home: CardStackPlusIcon,
+  Pharmacies: MdOutlineLocalHospital,
 }

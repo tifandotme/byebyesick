@@ -30,9 +30,9 @@ export const pharmacySchema = z
     opensAt: z.string(),
     closesAt: z.string(),
     operationalDays: z.array(z.string()).min(1, "Required"),
-    pharmacistName: z.string(),
-    pharmacistLicense: z.string(),
-    pharmacistPhone: z.string(),
+    pharmacistName: z.string().min(1, "Required"),
+    pharmacistLicense: z.string().min(1, "Required"),
+    pharmacistPhone: z.string().min(1, "Required"),
   })
   .refine((data) => Number(data.opensAt) < Number(data.closesAt), {
     message: "Closing hour must come after opening hour",

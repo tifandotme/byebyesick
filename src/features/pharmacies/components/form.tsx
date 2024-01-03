@@ -8,6 +8,7 @@ import { toast } from "sonner"
 
 import type { PharmacyInputs } from "@/types"
 import type { Pharmacy } from "@/types/api"
+import { updatePharmacy } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { pharmacySchema } from "@/lib/validations/pharmacy"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -66,8 +67,8 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       postalCode: initialData?.postal_code ?? "",
       latitude: Number(initialData?.latitude ?? -6.175422),
       longitude: Number(initialData?.longitude ?? 106.82732),
-      opensAt: initialData?.operational_hours.split("-")[0] ?? "0",
-      closesAt: initialData?.operational_hours.split("-")[1] ?? "0",
+      opensAt: String(initialData?.operational_hours_open ?? 0),
+      closesAt: String(initialData?.operational_hours_close ?? 0),
       operationalDays: initialData?.operational_days ?? [],
       pharmacistName: initialData?.pharmacist_name ?? "",
       pharmacistLicense: initialData?.pharmacist_license_no ?? "",
@@ -80,8 +81,12 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
 
     console.log(data)
 
-    // const { success, message } = await updatePost(mode, data, initialData?.id)
-    // success ? toast.success(message) : toast.error(message)
+    const { success, message } = await updatePharmacy(
+      mode,
+      data,
+      initialData?.id,
+    )
+    success ? toast.success(message) : toast.error(message)
 
     setIsLoading(false)
   }

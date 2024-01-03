@@ -27,7 +27,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: "Pharmacies",
       href: "/dashboard/pharmacies",
-      icon: "Home",
+      icon: "Pharmacies",
     },
     {
       title: "Users",

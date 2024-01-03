@@ -14,7 +14,7 @@ export type ResponseById<TData = unknown> = {
   errors?: string[]
 }
 
-// GET /pharmacies/:id
+// GET /v1/pharmacies/:id
 
 export type Pharmacy = {
   id: number
@@ -31,6 +31,7 @@ export type Pharmacy = {
   pharmacist_name: string
   pharmacist_license_no: string
   pharmacist_phone_no: string
-  operational_hours: string
+  operational_hours_open: number
+  operational_hours_close: number
   operational_days: string[]
 }
