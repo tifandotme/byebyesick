@@ -97,6 +97,7 @@ export interface ApiResponse<T> {
     current_page?: number
     items: T
   }
+  error: string[]
 }
 export interface IDrugClassification {
   id: number
