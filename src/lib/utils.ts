@@ -51,6 +51,10 @@ export function slugify(text: string): string {
     .toLowerCase()
 }
 
+export function unslugify(str: string) {
+  return str.replace(/-/g, " ")
+}
+
 export function updateQueryParams(
   router: NextRouter,
   newQuery: Record<string, string | null>,
