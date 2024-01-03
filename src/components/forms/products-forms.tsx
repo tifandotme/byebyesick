@@ -70,7 +70,7 @@ export default function ProductForm({
       name: initialProductData?.data.name ?? "",
       generic_name: initialProductData?.data.generic_name ?? "",
       content: initialProductData?.data.content ?? "",
-      // image: initialProductData?.data.image ?? "",
+      image: initialProductData?.data.image ?? "",
       manufacturer_id: initialProductData?.data.manufacturer_id ?? 1,
       description: initialProductData?.data.description ?? "",
       drug_classification_id:
@@ -426,20 +426,8 @@ export default function ProductForm({
                 />
               </div>
             </div>
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Price</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="100000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <div>
+
+            <div>
               <FormField
                 control={form.control}
                 name="image"
@@ -476,7 +464,7 @@ export default function ProductForm({
                           <label htmlFor="imageUpload" className="w-full">
                             <Button
                               variant="outline"
-                              className="w-full font-medium cursor-pointer"
+                              className="w-full cursor-pointer font-medium"
                               asChild
                             >
                               <div>
@@ -496,9 +484,9 @@ export default function ProductForm({
                           src={
                             form.getFieldState("image").isDirty
                               ? field.value
-                              : initialProductData.image
+                              : initialProductData.data.image
                           }
-                          alt={initialProductData.name}
+                          alt={initialProductData.data.name}
                         />
                       )}
                     </div>
@@ -508,7 +496,7 @@ export default function ProductForm({
                   </FormItem>
                 )}
               />
-            </div> */}
+            </div>
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="w-fit">
