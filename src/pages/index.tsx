@@ -2,7 +2,6 @@ import type { ReactElement } from "react"
 import React from "react"
 import type { GetServerSideProps } from "next"
 import Head from "next/head"
-import Hero from "@/features/landing/components/section/hero"
 import { Pill, Tablets } from "lucide-react"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
@@ -15,27 +14,45 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import MainLayout from "@/components/layout/mainLayout"
+import Hero from "@/features/landing/components/section/hero"
 
-// export const getServerSideProps: GetServerSideProps<{
-//   data: ProductsCategoriesSchema
-// }> = async () => {
-//   const res = await fetch(`http://10.20.191.30:8080/v1/product-categories`)
-//   const data = await res.json()
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const response = await fetch(
+      `http://10.20.191.30:8080/v1/drug-classifications/no-params`,
+    )
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = await response.json()
 
-//   if (!data) {
-//     return {
-//       notFound: true,
-//     }
-//   }
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   }
-// }
-
-export default function HomePage() {
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
+    return { props: { data } }
+  } catch (error) {
+    console.error("Error fetching data: ", error)
+    let errorMessage = "An error occurred"
+    if (error instanceof Error) {
+      errorMessage = error.message
+    }
+    return {
+      props: { error: errorMessage },
+    }
+  }
+}
+export default function HomePage({
+  data,
+  error,
+}: {
+  data: ApiResponse<IDrugClassification[]>
+  error: string | undefined
+}) {
+  if (error) {
+    return <div>Error: </div>
+  }
   return (
     <div>
       <Head>
