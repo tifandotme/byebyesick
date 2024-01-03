@@ -89,7 +89,6 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
   React.useEffect(() => {
     form.setFocus("name")
   }, [form])
-  console.log(form.getValues())
 
   return (
     <Form {...form}>
@@ -178,6 +177,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
             )}
           />
         </div>
+
         <div className="flex flex-col items-start gap-6 sm:flex-row">
           <FormField
             control={form.control}
@@ -192,8 +192,48 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="pharmacistName"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Pharmacist Name</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-          <FormItem className="w-full"></FormItem>
+        <div className="flex flex-col items-start gap-6 sm:flex-row">
+          <FormField
+            control={form.control}
+            name="pharmacistLicense"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Pharmacist License</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="pharmacistPhone"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Pharmacist Phone Number</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <FormField
@@ -262,7 +302,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                       <SelectValue placeholder={field.value} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent side="bottom">
+                  <SelectContent side="top" className="max-h-[250px]">
                     <SelectGroup>
                       {Array.from({ length: 23 }, (_, i) => i).map((option) => {
                         const hour = option.toString().padStart(2, "0")
@@ -297,7 +337,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                       <SelectValue placeholder={field.value} />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent side="top" className="max-h-[250px]">
                     <SelectGroup>
                       {Array.from({ length: 23 }, (_, i) => i).map((option) => {
                         const hour = option.toString().padStart(2, "0")
@@ -363,7 +403,11 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
 
         <FormItem>
           <FormLabel>Map Preview</FormLabel>
-          <AspectRatio ratio={16 / 9} className="-mx-6 lg:m-0">
+          <FormMessage className="text-muted-foreground">
+            Marker is draggable. To center view on marker, click anywhere on the
+            map.
+          </FormMessage>
+          <AspectRatio ratio={16 / 9} className="z-0 -mx-6 lg:m-0">
             <LeafletMap
               coords={{
                 lat: form.getValues("latitude"),
@@ -374,13 +418,9 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                 form.setValue("longitude", coords.lng)
               }}
               zoom={14}
-              className="mt-1"
+              className="mb-2"
             />
           </AspectRatio>
-          <FormMessage className="text-muted-foreground">
-            Marker is draggable. To center view on marker, click anywhere on the
-            map.
-          </FormMessage>
         </FormItem>
 
         <div className="flex gap-4">
