@@ -54,15 +54,6 @@ export type ProductsCategoriesSchema = {
   } & z.infer<typeof productCategoriesSchema>
 }
 
-// USE THIS FOR FAKE DATA
-export type ProductsResponse = {
-  total_items?: number
-  total_pages?: number
-  current_page_total_items?: number
-  current_page?: number
-  items: Item[]
-}
-
 // GET ALL PRODUCTS AND PRODUCTS/:ID
 
 export type Item = {
@@ -87,43 +78,6 @@ export type Item = {
   updated_at: Date
 }
 
-// GET ALL PRODUCT CATEGORIES FOR FAKER
-
-export type ProductCategoriesResponse = {
-  data: Categories[]
-}
-
-export type Categories = {
-  id: number
-  name: string
-}
-
-export type ProductsManufacturers = {
-  id: number
-}
-
-export type ProductsManufacturersResponse = {
-  data: Manufacturers[]
-}
-
-export type Manufacturers = {
-  id: number
-  name: string
-}
-
-export type DrugClass = {
-  id: number
-}
-
-export type DrugClassResponse = {
-  data: DrugClasses[]
-}
-
-export type DrugClasses = {
-  id: number
-  name: string
-}
-
 // FOR REAL BACKEND USES
 export interface ApiResponse<T> {
   data: {
@@ -134,6 +88,7 @@ export interface ApiResponse<T> {
     items: T
   }
 }
+
 export interface IDrugClassification {
   id: number
   name: string
