@@ -1,11 +1,7 @@
 import * as React from "react"
 import Link from "next/link"
 
-import type { Category } from "@/types"
-import {
-  getProductCount,
-  type ProductCountPromise,
-} from "@/lib/fetchers/product"
+import { slugify } from "@/lib/utils"
 import {
   Card,
   CardContent,
@@ -16,12 +12,11 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface CategoryCardProps {
-  category: Category
+  category: string
+  icon: React.ReactNode
 }
 
-export function CategoryCard({ category }: CategoryCardProps) {
-  const productCountPromise = getProductCount({ category })
-
+export function CategoryCard({ category, icon }: CategoryCardProps) {
   return (
     <Link href={`/categories/${slugify(category)}`}>
       <>
@@ -34,9 +29,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center space-y-1.5">
-            <CardTitle className="text-center text-xl capitalize">
-              {category}
-            </CardTitle>
+            <CardTitle className="text-xl capitalize">{category}</CardTitle>
             <React.Suspense fallback={<Skeleton className="h-4 w-20" />}>
               <CardDescription>number products</CardDescription>
             </React.Suspense>
@@ -47,12 +40,13 @@ export function CategoryCard({ category }: CategoryCardProps) {
   )
 }
 
-interface ProductCountProps {
-  productCountPromise: ProductCountPromise
-}
+// FETCH COUNT OF PRODUCT HERE
+// interface ProductCountProps {
+//   productCountPromise: ProductCountPromise
+// }
 
-async function ProductCount({ productCountPromise }: ProductCountProps) {
-  const productCount = await productCountPromise
+// async function ProductCount({ productCountPromise }: ProductCountProps) {
+//   const productCount = await productCountPromise
 
-  return <CardDescription>{productCount} products</CardDescription>
-}
+//   return <CardDescription>{productCount} products</CardDescription>
+// }
