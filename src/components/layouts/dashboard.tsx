@@ -41,6 +41,8 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
 export function Sidebar() {
   const pathname = useRouter().pathname
 
+  const role = "pharmacyAdmin"
+
   return (
     <div className="flex w-full flex-col gap-2 p-1">
       {dashboardConfig.sidebarNav.map((item) => {
@@ -63,6 +65,33 @@ export function Sidebar() {
           </Link>
         )
       })}
+      {role === "pharmacyAdmin" && (
+        <>
+          <h3 className="mt-5 select-none text-xs uppercase tracking-wide text-muted-foreground">
+            Admin Panel
+          </h3>
+          {dashboardConfig.sidebarNavAdmin.map((item) => {
+            const Icon = item.icon ? Icons[item.icon] : ChevronRightIcon
+
+            return (
+              <Link aria-label={item.title} key={item.title} href={item.href}>
+                <span
+                  className={cn(
+                    "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:bg-muted hover:text-foreground",
+
+                    pathname.includes(item.href)
+                      ? "bg-muted font-medium text-foreground"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  <Icon className="mr-2 h-4 w-4" />
+                  <span>{item.title}</span>
+                </span>
+              </Link>
+            )
+          })}
+        </>
+      )}
     </div>
   )
 }
