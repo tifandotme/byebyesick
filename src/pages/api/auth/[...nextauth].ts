@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           if (!resp.ok || resp.status !== 200) {
             return null
           }
-          return parsedResponse
+          return parsedResponse.data
         } catch (error) {
           const err = error as Error
           throw new Error(err.message)
