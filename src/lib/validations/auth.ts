@@ -21,12 +21,12 @@ export const verifyFormSchema = z
     role: z.string().min(1, {
       message: "Role is required",
     }),
-    password: z.string().min(1, {
-      message: "Password is required",
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters",
     }),
     confirmPassword: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters" })
+      .min(8, { message: "Password must be at least 8 characters" })
       .transform((e) => (e === "" ? undefined : e)),
   })
   .required()
