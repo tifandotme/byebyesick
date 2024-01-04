@@ -1,4 +1,4 @@
-import { mutate } from "swr"
+import useSWR, { mutate } from "swr"
 
 import type {
   PharmacyInputs,
@@ -7,7 +7,7 @@ import type {
   Response,
   UserInputs,
 } from "@/types"
-import type { Pharmacy } from "@/types/api"
+import type { ApiResponse, IProduct, Pharmacy } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -140,6 +140,42 @@ export async function deleteAdmin(id: number): Promise<Response> {
       success: false,
       message: err instanceof Error ? err.message : "Something went wrong",
     }
+  }
+}
+
+interface ProductsFilter {
+  drug_class?: number
+  search?: string
+  limit?: number
+  sort?: "name" | "date"
+  sort_by?: "asc" | "desc"
+  page?: number
+}
+
+export const useProductData = (filters: ProductsFilter) => {
+  const { drug_class, search, limit, sort, sort_by, page } = filters
+
+  let url = "/v1/products?"
+  if (search) url += `search=${search}&`
+  if (limit) url += `limit=${limit}&`
+  if (sort) url += `sort=${sort}&`
+  if (sort_by) url += `sort_by=${sort_by}&`
+  if (drug_class) url += `drug_class=${drug_class}&`
+  if (page) url += `page=${page}`
+
+  const { data, isLoading, mutate, error } =
+    useSWR<ApiResponse<IProduct[]>>(url)
+
+  const resetFilters = () => {
+    mutate()
+  }
+
+  return {
+    data,
+    error,
+    isLoading,
+    mutate,
+    resetFilters,
   }
 }
 
