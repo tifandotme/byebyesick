@@ -7,7 +7,14 @@ import type {
   Response,
   UserInputs,
 } from "@/types"
-import type { ApiResponse, IProduct, Pharmacy } from "@/types/api"
+import type {
+  ApiResponse,
+  IDrugClassification,
+  IManufacturer,
+  IProduct,
+  IProductCategory,
+  Pharmacy,
+} from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -185,10 +192,7 @@ export async function updatePost(
   id?: number,
 ): Promise<Response> {
   try {
-    // const { ...data } = payload
-
     const formData = new FormData()
-
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
     formData.append("content", payload.content)
@@ -228,13 +232,6 @@ export async function updatePost(
     if (!res.ok) {
       throw new Error("Failed to update a product")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)
@@ -302,7 +299,6 @@ export async function updateProductCategory(
       },
       body: JSON.stringify({
         ...data,
-        // slug: mode === "add" ? slugify(data.name) : undefined,
       }),
     }
 
@@ -311,12 +307,6 @@ export async function updateProductCategory(
     if (!res.ok) {
       throw new Error("Failed to update a product category")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)
@@ -366,4 +356,56 @@ export async function deleteProductCategory(id: number): Promise<Response> {
           : "Something went wrong please try again",
     }
   }
+}
+
+export async function getDrugClassificationName(
+  drug_classification_id: number,
+) {
+  const response = await fetch(
+    `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
+  )
+  const data: ApiResponse<IDrugClassification[]> = await response.json()
+  let classificationName = "Unknown"
+
+  data.data.items.forEach((item: IDrugClassification) => {
+    if (item.id === drug_classification_id) {
+      classificationName = item.name
+    }
+  })
+
+  console.log(classificationName)
+
+  return classificationName
+}
+
+export async function getProductCategoryName(product_category_id: number) {
+  const response = await fetch(
+    `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
+  )
+  const data: ApiResponse<IProductCategory[]> = await response.json()
+  let classificationName = "Unknown"
+
+  data.data.items.forEach((item: IProductCategory) => {
+    if (item.id === product_category_id) {
+      classificationName = item.name
+    }
+  })
+
+  return classificationName
+}
+
+export async function getManufacturerName(manufacturer_id: number) {
+  const response = await fetch(
+    `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
+  )
+  const data: ApiResponse<IManufacturer[]> = await response.json()
+  let classificationName = "Unknown"
+
+  data.data.items.forEach((item: IManufacturer) => {
+    if (item.id === manufacturer_id) {
+      classificationName = item.name
+    }
+  })
+
+  return classificationName
 }

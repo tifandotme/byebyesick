@@ -12,7 +12,9 @@ interface PageProps {
 
 export const getServerSideProps = (async (context) => {
   const id = context?.params?.id
-  const product = await fetch(`/v1/products/${id}`)
+  const product = await fetch(
+    `https://byebyesick-staging.irfancen.com/v1/products/${id}`,
+  )
   if (!product.ok || product.status !== 200) {
     return {
       notFound: true,
