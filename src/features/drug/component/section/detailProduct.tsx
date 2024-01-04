@@ -1,12 +1,13 @@
 import React from "react"
 import Image from "next/image"
-import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
-import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 import { MapPin, PlusIcon } from "lucide-react"
 
+import type { IProduct } from "@/types/api"
 import { Button } from "@/components/ui/button"
+import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
+import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 
-function DetailProduct() {
+function DetailProduct(data: IProduct) {
   return (
     <div className="flex flex-col gap-16 md:flex-row">
       <div className="flex max-h-[336px] flex-auto justify-center md:w-1/2">
@@ -16,7 +17,7 @@ function DetailProduct() {
         <div className="flex">
           <div className="flex w-full justify-between">
             <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-semibold">Enervon C</h1>
+              <h1 className="text-3xl font-semibold">data.</h1>
               <h2 className="text-xl font-medium text-muted-foreground">
                 Rp. 50.000/<span>Strips</span>
               </h2>

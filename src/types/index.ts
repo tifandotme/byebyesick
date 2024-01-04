@@ -45,6 +45,8 @@ export type DashboardConfig = {
 
 export type PharmacyInputs = z.infer<typeof pharmacySchema>
 
+export type UserInputs = z.infer<typeof userSchema>
+
 export type ProductInputs = z.infer<typeof productSchema>
 
 export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
