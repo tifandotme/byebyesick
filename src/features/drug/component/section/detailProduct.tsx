@@ -9,15 +9,14 @@ import {
   getProductCategoryName,
 } from "@/lib/fetchers"
 import { Button } from "@/components/ui/button"
+import { PlaceholderImage } from "@/components/image-placeholer"
 import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
 import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 
 function DetailProduct(data: IProduct) {
-  const [drugClassificationName, setDrugClassificationName] =
-    React.useState("Unknown")
-  const [productCategoryName, setProductCategoryName] =
-    React.useState("Unknown")
-  const [manufacturerName, setManufacturerName] = React.useState("Unknown")
+  const [drugClassificationName, setDrugClassificationName] = React.useState("")
+  const [productCategoryName, setProductCategoryName] = React.useState("")
+  const [manufacturerName, setManufacturerName] = React.useState("")
 
   React.useEffect(() => {
     getDrugClassificationName(data.drug_classification_id).then(
@@ -36,7 +35,18 @@ function DetailProduct(data: IProduct) {
   return (
     <div className="flex flex-col gap-16 md:flex-row">
       <div className="flex max-h-[336px] flex-auto justify-center md:w-1/2">
-        <Image width={362} height={336} src={data.image} alt="Enervon C" />
+        {data.image?.length ? (
+          <Image
+            src={data.image ?? "/images/placeholder.webp"}
+            loading="lazy"
+            className="object-cover"
+            alt={data.image ?? data.name}
+            width={600}
+            height={600}
+          />
+        ) : (
+          <PlaceholderImage className="rounded-none" asChild />
+        )}
       </div>
       <div className="flex flex-auto flex-col gap-3 md:w-1/2">
         <div className="flex">
@@ -53,11 +63,26 @@ function DetailProduct(data: IProduct) {
                 <span className="flex items-center justify-center">
                   <MapPin className="h-4 w-4" />
                 </span>
-                Send from Jln Sehati
+                {data.content}
               </h4>
             </div>
             <div>
-              <Button className="flex items-center gap-2">
+              <Button
+                className="flex items-center gap-2"
+                onClick={() => {
+                  // startAddingToCart(async () => {
+                  //   try {
+                  //     await addToCart({
+                  //       productId: product.data.id,
+                  //       quantity: 1,
+                  //     })
+                  //     toast.success("Added to cart.")
+                  //   } catch (err) {
+                  //     catchError(err)
+                  //   }
+                  // })
+                }}
+              >
                 <span>
                   <PlusIcon />
                 </span>
