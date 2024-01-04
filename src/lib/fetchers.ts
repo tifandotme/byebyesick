@@ -1,6 +1,7 @@
 import useSWR, { mutate } from "swr"
 
 import type {
+  CartInputs,
   PharmacyInputs,
   ProductCategoriesInputs,
   ProductInputs,
@@ -373,8 +374,6 @@ export async function getDrugClassificationName(
     }
   })
 
-  console.log(classificationName)
-
   return classificationName
 }
 
@@ -383,15 +382,15 @@ export async function getProductCategoryName(product_category_id: number) {
     `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
   )
   const data: ApiResponse<IProductCategory[]> = await response.json()
-  let classificationName = "Unknown"
+  let productCategoryName = "Unknown"
 
   data.data.items.forEach((item: IProductCategory) => {
     if (item.id === product_category_id) {
-      classificationName = item.name
+      productCategoryName = item.name
     }
   })
 
-  return classificationName
+  return productCategoryName
 }
 
 export async function getManufacturerName(manufacturer_id: number) {
@@ -399,13 +398,15 @@ export async function getManufacturerName(manufacturer_id: number) {
     `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
   )
   const data: ApiResponse<IManufacturer[]> = await response.json()
-  let classificationName = "Unknown"
+  let manufacturersName = "Unknown"
 
   data.data.items.forEach((item: IManufacturer) => {
     if (item.id === manufacturer_id) {
-      classificationName = item.name
+      manufacturersName = item.name
     }
   })
 
-  return classificationName
+  return manufacturersName
 }
+
+export async function addToCart(payload: CartInputs) {}
