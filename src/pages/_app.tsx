@@ -1,3 +1,5 @@
+import React from "react"
+import Head from "next/head"
 import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig } from "swr"
@@ -9,8 +11,6 @@ import { Toaster } from "@/components/ui/sonner"
 
 import "@/styles/globals.css"
 import "leaflet/dist/leaflet.css"
-
-import Head from "next/head"
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
