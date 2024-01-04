@@ -2,8 +2,19 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ShoppingCart } from "lucide-react"
+import { useSession } from "next-auth/react"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 function MainNavbar() {
+  const { data: session } = useSession()
   return (
     <header className="border-b-2 border-b-apple-300 bg-background">
       <div className="container py-2">
@@ -20,22 +31,38 @@ function MainNavbar() {
             <button type="button">
               <ShoppingCart className="h-7 w-7 text-primary" />
             </button>
-            <button
-              type="button"
-              className="group flex shrink-0 items-center rounded-lg transition"
-            >
-              <span className="sr-only">Menu</span>
-              <img
-                alt="Man"
-                src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                className="h-10 w-10 rounded-full object-cover"
-              />
-              <p className="ms-2 hidden text-left text-xs sm:block">
-                <strong className="block font-medium">Eric Frusciante</strong>
-
-                <span className="text-gray-500"> eric@frusciante.com </span>
-              </p>
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <button
+                  type="button"
+                  className="group flex shrink-0 items-center rounded-lg"
+                >
+                  <span className="sr-only">Menu</span>
+                  <img
+                    alt="Man"
+                    src={`${
+                      session?.user.image !== ""
+                        ? session?.user.image
+                        : "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
+                    }`}
+                    className="h-10 w-10 rounded-full object-cover"
+                  />
+                  <p className="ms-2 hidden text-left text-xs sm:block">
+                    <strong className="block font-medium">
+                      {session?.user.email}
+                    </strong>
+                  </p>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer text-destructive">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
