@@ -31,6 +31,16 @@ export default async function middleware(req: NextRequestWithAuth) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }
+  } else {
+    if (!isAuthenticated) {
+      const url = new URL(`/auth/login`, req.url)
+      url.searchParams.set("callbackUrl", encodeURI(req.url))
+      return NextResponse.redirect(url)
+    }
+    if (token.user_role_id !== 3 && token.user_role_id !== 4) {
+      const url = new URL(`/403`, req.url)
+      return NextResponse.rewrite(url)
+    }
   }
 
   return NextResponse.next()
