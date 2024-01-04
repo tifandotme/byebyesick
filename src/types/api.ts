@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type { usersRoleIds } from "@/config"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 
@@ -41,6 +42,15 @@ export type Pharmacy = {
   operational_days: string[]
 }
 
+// GET /v1/users/:id
+
+export type User = {
+  id: number
+  email: string
+  user_role_id: keyof typeof usersRoleIds
+  is_verified: boolean
+}
+
 // FOR SCHEMAS
 export type ProductsSchema = {
   data: {
@@ -79,6 +89,7 @@ export type Item = {
 }
 
 // FOR REAL BACKEND USES
+
 export interface ApiResponse<T> {
   data: {
     total_items?: number
