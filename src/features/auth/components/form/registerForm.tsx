@@ -1,8 +1,11 @@
+import { useState } from "react"
 import Link from "next/link"
+import { register } from "@/features/auth/api/register"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
+import type { ApiResponse } from "@/types/api"
 import {
   registerFormSchema,
   type RegisterFormSchemaType,
@@ -27,14 +30,23 @@ export default function RegisterForm() {
     },
   })
 
-  function onSubmit(data: RegisterFormSchemaType) {
-    toast.success("You have submitted the following data", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const [loading, setLoading] = useState<boolean>(false)
+
+  async function onSubmit(data: RegisterFormSchemaType) {
+    try {
+      setLoading(true)
+      const signup = await register(data.email)
+      const decoded: ApiResponse<{ email: string }> = await signup.json()
+      if (!signup.ok) {
+        throw new Error(decoded.errors[0] ?? "Something went wrong")
+      }
+      toast.success(`Verification email has been sent to ${data.email}`)
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -43,6 +55,7 @@ export default function RegisterForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-6 lg:w-1/2"
       >
+        <h1 className="text-xl font-medium">Register Account</h1>
         <FormField
           control={form.control}
           name="email"
@@ -61,7 +74,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit">
+        <Button className="w-full" disabled={loading} type="submit">
           Register
         </Button>
         <div className="flex gap-2 text-sm text-apple-800 md:text-base">
