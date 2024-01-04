@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 import { ShoppingCart } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 
@@ -79,7 +79,7 @@ function MainNavbar() {
               <span className="loading loading-spinner loading-xs"></span>
             ) : (
               <Link
-                href={"/auth/login"}
+                href={"/auth/login?callbackUrl=" + router.asPath}
                 className="btn btn-ghost navbar-end w-fit text-base"
               >
                 Login

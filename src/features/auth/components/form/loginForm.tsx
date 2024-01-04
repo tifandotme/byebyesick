@@ -31,9 +31,12 @@ export default function LoginForm() {
   })
 
   const { data: session } = useSession()
-
   useEffect(() => {
+    const callbackUrl = router.query.callbackUrl as string
     if (session) {
+      if (callbackUrl) {
+        router.replace(callbackUrl)
+      }
       switch (session.user.role) {
         case 1:
           router.replace("/dashboard/products")
