@@ -53,8 +53,8 @@ export function ComboboxFormItem({
               variant="outline"
               role="combobox"
               className={cn(
-                "w-full justify-between font-normal",
-                !value && "text-muted-foreground",
+                "w-full justify-between !border-input font-normal hover:!bg-muted hover:!text-muted-foreground",
+                !value && "!text-muted-foreground",
               )}
               disabled={isLoading}
             >
