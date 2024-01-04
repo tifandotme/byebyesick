@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,6 +29,26 @@ export default function LoginForm() {
       email: "",
     },
   })
+
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if (session) {
+      switch (session.user.role) {
+        case 1:
+          router.replace("/dashboard/products")
+          break
+        case 2:
+          router.replace("/dashboard/pharmacies")
+          break
+        case 3:
+          break
+        case 4:
+          router.replace("/")
+          break
+      }
+    }
+  }, [session, router])
 
   const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data) => {
     try {
