@@ -12,10 +12,10 @@ export default async function middleware(req: NextRequestWithAuth) {
   const isAuthenticated = !!token
 
   if (pathname.startsWith("/auth") && isAuthenticated) {
-    if (token && token.role === 1) {
+    if (token && token.user_role_id === 1) {
       return NextResponse.redirect(new URL("/dashboard/products", req.url))
     }
-    if (token && token.role === 2) {
+    if (token && token.user_role_id === 2) {
       return NextResponse.redirect(new URL("/dashboard/pharmacies", req.url))
     }
     return NextResponse.redirect(new URL("/", req.url))
@@ -27,7 +27,7 @@ export default async function middleware(req: NextRequestWithAuth) {
       url.searchParams.set("callbackUrl", encodeURI(req.url))
       return NextResponse.redirect(url)
     }
-    if (token.role !== 2) {
+    if (token.user_role_id !== 2 && token.user_role_id !== 1) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }
