@@ -1,12 +1,19 @@
-import type { UserI } from "@/types/user"
+import type { VerifyFormSchemaType } from "@/lib/validations/auth"
 
 export function verify(
-  body: Partial<UserI>,
+  body: VerifyFormSchemaType & { email: string },
   token: string | string[] | undefined,
 ) {
+  const formData = new FormData()
+  formData.append("name", body.name)
+  formData.append("email", body.email)
+  formData.append("password", body.password)
+  formData.append("user_role_id", body.role)
+  formData.append("certificate", body.image)
+
   var requestOptions = {
     method: "POST",
-    body: JSON.stringify(body),
+    body: formData,
   }
   return fetch(
     `${process.env.BASE_URL}/v1/auth/register?token=${token}`,
