@@ -13,17 +13,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 110, 68%, 37%;
+    --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 111 68% 26%;
+    --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 111 100% 90%;
+    --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 112 100% 80%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 129 38% 90%; /* apple-accented */
+    --accent-foreground: 240 10% 3.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -54,7 +54,7 @@
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 240 3.7% 15.9%;
+    --accent: 100 54% 9%; /* apple-accented */
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
