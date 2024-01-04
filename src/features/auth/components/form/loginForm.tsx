@@ -37,7 +37,7 @@ export default function LoginForm() {
       if (callbackUrl) {
         router.replace(callbackUrl)
       }
-      switch (session.user.role) {
+      switch (session.user.user_role_id) {
         case 1:
           router.replace("/dashboard/products")
           break
