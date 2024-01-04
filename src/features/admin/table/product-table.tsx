@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { ApiResponse, IProduct } from "@/types/api"
-import { deletePost } from "@/lib/fetchers"
+import { deleteProducts } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -69,6 +69,7 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
           <DataTableColumnHeader column={column} title="Generic Name" />
         ),
       },
+
       {
         id: "actions",
         cell: ({ row }) => (
@@ -85,8 +86,7 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/${row.original.id}`}
-                  // href={""}
+                  href={`/products/${row.original.id}`}
                   target="_blank"
                   className="flex justify-between"
                 >
@@ -120,7 +120,7 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
                       <AlertDialogAction
                         onClick={() => {
                           const handleDeletion = async () => {
-                            const { success } = await deletePost(
+                            const { success } = await deleteProducts(
                               row.original.id,
                             )
 
@@ -129,9 +129,9 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
                           }
 
                           toast.promise(handleDeletion(), {
-                            loading: "Deleting post...",
-                            success: "Post deleted successfully",
-                            error: "Failed to delete post",
+                            loading: "Deleting products...",
+                            success: "Products deleted successfully",
+                            error: "Failed to delete products",
                           })
                         }}
                       >
