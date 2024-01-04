@@ -33,7 +33,7 @@ export async function updatePharmacy(
 ): Promise<Response> {
   try {
     const url = new URL(
-      `/v1/pharmacies/${mode === "edit" ? id : ""}`,
+      `/v1/pharmacies${mode === "edit" ? `/${id}` : ""}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
@@ -86,7 +86,7 @@ export async function updateAdmin(
 ): Promise<Response> {
   try {
     const url = new URL(
-      `/v1/users/admin/${mode === "edit" ? id : ""}`,
+      `/v1/users/admin${mode === "edit" ? `/${id}` : ""}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
