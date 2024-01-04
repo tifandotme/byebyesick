@@ -2,7 +2,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 
-import type { Pharmacy } from "@/types/api"
+import type { ResponseById, User } from "@/types/api"
 import {
   Card,
   CardContent,
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { PharmacyForm } from "@/features/pharmacies/components/form"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
+import { UserForm } from "@/features/users/components/form"
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
   context,
@@ -38,11 +38,14 @@ export default function EditPharmacyPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
-  const { data, isLoading } = useSWR<Pharmacy>(`/v1/pharmacies/${id}`, {
-    onError: () => {
-      router.push("/dashboard/pharmacies")
+  const { data, isLoading } = useSWR<ResponseById<User>>(
+    `/v1/users/admin/${id}`,
+    {
+      onError: () => {
+        router.push("/dashboard/users")
+      },
     },
-  })
+  )
 
   return (
     <>
@@ -82,10 +85,10 @@ export default function EditPharmacyPage({
       {!isLoading && data && (
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Edit pharmacy</CardTitle>
+            <CardTitle className="text-2xl">Edit user</CardTitle>
           </CardHeader>
           <CardContent>
-            <PharmacyForm mode="edit" initialData={data} />
+            <UserForm mode="edit" initialData={data?.data} />
           </CardContent>
         </Card>
       )}
