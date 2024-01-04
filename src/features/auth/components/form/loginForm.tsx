@@ -1,6 +1,7 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -20,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input"
 
 export default function LoginForm() {
+  const router = useRouter()
   const form = useForm<LoginFormSchemaType>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -37,14 +39,8 @@ export default function LoginForm() {
       if (!result?.ok) {
         throw new Error("Invalid email or password")
       }
-      // toast.success("You have submitted the following data", {
-      //   description: (
-      //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-      //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-      //     </pre>
-      //   ),
-      // })
       toast.success("Login Successfull", { duration: 2000 })
+      router.replace("/")
     } catch (error) {
       const err = error as Error
       toast.error(err.message, { duration: 2000 })

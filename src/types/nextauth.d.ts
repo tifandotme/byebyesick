@@ -8,6 +8,7 @@ declare module "next-auth" {
     role: string
     image: string
     id: number
+    token: string
   }
 
   interface Session extends DefaultSession {
@@ -17,6 +18,7 @@ declare module "next-auth" {
       role: string
       image: string
       id: number
+      token: string
     }
   }
 }
@@ -28,5 +30,6 @@ declare module "next-auth/jwt" {
     role: string
     image: string
     id: number
+    token: string
   }
 }

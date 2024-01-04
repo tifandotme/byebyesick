@@ -16,21 +16,18 @@ export const authOptions: NextAuthOptions = {
             email: string
             password: string
           }
-          // const login: UserI[] = await (await Login(email)).json()
-          // if (login[0].password !== password) {
-          //     return null
-          // }
-          // return login[0]
-          if (email !== "user@gmail.com" || password !== "123456") {
+          const resp = await fetch(`${process.env.BASE_URL}/v1/auth/login`, {
+            method: "POST",
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          })
+          const parsedResponse = await resp.json()
+          if (!resp.ok || resp.status !== 200) {
             return null
           }
-          return {
-            id: 0,
-            email: "user@gmail.com",
-            image: "url",
-            name: "John Doe",
-            role: "User",
-          }
+          return parsedResponse
         } catch (error) {
           const err = error as Error
           throw new Error(err.message)
