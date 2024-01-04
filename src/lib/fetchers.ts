@@ -6,11 +6,7 @@ import type {
   ProductInputs,
   Response,
 } from "@/types"
-import type {
-  Pharmacy,
-  ProductsCategoriesSchema,
-  ProductsSchema,
-} from "@/types/api"
+import type { Pharmacy } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -42,7 +38,7 @@ export async function updatePharmacy(
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       body: JSON.stringify({
         pharmacy_admin_id: 1,
@@ -82,48 +78,53 @@ export async function updatePharmacy(
   }
 }
 
-export async function updatePost(
+export async function updateProducts(
   mode: "add" | "edit",
   payload: ProductInputs,
   id?: number,
 ): Promise<Response> {
   try {
-    const { ...data } = payload
-    // const convertedImage = await convertToCloudinaryURL(image)
+    const formData = new FormData()
 
-    // if (!convertedImage) {
-    //   throw new Error("Failed to upload the image. Try again later")
-    // }
+    formData.append("name", payload.name)
+    formData.append("generic_name", payload.generic_name)
+    formData.append("content", payload.content)
+    formData.append("description", payload.description)
+    formData.append("drug_form", payload.drug_form)
+    formData.append("unit_in_pack", payload.unit_in_pack)
+    formData.append("weight", payload.weight.toString())
+    formData.append("length", payload.length.toString())
+    formData.append("width", payload.width.toString())
+    formData.append("height", payload.height.toString())
+    formData.append("image", payload.image)
+    formData.append("manufacturer_id", payload.manufacturer_id.toString())
+    formData.append("selling_unit", payload.selling_unit.toString())
+    formData.append(
+      "drug_classification_id",
+      payload.drug_classification_id.toString(),
+    )
+    formData.append(
+      "product_category_id",
+      payload.product_category_id.toString(),
+    )
+
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...data,
-        // image: convertedImage,
-        // slug: mode === "add" ? slugify(data.name) : undefined,
-      }),
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
+      body: formData,
     }
-
-    // satisfies Partial<Omit<ProductsSchema, "id">>
 
     const res = await fetch(url, options)
 
     if (!res.ok) {
       throw new Error("Failed to update a product")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)
@@ -141,7 +142,7 @@ export async function updatePost(
   }
 }
 
-export async function deletePost(id: number): Promise<Response> {
+export async function deleteProducts(id: number): Promise<Response> {
   try {
     const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
     const options: RequestInit = {
@@ -191,7 +192,6 @@ export async function updateProductCategory(
       },
       body: JSON.stringify({
         ...data,
-        // slug: mode === "add" ? slugify(data.name) : undefined,
       }),
     }
 
@@ -200,12 +200,6 @@ export async function updateProductCategory(
     if (!res.ok) {
       throw new Error("Failed to update a product category")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)

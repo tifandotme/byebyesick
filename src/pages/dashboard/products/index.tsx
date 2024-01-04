@@ -1,14 +1,13 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { ProductTable } from "@/features/admin/table/product-table"
-import ProductLayout from "@/features/products/components/layout"
-import { Divide } from "lucide-react"
 import useSWR from "swr"
 
 import type { ApiResponse, IProduct } from "@/types/api"
 import { Button } from "@/components/ui/button"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
+import { ProductTable } from "@/features/admin/table/product-table"
+import ProductLayout from "@/features/products/components/layout"
 
 export const useProductData = () => {
   const { data, isLoading, mutate, error } =
