@@ -25,19 +25,30 @@ export const dashboardConfig: DashboardConfig = {
     },
   ],
   sidebarNavAdmin: [
-    { title: "Posts", href: "/dashboard/posts", icon: "File" },
+    {
+      title: "Pharmacies",
+      href: "/dashboard/pharmacies",
+      icon: "Pharmacies",
+    },
     {
       title: "Users",
       href: "/dashboard/users",
-      icon: "Person",
     },
   ],
 }
+
+export const usersRoleIds = {
+  1: "admin",
+  2: "pharmacyAdmin",
+  3: "doctor",
+  4: "user",
+} as const
 
 export const productManufacturers = [
   "Soho Industri Pharmas",
   "Amarox Pharma Global",
 ] as const
+
 export type ProductManufacturers = (typeof productManufacturers)[number]
 
 export const productClass = [
