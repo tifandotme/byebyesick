@@ -150,11 +150,7 @@ export async function updatePost(
 ): Promise<Response> {
   try {
     const { ...data } = payload
-    // const convertedImage = await convertToCloudinaryURL(image)
 
-    // if (!convertedImage) {
-    //   throw new Error("Failed to upload the image. Try again later")
-    // }
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,
@@ -166,25 +162,14 @@ export async function updatePost(
       },
       body: JSON.stringify({
         ...data,
-        // image: convertedImage,
-        // slug: mode === "add" ? slugify(data.name) : undefined,
       }),
     }
-
-    // satisfies Partial<Omit<ProductsSchema, "id">>
 
     const res = await fetch(url, options)
 
     if (!res.ok) {
       throw new Error("Failed to update a product")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)
@@ -252,7 +237,6 @@ export async function updateProductCategory(
       },
       body: JSON.stringify({
         ...data,
-        // slug: mode === "add" ? slugify(data.name) : undefined,
       }),
     }
 
@@ -261,12 +245,6 @@ export async function updateProductCategory(
     if (!res.ok) {
       throw new Error("Failed to update a product category")
     }
-
-    // Revalidate path if edited
-    // if (mode === "edit") {
-    //   const slug = (await res.json()).slug as string
-    //   await fetch(`/api/revalidate?slug=${slug}`)
-    // }
 
     if (mode === "edit") {
       mutate(url)
