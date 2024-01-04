@@ -5,12 +5,9 @@ import type {
   ProductCategoriesInputs,
   ProductInputs,
   Response,
+  UserInputs,
 } from "@/types"
-import type {
-  Pharmacy,
-  ProductsCategoriesSchema,
-  ProductsSchema,
-} from "@/types/api"
+import type { Pharmacy } from "@/types/api"
 
 /**
  * Generic fetcher for `swr`
@@ -36,7 +33,7 @@ export async function updatePharmacy(
 ): Promise<Response> {
   try {
     const url = new URL(
-      `/v1/pharmacies${mode === "edit" ? id : ""}`,
+      `/v1/pharmacies/${mode === "edit" ? id : ""}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
     const options: RequestInit = {
@@ -73,6 +70,70 @@ export async function updatePharmacy(
     return {
       success: true,
       message: `Pharmacy ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateAdmin(
+  mode: "add" | "edit",
+  payload: UserInputs,
+  id?: number,
+): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/users/admin/${mode === "edit" ? id : ""}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: payload.email,
+        password: payload.password,
+      } satisfies Partial<UserInputs>),
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to update admin")
+    }
+
+    return {
+      success: true,
+      message: `Admin ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function deleteAdmin(id: number): Promise<Response> {
+  try {
+    const url = new URL(`/v1/users/admin/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a admin")
+    }
+
+    return {
+      success: true,
+      message: "Admin deleted",
     }
   } catch (err) {
     return {
