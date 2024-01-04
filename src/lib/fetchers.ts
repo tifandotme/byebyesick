@@ -178,6 +178,7 @@ export const useProductData = (filters: ProductsFilter) => {
     resetFilters,
   }
 }
+
 export async function updatePost(
   mode: "add" | "edit",
   payload: ProductInputs,
