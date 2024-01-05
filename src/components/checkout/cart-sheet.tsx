@@ -2,7 +2,10 @@ import React from "react"
 import Link from "next/link"
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { ShoppingCart } from "lucide-react"
+import useSWR from "swr"
 
+import type { ICart, ResponseGetAll } from "@/types/api"
+import { token } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -16,8 +19,30 @@ import {
 } from "@/components/ui/sheet"
 import { CartLineItems } from "@/components/checkout/cart-items"
 
+const fetcher = (url: string, token: string) =>
+  fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((r) => r.json())
+
+const useCartList = (token: string) => {
+  const { data, isLoading, error } = useSWR<ResponseGetAll<ICart[]>>(
+    "http://10.20.191.30:8080/v1/cart-items",
+    (url: string) => fetcher(url, token),
+  )
+
+  return {
+    cartdata: data,
+    cartisLoading: isLoading,
+    carterror: error,
+  }
+}
+
 export default function CartSheet() {
-  const itemCount = 0
+  const { cartdata, cartisLoading } = useCartList(token)
+  console.log(cartdata, "cartdata")
+  const itemCount = cartdata?.data.items.length
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -27,27 +52,26 @@ export default function CartSheet() {
           size="icon"
           className="relative"
         >
-          {/* {itemCount > 0 && (
+          {itemCount! > 0 && (
             <Badge
               variant="secondary"
               className="absolute -right-2 -top-2 h-6 w-6 justify-center rounded-full p-2.5"
             >
               {itemCount}
             </Badge>
-          )} */}
+          )}
           <ShoppingCart className="h-4 w-4" aria-hidden="true" />
         </Button>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
         <SheetHeader className="space-y-2.5 pr-6">
-          {/* <SheetTitle>Cart {itemCount > 0 && `(${itemCount})`}</SheetTitle> */}
-          <SheetTitle>Cart</SheetTitle>
+          <SheetTitle>Cart {itemCount! > 0 && `(${itemCount})`}</SheetTitle>
 
           <Separator />
         </SheetHeader>
-        {itemCount > 0 ? (
+        {itemCount! > 0 ? (
           <>
-            {/* <CartLineItems items={CartLineItems} className="flex-1" /> */}
+            <CartLineItems items={cartdata!} className="flex-1" />
             <div className="space-y-4 pr-6">
               <Separator />
               <div className="space-y-1.5 text-sm">

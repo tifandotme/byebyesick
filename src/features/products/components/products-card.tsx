@@ -1,13 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
-
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { EyeOpenIcon } from "@radix-ui/react-icons"
-import { CheckCheckIcon, PlusCircleIcon } from "lucide-react"
+import { LoaderIcon } from "lucide-react"
 import { toast } from "sonner"
 
+import type { CartInputs } from "@/types"
 import type { ProductsSchema } from "@/types/api"
+import { addToCart } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -20,25 +20,33 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { PlaceholderImage } from "@/components/image-placeholer"
-import Loader from "@/components/loader"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   product: ProductsSchema
-  variant?: "default" | "switchable"
   isAddedToCart?: boolean
   onSwitch?: () => Promise<void>
 }
 
 export function ProductCard({
   product,
-  variant = "default",
   isAddedToCart = false,
   onSwitch,
   className,
   ...props
 }: ProductCardProps) {
-  const [isAddingToCart, startAddingToCart] = React.useTransition()
+  const [isLoading, setIsLoading] = React.useState(false)
 
+  const addToCartt = async (data: CartInputs) => {
+    setIsLoading(true)
+
+    console.log(data)
+
+    const { success, message } = await addToCart(data)
+
+    success ? toast.success(message) : toast.error(message)
+
+    setIsLoading(false)
+  }
   return (
     <Card
       className={cn("h-full w-full overflow-hidden rounded-sm", className)}
@@ -77,67 +85,34 @@ export function ProductCard({
         </CardContent>
       </Link>
       <CardFooter className="p-4 pt-1">
-        {variant === "default" ? (
-          <div className="flex w-full items-center space-x-2">
-            <Button
-              aria-label="Add to cart"
-              size="sm"
-              className="h-8 w-full rounded-sm"
-              //   onClick={() => {
-              //     startAddingToCart(async () => {
-              //       try {
-              //         await addToCart({
-              //           productId: product.data.id,
-              //           quantity: 1,
-              //         })
-              //         toast.success("Added to cart.")
-              //       } catch (err) {
-              //         catchError(err)
-              //       }
-              //     })
-              //   }}
-              disabled={isAddingToCart}
-            >
-              {isAddingToCart && <Loader />}
-              Add to cart
-            </Button>
-            <Link
-              href={`/products/${product.data.id}`}
-              title="Preview"
-              className={cn(
-                buttonVariants({
-                  variant: "secondary",
-                  size: "icon",
-                  className: "h-8 w-8 shrink-0",
-                }),
-              )}
-            >
-              <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
-              <span className="sr-only">Preview</span>
-            </Link>
-          </div>
-        ) : (
+        <div className="flex w-full items-center space-x-2">
           <Button
-            aria-label={isAddedToCart ? "Remove from cart" : "Add to cart"}
+            aria-label="Add to cart"
             size="sm"
             className="h-8 w-full rounded-sm"
-            onClick={() => {
-              startAddingToCart(async () => {
-                await onSwitch?.()
-              })
-            }}
-            disabled={isAddingToCart}
+            onClick={() =>
+              addToCartt({ product_id: product.data.id, quantity: 1 })
+            }
+            disabled={isLoading}
           >
-            {isAddingToCart ? (
-              <Loader />
-            ) : isAddedToCart ? (
-              <CheckCheckIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-            ) : (
-              <PlusCircleIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-            )}
-            {isAddedToCart ? "Added" : "Add to cart"}
+            {isLoading && <LoaderIcon className="" />}
+            Add to cart
           </Button>
-        )}
+          <Link
+            href={`/products/${product.data.id}`}
+            title="Preview"
+            className={cn(
+              buttonVariants({
+                variant: "secondary",
+                size: "icon",
+                className: "h-8 w-8 shrink-0",
+              }),
+            )}
+          >
+            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
+            <span className="sr-only">Preview</span>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   )

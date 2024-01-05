@@ -1,19 +1,16 @@
 import Image from "next/image"
 import { Slot } from "@radix-ui/react-slot"
 import { ImageIcon } from "lucide-react"
-import { z } from "zod"
 
+import type { ICart, ResponseGetAll } from "@/types/api"
 // import type { CartLineItem } from "@/types"
 import { cn, formatPrice } from "@/lib/utils"
-import type { productSchema } from "@/lib/validations/products-schema"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 // import { UpdateCart } from "@/components/checkout/update-cart"
 
-export type CartLineItem = z.infer<typeof productSchema>
-
 interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: CartLineItem[]
+  items: ResponseGetAll<ICart[]>
   isScrollable?: boolean
   isEditable?: boolean
 }
@@ -37,7 +34,7 @@ export function CartLineItems({
         )}
         {...props}
       >
-        {items.map((item, index) => (
+        {items.data.items.map((item, index) => (
           <div key={index} className="space-y-3">
             <div
               className={cn(
@@ -47,10 +44,12 @@ export function CartLineItems({
             >
               <div className="flex items-center space-x-4">
                 <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
-                  {item?.image?.length ? (
+                  {item?.product.image?.length ? (
                     <Image
-                      src={item.image ?? "/images/product-placeholder.webp"}
-                      alt={item.name ?? item.name}
+                      src={
+                        item.product.image ?? "/images/product-placeholder.webp"
+                      }
+                      alt={item.product.name ?? item.product.name}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       fill
                       className="absolute object-cover"
@@ -68,22 +67,24 @@ export function CartLineItems({
 
                 <div className="flex flex-col space-y-1 self-start">
                   <span className="line-clamp-1 text-sm font-medium">
-                    {item.name}
+                    {item.product.name}
                   </span>
-                  {/* {isEditable ? (
-                    <span className="text-xs line-clamp-1 text-muted-foreground">
-                      {formatPrice(item.price)} x {item.quantity} ={" "}
+                  {isEditable ? (
+                    <span className="line-clamp-1 text-xs text-muted-foreground">
+                      {formatPrice(item.product.price)} x {item.quantity} ={" "}
                       {formatPrice(
-                        (Number(item.price) * Number(item.quantity)).toFixed(2),
+                        (
+                          Number(item.product.price) * Number(item.quantity)
+                        ).toFixed(2),
                       )}
                     </span>
                   ) : (
-                    <span className="text-xs line-clamp-1 text-muted-foreground">
+                    <span className="line-clamp-1 text-xs text-muted-foreground">
                       Qty {item.quantity}
                     </span>
-                  )} */}
+                  )}
                   {/* <span className="text-xs capitalize line-clamp-1 text-muted-foreground">
-                    {`${item.category} ${
+                    {`${item.product.} ${
                       item.subcategory ? `/ ${item.subcategory}` : ""
                     }`}
                   </span> */}
@@ -100,7 +101,7 @@ export function CartLineItems({
                     )} */}
                   </span>
                   <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {formatPrice(item.price)} each
+                    {/* {formatPrice(item.price)} each */}
                   </span>
                 </div>
               )}

@@ -113,6 +113,15 @@ export interface IProductCategory {
   id: number
   name: string
 }
+
+export interface ICart {
+  id: number
+  user_id: number
+  product_id: number
+  quantity: number
+  product: IProduct
+}
+
 export interface IProduct {
   id: number
   name: string

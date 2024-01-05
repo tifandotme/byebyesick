@@ -411,15 +411,19 @@ export async function getManufacturerName(manufacturer_id: number) {
   return manufacturersName
 }
 
+export const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Im1hdHRoZXd3YWxmcmVkb29AZ21haWwuY29tIiwidXNlcl9yb2xlX2lkIjo0LCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDUyMjgxNCwiaWF0IjoxNzA0NDM2NDE0fQ.WZWW3o89zdl8dVpR5W_vN_RZIb3B10I2sD-ia0Unv7I"
 export async function addToCart(payload: CartInputs): Promise<Response> {
   try {
     const { ...data } = payload
 
-    const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    // const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    const url = new URL("http://10.20.191.30:8080/v1/cart-items")
     const options: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         ...data,
@@ -427,6 +431,7 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
     }
 
     const res = await fetch(url, options)
+    console.log(res, "res")
 
     if (!res.ok) {
       throw new Error("Failed to update a product category")
