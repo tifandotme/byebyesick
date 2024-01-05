@@ -236,9 +236,8 @@ export async function updatePost(
 
     if (mode === "edit") {
       mutate(url)
-      const slug = (await res.json()).slug as string
-
-      await fetch(`/api/revalidate?slug=${slug}`)
+      const id = (await res.json()).id as string
+      await fetch(`/api/revalidate/products/${id}`)
     }
 
     return {
