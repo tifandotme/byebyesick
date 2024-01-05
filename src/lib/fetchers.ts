@@ -236,6 +236,9 @@ export async function updatePost(
 
     if (mode === "edit") {
       mutate(url)
+      const slug = (await res.json()).slug as string
+
+      await fetch(`/api/revalidate?slug=${slug}`)
     }
 
     return {
@@ -409,4 +412,37 @@ export async function getManufacturerName(manufacturer_id: number) {
   return manufacturersName
 }
 
-export async function addToCart(payload: CartInputs) {}
+export async function addToCart(payload: CartInputs): Promise<Response> {
+  try {
+    const { ...data } = payload
+
+    const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+      }),
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to update a product category")
+    }
+    return {
+      success: true,
+      message: `Cart Added`,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong please try again",
+    }
+  }
+}
