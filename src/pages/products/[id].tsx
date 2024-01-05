@@ -4,11 +4,12 @@ import type {
   GetStaticProps,
   InferGetStaticPropsType,
 } from "next"
+import Head from "next/head"
 
 import type { ApiResponse, IProduct, ResponseById } from "@/types/api"
 import MainLayout from "@/components/layout/mainLayout"
-import DetailProduct from "@/features/drug/component/section/detailProduct"
-import OtherProduct from "@/features/drug/component/section/otherProduct"
+import DetailProduct from "@/features/drug/component/section/detail-product"
+import OtherProduct from "@/features/drug/component/section/other-product"
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const url = new URL("/v1/products", process.env.NEXT_PUBLIC_DB_URL)
@@ -52,10 +53,15 @@ function DetailProductPage({
   product,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className="flex flex-col gap-10">
-      <DetailProduct {...product.data} />
-      <OtherProduct />
-    </div>
+    <>
+      <Head>
+        <title>{product.data.name} - ByeByeSick</title>
+      </Head>
+      <div className="flex flex-col gap-10">
+        <DetailProduct {...product.data} />
+        <OtherProduct />
+      </div>
+    </>
   )
 }
 

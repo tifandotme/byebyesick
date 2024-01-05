@@ -1,9 +1,12 @@
 import React from "react"
 import Image from "next/image"
-import { MapPin, PlusIcon } from "lucide-react"
+import { LoaderIcon, MapPin, PlusIcon } from "lucide-react"
+import { toast } from "sonner"
 
+import type { CartInputs } from "@/types"
 import type { IProduct } from "@/types/api"
 import {
+  addToCart,
   getDrugClassificationName,
   getManufacturerName,
   getProductCategoryName,
@@ -17,6 +20,7 @@ function DetailProduct(data: IProduct) {
   const [drugClassificationName, setDrugClassificationName] = React.useState("")
   const [productCategoryName, setProductCategoryName] = React.useState("")
   const [manufacturerName, setManufacturerName] = React.useState("")
+  const [isLoading, setIsLoading] = React.useState(false)
 
   React.useEffect(() => {
     getDrugClassificationName(data.drug_classification_id).then(
@@ -31,6 +35,15 @@ function DetailProduct(data: IProduct) {
     data.product_category_id,
     data.manufacturer_id,
   ])
+  const addToCartt = async (data: CartInputs) => {
+    setIsLoading(true)
+
+    const { success, message } = await addToCart(data)
+
+    success ? toast.success(message) : toast.error(message)
+
+    setIsLoading(false)
+  }
 
   return (
     <div className="flex flex-col gap-16 md:flex-row">
@@ -68,25 +81,14 @@ function DetailProduct(data: IProduct) {
             </div>
             <div>
               <Button
-                className="flex items-center gap-2"
-                onClick={() => {
-                  // startAddingToCart(async () => {
-                  //   try {
-                  //     await addToCart({
-                  //       productId: product.data.id,
-                  //       quantity: 1,
-                  //     })
-                  //     toast.success("Added to cart.")
-                  //   } catch (err) {
-                  //     catchError(err)
-                  //   }
-                  // })
-                }}
+                aria-label="Add to cart"
+                size="sm"
+                className="h-8 w-full rounded-sm"
+                onClick={() => addToCartt({ product_id: data.id, quantity: 1 })}
+                disabled={isLoading}
               >
-                <span>
-                  <PlusIcon />
-                </span>
-                Add To Cart
+                {isLoading && <LoaderIcon className="" />}
+                Add to cart
               </Button>
             </div>
           </div>
