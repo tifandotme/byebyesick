@@ -1,38 +1,59 @@
 import React from "react"
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import type {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+} from "next"
 
-import type { IProduct, ResponseById } from "@/types/api"
+import type { ApiResponse, IProduct, ResponseById } from "@/types/api"
 import MainLayout from "@/components/layout/mainLayout"
 import DetailProduct from "@/features/drug/component/section/detailProduct"
 import OtherProduct from "@/features/drug/component/section/otherProduct"
 
-interface PageProps {
-  props: ResponseById<IProduct>
+export const getStaticPaths: GetStaticPaths = async () => {
+  const url = new URL("/v1/products", process.env.NEXT_PUBLIC_DB_URL)
+  const res = await fetch(url)
+
+  const products: ApiResponse<IProduct[]> = await res.json()
+
+  const paths = products.data.items.map((product) => ({
+    params: { id: product.id.toString() },
+  }))
+
+  return {
+    paths,
+    fallback: "blocking",
+  }
 }
 
-export const getServerSideProps = (async (context) => {
-  const id = context?.params?.id
-  const product = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/products/${id}`,
+export const getStaticProps: GetStaticProps<{
+  product: ResponseById<IProduct>
+}> = async (context) => {
+  const url = new URL(
+    `/v1/products/${context?.params?.id}`,
+    process.env.NEXT_PUBLIC_DB_URL,
   )
-  if (!product.ok || product.status !== 200) {
+  const res = await fetch(url)
+
+  const product = (await res.json()) as ResponseById<IProduct> | undefined
+
+  if (!product) {
     return {
       notFound: true,
     }
   }
-  const parsedProduct: ResponseById<IProduct> = await product.json()
-  const props = {
-    props: parsedProduct,
+
+  return {
+    props: { product },
   }
-  return { props }
-}) satisfies GetServerSideProps<PageProps>
+}
 
 function DetailProductPage({
-  props,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  product,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className="flex flex-col gap-10">
-      <DetailProduct {...props.data} />
+      <DetailProduct {...product.data} />
       <OtherProduct />
     </div>
   )
