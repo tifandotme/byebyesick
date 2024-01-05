@@ -1,16 +1,18 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import ProductLayout from "@/features/products/components/layout"
 
 import type { ProductsSchema } from "@/types/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ProductForm from "@/components/forms/products-forms"
 import { DashboardLayout } from "@/components/layouts/dashboard"
+import ProductLayout from "@/features/products/components/layout"
 
 export const getServerSideProps: GetServerSideProps<{
   data: ProductsSchema
 }> = async (context) => {
   const id = context.query.id as string
-  const res = await fetch(`http://10.20.191.30:8080/v1/products/${id}`)
+  const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+
+  const res = await fetch(url)
   const data = await res.json()
 
   if (!data) {

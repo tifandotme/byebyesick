@@ -23,7 +23,7 @@ export default async function handler(
   }
 
   try {
-    await res.revalidate(`/${slug}`)
+    await res.revalidate(`/products/${slug}`)
 
     return res.status(200).json({ succses: true, message: "Revalidated" })
   } catch (err) {
