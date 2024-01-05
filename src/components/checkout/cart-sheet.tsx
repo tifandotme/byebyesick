@@ -26,8 +26,8 @@ const fetcher = (url: string, token: string) =>
     },
   }).then((r) => r.json())
 
-const useCartList = (token: string) => {
-  const { data, isLoading, error } = useSWR<ResponseGetAll<ICart[]>>(
+export const useCartList = (token: string) => {
+  const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
     "http://10.20.191.30:8080/v1/cart-items",
     (url: string) => fetcher(url, token),
   )
@@ -36,12 +36,13 @@ const useCartList = (token: string) => {
     cartdata: data,
     cartisLoading: isLoading,
     carterror: error,
+    cartMutate: mutate,
   }
 }
 
 export default function CartSheet() {
-  const { cartdata, cartisLoading } = useCartList(token)
-  console.log(cartdata, "cartdata")
+  const { cartdata, cartisLoading, cartMutate } = useCartList(token)
+  console.log(cartdata, "cartdata in cart sheet page")
   const itemCount = cartdata?.data.items.length
   return (
     <Sheet>

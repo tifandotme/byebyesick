@@ -6,6 +6,7 @@ import type { ICart, ResponseGetAll } from "@/types/api"
 // import type { CartLineItem } from "@/types"
 import { cn, formatPrice } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { UpdateCart } from "@/components/checkout/update-cart-items"
 
 // import { UpdateCart } from "@/components/checkout/update-cart"
 
@@ -91,8 +92,7 @@ export function CartLineItems({
                 </div>
               </div>
               {isEditable ? (
-                // <UpdateCart cartLineItem={item} />
-                <div></div>
+                <UpdateCart cartLineItem={item} />
               ) : (
                 <div className="flex flex-col space-y-1 font-medium">
                   <span className="ml-auto line-clamp-1 text-sm">

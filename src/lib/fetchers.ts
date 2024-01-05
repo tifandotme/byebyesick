@@ -217,9 +217,13 @@ export async function updatePost(
     )
 
     const url = new URL(
-      `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
-      process.env.NEXT_PUBLIC_DB_URL,
+      `${
+        mode === "edit"
+          ? `http://10.20.191.30:8080/v1/products/${id}`
+          : "http://10.20.191.30:8080/v1/products"
+      }`,
     )
+
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
@@ -431,11 +435,12 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
     }
 
     const res = await fetch(url, options)
-    console.log(res, "res")
+    console.log(res, "res from add to cart in fetchers")
 
     if (!res.ok) {
       throw new Error("Failed to update a product category")
     }
+    mutate(url)
     return {
       success: true,
       message: `Cart Added`,
@@ -447,6 +452,40 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
         error instanceof Error
           ? error.message
           : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function deleteCart(product_ids: number[]): Promise<Response> {
+  try {
+    // const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const url = new URL(
+      `http://10.20.191.30:8080/v1/cart-items?product_ids=${product_ids}`,
+    )
+    const options: RequestInit = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a product")
+    }
+
+    mutate(url)
+
+    return {
+      success: true,
+      message: "Cart deleted",
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
     }
   }
 }

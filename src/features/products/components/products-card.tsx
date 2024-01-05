@@ -4,10 +4,11 @@ import Link from "next/link"
 import { EyeOpenIcon } from "@radix-ui/react-icons"
 import { LoaderIcon } from "lucide-react"
 import { toast } from "sonner"
+import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
 import type { ProductsSchema } from "@/types/api"
-import { addToCart } from "@/lib/fetchers"
+import { addToCart, token } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -19,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useCartList } from "@/components/checkout/cart-sheet"
 import { PlaceholderImage } from "@/components/image-placeholer"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -35,15 +37,16 @@ export function ProductCard({
   ...props
 }: ProductCardProps) {
   const [isLoading, setIsLoading] = React.useState(false)
+  const { cartMutate } = useCartList(token)
 
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)
 
-    console.log(data)
-
     const { success, message } = await addToCart(data)
 
     success ? toast.success(message) : toast.error(message)
+
+    mutate(data)
 
     setIsLoading(false)
   }
@@ -90,9 +93,10 @@ export function ProductCard({
             aria-label="Add to cart"
             size="sm"
             className="h-8 w-full rounded-sm"
-            onClick={() =>
+            onClick={() => {
               addToCartt({ product_id: product.data.id, quantity: 1 })
-            }
+              cartMutate()
+            }}
             disabled={isLoading}
           >
             {isLoading && <LoaderIcon className="" />}
