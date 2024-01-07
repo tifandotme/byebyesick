@@ -26,7 +26,7 @@ function ProfileLayout({
   const { pathname } = useRouter()
   return (
     <div className="flex gap-5">
-      <Card className="w-1/2">
+      <Card className="h-fit w-1/2">
         <CardHeader className="flex flex-col items-center">
           <img
             alt="Man"
@@ -43,7 +43,7 @@ function ProfileLayout({
               className={`${
                 pathname === "/user/profile"
                   ? "bg-secondary text-secondary-foreground"
-                  : "text-primary-foreground"
+                  : "text-primary"
               } rounded-md py-2 hover:bg-muted hover:text-foreground`}
             >
               <span
@@ -79,7 +79,7 @@ function ProfileLayout({
           </div>
         </CardContent>
       </Card>
-      <Card className="w-full">
+      <Card className="h-fit w-full">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           <CardDescription>{desc}</CardDescription>
