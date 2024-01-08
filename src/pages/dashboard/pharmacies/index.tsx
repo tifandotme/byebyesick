@@ -2,26 +2,39 @@ import React from "react"
 import useSWR from "swr"
 
 import type { Pharmacy, ResponseGetAll } from "@/types/api"
-import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
-import { PharmacyTable } from "@/features/pharmacies/components/table"
+import { PharmacyCard } from "@/features/pharmacies/components/pharmacy-card"
+import { PharmacyCardSkeleton } from "@/features/pharmacies/components/pharmacy-card-skeleton"
 
-export default function PharmacyPage() {
+export default function PharmaciesPage() {
   const { data, isLoading } =
-    useSWR<ResponseGetAll<Pharmacy[]>>("/v1/pharmacies?")
+    useSWR<ResponseGetAll<Pharmacy[]>>("/v1/pharmacies")
 
+  // TODO add sort and filter button
   return (
-    <div className="space-y-6 overflow-auto">
-      {isLoading && (
-        <DataTableSkeleton columnCount={4} filterableFieldCount={0} />
+    <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {isLoading &&
+        Array.from({ length: 3 }).map((_, i) => (
+          <PharmacyCardSkeleton key={i} />
+        ))}
+      {data?.data.items.length === 0 && (
+        <span className="col-span-full my-5 text-center">
+          No pharmacies found. Please add a pharmacy.
+        </span>
       )}
-      {!isLoading && data && <PharmacyTable data={data?.data.items} />}
-    </div>
+      {data?.data.items.map((pharmacy) => (
+        <PharmacyCard
+          key={pharmacy.id}
+          pharmacy={pharmacy}
+          href={`/dashboard/pharmacies/${pharmacy.id}`}
+        />
+      ))}
+    </section>
   )
 }
 
-PharmacyPage.getLayout = function getLayout(page: React.ReactElement) {
+PharmaciesPage.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <DashboardLayout>
       <PharmaciesLayout>{page}</PharmaciesLayout>
