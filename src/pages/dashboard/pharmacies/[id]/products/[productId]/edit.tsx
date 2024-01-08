@@ -1,19 +1,22 @@
+import React from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 
-import type { Pharmacy } from "@/types/api"
+import type { PharmacyProductById, ResponseById } from "@/types/api"
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { PharmacyForm } from "@/features/pharmacies/components/form"
+import { PharmacyProductForm } from "@/features/pharmacies/components/forms/pharmacy-product"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
+import { PharmaciesTabs } from "@/features/pharmacies/components/tabs"
 
 export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
   context,
@@ -33,16 +36,19 @@ export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
   }
 }
 
-export default function EditPharmacyPage({
+export default function EditPharmacyProductPage({
   id,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
-  const { data, isLoading } = useSWR<Pharmacy>(`/v1/pharmacies/${id}`, {
-    onError: () => {
-      router.push("/dashboard/pharmacies")
+  const { data, isLoading } = useSWR<ResponseById<PharmacyProductById>>(
+    `/v1/pharmacy-products/${id}`,
+    {
+      onError: () => {
+        router.push(`/dashboard/pharmacies/${id}/products`)
+      },
     },
-  })
+  )
 
   return (
     <>
@@ -50,42 +56,38 @@ export default function EditPharmacyPage({
         <Card>
           <CardHeader className="space-y-1">
             <Skeleton className="h-8 w-1/5" />
+            <Skeleton className="h-5 w-2/6" />
           </CardHeader>
           <CardContent>
             <div className="grid w-full max-w-2xl gap-5">
+              <div className="space-y-2.5">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-[74px]" />
+              </div>
               <div className="space-y-2.5">
                 <Skeleton className="h-5 w-32" />
                 <Skeleton className="h-10" />
               </div>
               <div className="space-y-2.5">
                 <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-[218px]" />
+                <Skeleton className="h-8 w-1/6" />
+                <Skeleton className="h-5 w-2/5" />
               </div>
-              <div className="flex gap-2">
-                <div className="w-full space-y-2.5">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-10" />
-                </div>
-                <div className="w-full space-y-2.5">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-10" />
-                </div>
-              </div>
-              <Skeleton className="h-[72px]" />
             </div>
           </CardContent>
           <CardFooter>
-            <Skeleton className="h-10 w-24" />
+            <Skeleton className="mt-4 h-10 w-24" />
           </CardFooter>
         </Card>
       )}
       {!isLoading && data && (
         <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl">Edit pharmacy</CardTitle>
+          <CardHeader className="space-y-1 p-4 sm:p-6">
+            <CardTitle className="text-2xl">Edit product</CardTitle>
+            <CardDescription>Edit a product in your pharmacy</CardDescription>
           </CardHeader>
-          <CardContent>
-            <PharmacyForm mode="edit" initialData={data} />
+          <CardContent className="p-4 !pt-0 sm:p-6">
+            <PharmacyProductForm mode="edit" initialData={data.data} />
           </CardContent>
         </Card>
       )}
@@ -93,10 +95,15 @@ export default function EditPharmacyPage({
   )
 }
 
-EditPharmacyPage.getLayout = function getLayout(page: React.ReactElement) {
+EditPharmacyProductPage.getLayout = function getLayout(
+  page: React.ReactElement,
+) {
   return (
     <DashboardLayout>
-      <PharmaciesLayout>{page}</PharmaciesLayout>
+      <PharmaciesLayout>
+        <PharmaciesTabs />
+        {page}
+      </PharmaciesLayout>
     </DashboardLayout>
   )
 }

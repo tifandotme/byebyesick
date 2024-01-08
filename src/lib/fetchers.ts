@@ -2,26 +2,26 @@ import { mutate } from "swr"
 
 import type {
   PharmacyInputs,
+  PharmacyProductInputs,
   ProductCategoriesInputs,
   ProductInputs,
   Response,
   UserInputs,
 } from "@/types"
-import type { Pharmacy } from "@/types/api"
+import type { Pharmacy, PharmacyProduct } from "@/types/api"
+import { handleFailedRequest } from "@/lib/utils"
+
+const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
- * Generic fetcher for `swr`
+ * Fetcher function for SWR
  */
-export async function fetcher<TData>(
+export async function fetcher<TData = unknown>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<TData> {
-  const url = new URL(endpoint, process.env.NEXT_PUBLIC_DB_URL)
+  const url = new URL(endpoint, BASE_URL)
   const res = await fetch(url, options)
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch at " + endpoint)
-  }
 
   return res.json()
 }
@@ -32,10 +32,7 @@ export async function updatePharmacy(
   id?: number,
 ): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/pharmacies/${mode === "edit" ? id : ""}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const endpoint = mode === "add" ? "/v1/pharmacies" : `/v1/pharmacies/${id}`
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
@@ -50,8 +47,8 @@ export async function updatePharmacy(
         province: payload.province,
         city: payload.city,
         postal_code: payload.postalCode,
-        latitude: String(payload.latitude),
-        longitude: String(payload.longitude),
+        latitude: payload.latitude,
+        longitude: payload.longitude,
         pharmacist_name: payload.pharmacistName,
         pharmacist_license_no: payload.pharmacistLicense,
         pharmacist_phone_no: payload.pharmacistPhone,
@@ -61,15 +58,34 @@ export async function updatePharmacy(
       } satisfies Partial<Omit<Pharmacy, "id">>),
     }
 
-    const res = await fetch(url, options)
-
-    if (!res.ok) {
-      throw new Error("Failed to update pharmacy")
-    }
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
       message: `Pharmacy ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function deletePharmacy(id?: number): Promise<Response> {
+  try {
+    const endpoint = `/v1/pharmacies/${id}`
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Pharmacy deleted",
     }
   } catch (err) {
     return {
@@ -85,10 +101,8 @@ export async function updateAdmin(
   id?: number,
 ): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/users/admin/${mode === "edit" ? id : ""}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const endpoint =
+      mode === "add" ? "/v1/users/admin" : `/v1/users/admin/${id}`
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PATCH",
       headers: {
@@ -100,11 +114,8 @@ export async function updateAdmin(
       } satisfies Partial<UserInputs>),
     }
 
-    const res = await fetch(url, options)
-
-    if (!res.ok) {
-      throw new Error("Failed to update admin")
-    }
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) handleFailedRequest(res)
 
     return {
       success: true,
@@ -120,20 +131,53 @@ export async function updateAdmin(
 
 export async function deleteAdmin(id: number): Promise<Response> {
   try {
-    const url = new URL(`/v1/users/admin/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const endpoint = `/v1/users/admin/${id}`
     const options: RequestInit = {
       method: "DELETE",
     }
 
-    const res = await fetch(url, options)
-
-    if (!res.ok) {
-      throw new Error("Failed to delete a admin")
-    }
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) handleFailedRequest(res)
 
     return {
       success: true,
       message: "Admin deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updatePharmacyProduct(
+  mode: "add" | "edit",
+  payload: PharmacyProductInputs & Pick<PharmacyProduct, "pharmacy_id">,
+  id?: number,
+): Promise<Response> {
+  try {
+    const { pharmacy_id, product_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/pharmacy-products" : `/v1/pharmacy-products/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { pharmacy_id, product_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: `Pharmacy product ${mode === "add" ? "added" : "updated"}`,
     }
   } catch (err) {
     return {
