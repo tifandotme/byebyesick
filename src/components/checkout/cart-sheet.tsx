@@ -28,7 +28,7 @@ const fetcher = (url: string, token: string) =>
 
 export const useCartList = (token: string) => {
   const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
-    "http://10.20.191.30:8080/v1/cart-items",
+    "https://byebyesick-staging.irfancen.com/v1/cart-items",
     (url: string) => fetcher(url, token),
   )
 

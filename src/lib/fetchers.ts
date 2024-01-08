@@ -416,13 +416,16 @@ export async function getManufacturerName(manufacturer_id: number) {
 }
 
 export const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJlbWFpbCI6Im1hdHRoZXd3YWxmcmVkb29AZ21haWwuY29tIiwidXNlcl9yb2xlX2lkIjo0LCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDUyMjgxNCwiaWF0IjoxNzA0NDM2NDE0fQ.WZWW3o89zdl8dVpR5W_vN_RZIb3B10I2sD-ia0Unv7I"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6InlhZmkudGFtZmFuMDhAZ21haWwuY29tIiwidXNlcl9yb2xlX2lkIjo0LCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc2NTMwMywiaWF0IjoxNzA0Njc4OTAzfQ.sByurDbCjMAsSHTAu5u0RRWBYt0XUcNNwby1HRLMHU0"
+
+const tokenAdmin =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6InNlbmFAZW1haWwuY29tIiwidXNlcl9yb2xlX2lkIjoyLCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc2NTc4MywiaWF0IjoxNzA0Njc5MzgzfQ.LrtpaPYUwWMq07yEaAIMO0xzkuuRKZ8XFn1pfDL72rc"
 export async function addToCart(payload: CartInputs): Promise<Response> {
   try {
     const { ...data } = payload
 
-    // const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
-    const url = new URL("http://10.20.191.30:8080/v1/cart-items")
+    const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    // const url = new URL("http://10.20.191.30:8080/v1/cart-items")
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -435,11 +438,11 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
     }
 
     const res = await fetch(url, options)
-    console.log(res, "res from add to cart in fetchers")
 
     if (!res.ok) {
-      throw new Error("Failed to update a product category")
+      throw new Error("Failed adding item to cart")
     }
+
     mutate(url)
     return {
       success: true,
@@ -458,10 +461,11 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
 
 export async function deleteCart(product_ids: number[]): Promise<Response> {
   try {
-    // const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
     const url = new URL(
-      `http://10.20.191.30:8080/v1/cart-items?product_ids=${product_ids}`,
+      `/v1/cart-items?product_ids=${product_ids}`,
+      process.env.NEXT_PUBLIC_DB_URL,
     )
+
     const options: RequestInit = {
       method: "DELETE",
       headers: {

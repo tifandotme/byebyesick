@@ -94,8 +94,9 @@ export function ProductCard({
             size="sm"
             className="h-8 w-full rounded-sm"
             onClick={() => {
-              addToCartt({ product_id: product.data.id, quantity: 1 })
-              cartMutate()
+              addToCartt({ product_id: product.data.id, quantity: 1 }).then(
+                () => cartMutate(),
+              )
             }}
             disabled={isLoading}
           >
