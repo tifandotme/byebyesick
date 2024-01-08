@@ -11,7 +11,7 @@ export const newPasswordScheme = z
     }),
     confirmPassword: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters" })
+      .min(1, { message: "Confirmation password is required" })
       .transform((e) => (e === "" ? undefined : e)),
   })
   .required()
