@@ -1,8 +1,8 @@
 import React from "react"
 import Head from "next/head"
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, signIn, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
-import { SWRConfig } from "swr"
+import { SWRConfig, type Middleware, type SWRHook } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
 import { fetcher } from "@/lib/fetchers"
@@ -20,41 +20,97 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   }, [])
 
   return (
+    <>
+      <Head>
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+      </Head>
+
+      <SessionProvider session={pageProps.session}>
+        <SWRConfigWrapper>
+          <ThemeProvider attribute="class">
+            {getLayout(<Component {...pageProps} />)}
+
+            <Toaster richColors closeButton />
+          </ThemeProvider>
+        </SWRConfigWrapper>
+      </SessionProvider>
+    </>
+  )
+}
+
+function SWRConfigWrapper({ children }: React.PropsWithChildren) {
+  const { data: session, status } = useSession()
+
+  // TODO remove when auth UI is ready
+  React.useEffect(() => {
+    if (status !== "unauthenticated") return
+    signIn("credentials", {
+      redirect: false,
+      email: "sena@email.com",
+      password: "password",
+    })
+  }, [status])
+
+  React.useEffect(() => {
+    if (!session?.user.token) return
+
+    // "monkey patch" fetch to add the token to all requests
+    const originalFetch = window.fetch
+    window.fetch = async (...args) => {
+      const [url, options] = args
+      return originalFetch(url, {
+        ...options,
+        headers: { Authorization: `Bearer ${session.user.token}` },
+      })
+    }
+  }, [session?.user.token])
+
+  // disable all SWR requests when unauthenticated
+  const middleware: Middleware = (useSWRNext: SWRHook) => {
+    return (key, fetcher, config) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return useSWRNext(
+        status === "authenticated" ? key : null,
+        fetcher,
+        config,
+      )
+    }
+  }
+
+  return (
     <SWRConfig
       value={{
-        fetcher,
+        fetcher: async (...args: Parameters<typeof fetcher>) => {
+          const [endpoint, options] = args
+          return fetcher(endpoint, {
+            ...options,
+            headers: session
+              ? { Authorization: `Bearer ${session.user.token}` }
+              : undefined,
+          })
+        },
         revalidateOnFocus: false,
+        use: [middleware],
       }}
     >
-      <SessionProvider session={pageProps.session}>
-        <Head>
-          <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/apple-touch-icon.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/favicon-32x32.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/favicon-16x16.png"
-          />
-          <link rel="manifest" href="/site.webmanifest" />
-        </Head>
-        <ThemeProvider attribute="class">
-          {getLayout(
-            <>
-              <Component {...pageProps} /> <Toaster richColors closeButton />
-            </>,
-          )}
-        </ThemeProvider>
-      </SessionProvider>
+      {children}
     </SWRConfig>
   )
 }
