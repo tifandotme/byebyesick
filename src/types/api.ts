@@ -98,6 +98,7 @@ export interface ApiResponse<T> {
     current_page?: number
     items: T
   }
+  errors: string[]
 }
 
 export interface IDrugClassification {
