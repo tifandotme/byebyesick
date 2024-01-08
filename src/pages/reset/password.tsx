@@ -1,7 +1,7 @@
 import React from "react"
 
-import ResetPasswordLayout from "@/components/layouts/reset-password"
 import ResetPasswordEmailForm from "@/features/resetpassword/component/form/resetPasswordEmailForm"
+import ResetPasswordLayout from "@/features/resetpassword/component/layout/reset-password"
 
 function PasswordPage() {
   return <ResetPasswordEmailForm />
