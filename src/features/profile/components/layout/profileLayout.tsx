@@ -17,10 +17,12 @@ function ProfileLayout({
   children,
   desc,
   title,
+  action,
 }: {
   children: React.ReactNode
   title: string
   desc: string
+  action?: React.ReactNode
 }) {
   const { data: session } = useSession()
   const { pathname } = useRouter()
@@ -81,8 +83,13 @@ function ProfileLayout({
       </Card>
       <Card className="h-fit w-full">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{desc}</CardDescription>
+          <div className="flex flex-row justify-between">
+            <div>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{desc}</CardDescription>
+            </div>
+            <div>{action}</div>
+          </div>
           <Separator />
         </CardHeader>
         <CardContent>{children}</CardContent>

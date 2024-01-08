@@ -135,3 +135,16 @@ export interface IProduct {
   created_at: string
   updated_at: string
 }
+
+export type AddressI = {
+  id: number
+  name: string
+  address: string
+  sub_district: string
+  district: string
+  city: string
+  province: string
+  postal_code: string
+  latitude: string
+  longitude: string
+}
