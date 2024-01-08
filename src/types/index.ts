@@ -1,6 +1,9 @@
 import type { z } from "zod"
 
-import type { pharmacySchema } from "@/lib/validations/pharmacy"
+import type {
+  pharmacyProductSchema,
+  pharmacySchema,
+} from "@/lib/validations/pharmacies"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 import type { userSchema } from "@/lib/validations/user"
@@ -47,6 +50,8 @@ export type DashboardConfig = {
 }
 
 export type PharmacyInputs = z.infer<typeof pharmacySchema>
+
+export type PharmacyProductInputs = z.infer<typeof pharmacyProductSchema>
 
 export type UserInputs = z.infer<typeof userSchema>
 

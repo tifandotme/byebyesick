@@ -11,7 +11,6 @@ const config = {
     "no-unused-vars": "off",
     "no-undef": "off",
     "tailwindcss/classnames-order": "off",
-    "tailwindcss/no-custom-classname": "off",
   },
   settings: {
     tailwindcss: {

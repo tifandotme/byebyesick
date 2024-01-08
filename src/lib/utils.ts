@@ -42,6 +42,10 @@ export function toSentenceCase(str: string) {
     .replace(/^./, (str) => str.toUpperCase())
 }
 
+export function removeLastSegment(url: string) {
+  return url.substring(0, url.lastIndexOf("/"))
+}
+
 export function slugify(text: string): string {
   return text
     .trim()
@@ -65,6 +69,13 @@ export function updateQueryParams(
     undefined,
     { shallow: true, scroll: false },
   )
+}
+
+export async function handleFailedRequest(res: Response) {
+  const { errors } = await res.json()
+  if (errors.length) console.error(errors)
+
+  throw new Error("Operation failed. Please try again later.")
 }
 
 export async function convertToCloudinaryURL(url: string) {

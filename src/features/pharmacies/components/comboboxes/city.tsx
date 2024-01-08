@@ -11,19 +11,18 @@ type FormItemProps = Pick<
   "label" | "value" | "onValueChange" | "data" | "isLoading"
 >
 
-type CityComboboxProps = Pick<
-  FormItemProps,
-  "label" | "value" | "onValueChange"
->
+type CityComboboxProps = {
+  provinceId: string
+} & Pick<FormItemProps, "label" | "value" | "onValueChange">
 
 export function CityCombobox({
   label,
   value,
   onValueChange,
+  provinceId,
 }: CityComboboxProps) {
   const cities = useStore((state) => state.cities)
   const updateCities = useStore((state) => state.updateCities)
-  const provinceId = useStore((state) => state.provinceId)
 
   const { data, isLoading } = useSWR(
     provinceId && !cities ? "/api/rajaongkir/city" : null,
@@ -53,7 +52,7 @@ export function CityCombobox({
   }, [data, provinceId])
 
   React.useEffect(() => {
-    if (!provinceId || !value) return
+    if (!value) return
     onValueChange("")
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,7 +65,7 @@ export function CityCombobox({
       value={value}
       onValueChange={onValueChange}
       data={filteredData}
-      isLoading={isLoading || !provinceId}
+      isLoading={isLoading || !filteredData}
     />
   )
 }

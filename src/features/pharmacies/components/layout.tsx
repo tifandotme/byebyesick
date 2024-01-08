@@ -7,27 +7,36 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header"
+import { PharmacySwitcher } from "@/features/pharmacies/components/pharmacy-switcher"
 
 export function PharmaciesLayout({ children }: React.PropsWithChildren) {
   const router = useRouter()
 
+  const isPharmacyDetailPage = router.route.startsWith(
+    "/dashboard/pharmacies/[id]",
+  )
+  const isPharmacyListPage = router.route === "/dashboard/pharmacies"
+
   return (
     <section className="grid items-center gap-8 pb-8 pt-6 md:py-8">
-      <PageHeader separated className="relative">
-        <PageHeaderHeading size="sm">Pharmacies</PageHeaderHeading>
+      <PageHeader className="relative">
+        <PageHeaderHeading size="sm">
+          {isPharmacyDetailPage ? "Dashboard" : "Pharmacies"}
+        </PageHeaderHeading>
         <PageHeaderDescription size="sm">
           Manage my pharmacies
         </PageHeaderDescription>
-        {router.pathname === "/dashboard/pharmacies" && (
-          <div className="absolute right-1 top-3.5">
+        <div className="absolute right-1 top-3.5">
+          {isPharmacyDetailPage && <PharmacySwitcher />}
+          {isPharmacyListPage && (
             <Button
               size="sm"
               onClick={() => router.push("/dashboard/pharmacies/add")}
             >
               <PlusIcon className="mr-1.5" /> Create pharmacy
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </PageHeader>
 
       {children}
