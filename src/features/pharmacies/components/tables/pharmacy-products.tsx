@@ -3,7 +3,9 @@ import Link from "next/link"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
 
-import type { Pharmacy } from "@/types/api"
+import type { PharmacyProduct } from "@/types/api"
+import { toSentenceCase } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header"
@@ -13,24 +15,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
-interface PharmacyTableProps {
-  data: Pharmacy[]
+interface PharmacyProductsTableProps {
+  data: PharmacyProduct[]
 }
 
-export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
-  const data = pharmacies.map((pharmacy) => ({
-    id: pharmacy.id,
-    name: pharmacy.name,
-    address: pharmacy.address,
-    pharmacistName: pharmacy.pharmacist_name,
-    pharmacistPhone: pharmacy.pharmacist_phone_no,
+export function PharmacyProductsTable({
+  data: pharmacyProducts,
+}: PharmacyProductsTableProps) {
+  const data = pharmacyProducts.map((product) => ({
+    id: product.id,
+    pharmacyId: product.pharmacy_id,
+    name: product.product.name,
+    price: product.price,
+    isActive: product.is_active ? "active" : "inactive",
+    stock: product.stock,
   }))
 
   type Data = (typeof data)[number]
@@ -46,36 +45,33 @@ export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
         ),
       },
       {
-        accessorKey: "address",
+        accessorKey: "price",
+        enableHiding: false,
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Address" />
+          <DataTableColumnHeader column={column} title="Price" />
+        ),
+      },
+      {
+        accessorKey: "stock",
+        enableHiding: false,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Stock" />
+        ),
+      },
+      {
+        accessorKey: "isActive",
+        enableHiding: false,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
         ),
         cell: ({ cell }) => {
-          const address = cell.getValue() as Data["address"]
+          const status = cell.getValue() as Data["isActive"]
 
-          return (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-default">{address}</span>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">{address}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )
+          return <Badge variant="outline">{toSentenceCase(status)}</Badge>
         },
-      },
-      {
-        accessorKey: "pharmacistName",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Pharmacist Name" />
-        ),
-      },
-      {
-        accessorKey: "pharmacistPhone",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Pharmacist Phone" />
-        ),
+        filterFn: (row, id, value) => {
+          return value.includes(row.getValue(id))
+        },
       },
       {
         id: "actions",
@@ -92,7 +88,9 @@ export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/pharmacies/edit/${row.original.id}`}>
+                <Link
+                  href={`/dashboard/pharmacies/${row.original.pharmacyId}/products/${row.original.id}/edit`}
+                >
                   Edit
                 </Link>
               </DropdownMenuItem>
@@ -108,6 +106,16 @@ export function PharmacyTable({ data: pharmacies }: PharmacyTableProps) {
     <DataTable
       columns={columns}
       data={data}
+      filterableColumns={[
+        {
+          id: "isActive",
+          title: "Status",
+          options: ["active", "inactive"].map((status) => ({
+            value: status,
+            label: toSentenceCase(status),
+          })),
+        },
+      ]}
       searchableColumns={[
         {
           id: "name",
