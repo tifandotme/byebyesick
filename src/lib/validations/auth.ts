@@ -16,6 +16,25 @@ export const loginFormSchema = z
   })
   .required()
 
+export const verifyFormSchema = z
+  .object({
+    role: z.string().min(1, {
+      message: "Role is required",
+    }),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters",
+    }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .transform((e) => (e === "" ? undefined : e)),
+  })
+  .required()
+  .refine((data) => data.confirmPassword === data.password, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+  })
+
 export const registerFormSchema = z
   .object({
     email: z
@@ -31,3 +50,4 @@ export const registerFormSchema = z
 
 export type LoginFormSchemaType = z.infer<typeof loginFormSchema>
 export type RegisterFormSchemaType = z.infer<typeof registerFormSchema>
+export type VerifyFormSchemaType = z.infer<typeof verifyFormSchema>

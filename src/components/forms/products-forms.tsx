@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ExternalLinkIcon } from "@radix-ui/react-icons"
-import { Loader2, UploadCloudIcon } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import useSWR from "swr"
@@ -29,7 +29,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {

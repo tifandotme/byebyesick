@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: false,
+  env: {
+    BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

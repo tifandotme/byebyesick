@@ -1,6 +1,9 @@
+import { useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { signIn, useSession } from "next-auth/react"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import {
@@ -19,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 
 export default function LoginForm() {
+  const router = useRouter()
   const form = useForm<LoginFormSchemaType>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -26,14 +30,45 @@ export default function LoginForm() {
     },
   })
 
-  function onSubmit(data: LoginFormSchemaType) {
-    toast.success("You have submitted the following data", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const { data: session } = useSession()
+  useEffect(() => {
+    const callbackUrl = router.query.callbackUrl as string
+    if (session) {
+      if (callbackUrl) {
+        router.replace(callbackUrl)
+      }
+      switch (session.user.user_role_id) {
+        case 1:
+          router.replace("/dashboard/products")
+          break
+        case 2:
+          router.replace("/dashboard/pharmacies")
+          break
+        case 3:
+          break
+        case 4:
+          router.replace("/")
+          break
+      }
+    }
+  }, [session, router])
+
+  const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data) => {
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        password: data.password,
+        email: data.email,
+      })
+      if (!result?.ok) {
+        throw new Error("Invalid email or password")
+      }
+      toast.success("Login Successfull", { duration: 2000 })
+      router.replace("/")
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    }
   }
 
   return (
