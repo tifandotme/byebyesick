@@ -1,7 +1,5 @@
 import React from "react"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { MapPinIcon, UserIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import {
@@ -9,13 +7,6 @@ import {
   type VerifyFormSchemaType,
 } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -25,7 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 
 function ProfileForm() {
   const form = useForm<VerifyFormSchemaType>({
