@@ -58,16 +58,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   const { data: session, status } = useSession()
 
-  // TODO remove when auth UI is ready
-  React.useEffect(() => {
-    if (status !== "unauthenticated") return
-    signIn("credentials", {
-      redirect: false,
-      email: "sena@email.com",
-      password: "password",
-    })
-  }, [status])
-
   React.useEffect(() => {
     if (!session?.user.token) return
 
