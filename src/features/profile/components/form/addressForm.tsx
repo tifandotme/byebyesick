@@ -115,6 +115,7 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
             name="city"
             render={({ field }) => (
               <CityCombobox
+                provinceId={form.watch("province")}
                 label="City"
                 value={field.value}
                 onValueChange={(value) => form.setValue("city", value)}
