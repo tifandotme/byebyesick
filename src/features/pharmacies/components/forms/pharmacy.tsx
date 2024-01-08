@@ -2,15 +2,14 @@ import React from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { PopoverClose } from "@radix-ui/react-popover"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { PharmacyInputs } from "@/types"
 import type { Pharmacy } from "@/types/api"
 import { updatePharmacy } from "@/lib/fetchers"
-import { toSentenceCase } from "@/lib/utils"
-import { pharmacySchema } from "@/lib/validations/pharmacy"
+import { removeLastSegment, toSentenceCase } from "@/lib/utils"
+import { pharmacySchema } from "@/lib/validations/pharmacies"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -23,11 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -45,6 +39,8 @@ const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
   ssr: false,
 })
 
+const INITIAL_COORDS = ["-6.175422", "106.82732"] as const // monas
+
 interface PharmacyFormProps {
   mode: "add" | "edit"
   initialData?: Pharmacy
@@ -52,8 +48,6 @@ interface PharmacyFormProps {
 
 export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
   const router = useRouter()
-
-  const [isLoading, setIsLoading] = React.useState(false)
 
   const form = useForm<PharmacyInputs>({
     resolver: zodResolver(pharmacySchema),
@@ -65,8 +59,8 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       city: initialData?.city ?? "",
       province: initialData?.province ?? "",
       postalCode: initialData?.postal_code ?? "",
-      latitude: Number(initialData?.latitude ?? -6.175422),
-      longitude: Number(initialData?.longitude ?? 106.82732),
+      latitude: initialData?.latitude ?? INITIAL_COORDS[0],
+      longitude: initialData?.longitude ?? INITIAL_COORDS[1],
       opensAt: String(initialData?.operational_hours_open ?? 0),
       closesAt: String(initialData?.operational_hours_close ?? 0),
       operationalDays: initialData?.operational_days ?? [],
@@ -77,23 +71,23 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
   })
 
   const onSubmit = async (data: PharmacyInputs) => {
-    setIsLoading(true)
-
-    console.log(data)
-
     const { success, message } = await updatePharmacy(
       mode,
       data,
       initialData?.id,
     )
-    success ? toast.success(message) : toast.error(message)
 
-    setIsLoading(false)
+    if (success) {
+      toast.success(message)
+      router.push(removeLastSegment(router.asPath))
+    } else {
+      toast.error(message)
+    }
   }
 
   React.useEffect(() => {
-    form.setFocus("name")
-  }, [form])
+    mode === "add" && form.setFocus("name")
+  }, [form, mode])
 
   return (
     <Form {...form}>
@@ -178,6 +172,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                 label="City"
                 value={field.value}
                 onValueChange={(value) => form.setValue("city", value)}
+                provinceId={form.watch("province")}
               />
             )}
           />
@@ -380,7 +375,9 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                   <Input
                     type="number"
                     {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
+                    onChange={(e) =>
+                      field.onChange(Number(e.target.value).toString())
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -397,7 +394,9 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                   <Input
                     type="number"
                     {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
+                    onChange={(e) =>
+                      field.onChange(Number(e.target.value).toString())
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -406,7 +405,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
           />
         </div>
 
-        <FormItem>
+        <FormItem className="mb-3">
           <FormLabel>Map Preview</FormLabel>
           <FormMessage className="text-muted-foreground">
             Marker is draggable. To center view on marker, click anywhere on the
@@ -415,68 +414,29 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
           <AspectRatio ratio={16 / 9} className="z-0 -mx-6 lg:m-0">
             <LeafletMap
               coords={{
-                lat: form.getValues("latitude"),
-                lng: form.getValues("longitude"),
+                lat: Number(form.getValues("latitude")),
+                lng: Number(form.getValues("longitude")),
               }}
               onCoordsChange={(coords) => {
-                form.setValue("latitude", coords.lat)
-                form.setValue("longitude", coords.lng)
+                form.setValue("latitude", Number(coords.lat).toString())
+                form.setValue("longitude", Number(coords.lng).toString())
               }}
               zoom={14}
-              className="mb-2"
             />
           </AspectRatio>
         </FormItem>
 
         <div className="flex gap-4">
-          <Button type="submit" disabled={isLoading} className="w-fit">
-            {isLoading && (
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-fit"
+          >
+            {form.formState.isSubmitting && (
               <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             {toSentenceCase(mode)} pharmacy
           </Button>
-          {mode === "edit" && initialData && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button type="button" variant="destructive" className="w-fit">
-                  Delete
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="max-w-[250px] space-y-4 text-center">
-                <span>Are you sure?</span>
-                <div className="flex gap-2 [&>*]:w-full">
-                  <PopoverClose asChild>
-                    <Button
-                      onClick={() => {
-                        const handleDeletion = async () => {
-                          // const { success } = await deletePost(initialData.id)
-
-                          // if (!success) throw new Error()
-
-                          router.push("/dashboard/pharmacies")
-                        }
-
-                        toast.promise(handleDeletion(), {
-                          loading: "Deleting pharmacy...",
-                          success: "Pharmacy deleted successfully",
-                          error: "Failed to delete pharmacy",
-                        })
-                      }}
-                      size="sm"
-                      variant="destructive"
-                    >
-                      Yes
-                    </Button>
-                  </PopoverClose>
-                  <PopoverClose asChild>
-                    <Button size="sm" variant="secondary">
-                      No
-                    </Button>
-                  </PopoverClose>
-                </div>
-              </PopoverContent>
-            </Popover>
-          )}
         </div>
       </form>
     </Form>
