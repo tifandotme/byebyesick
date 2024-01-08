@@ -52,7 +52,6 @@ export default function ProductForm({
   initialProductData,
 }: ProductFormProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState(false)
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
     `/v1/product-categories`,
@@ -87,9 +86,6 @@ export default function ProductForm({
   })
 
   const onSubmit = async (data: ProductInputs) => {
-    console.log("tes")
-    setIsLoading(true)
-    console.log(data)
     const { success, message } = await updatePost(
       mode,
       data,
@@ -97,8 +93,6 @@ export default function ProductForm({
     )
 
     success ? toast.success(message) : toast.error(message)
-
-    setIsLoading(false)
 
     router.push("/dashboard/products")
   }
@@ -484,9 +478,9 @@ export default function ProductForm({
                         />
                       )}
                     </div>
-                    {/* <UncontrolledFormMessage
-                      message={form.formState.errors.image?.message}
-                    /> */}
+                    <UncontrolledFormMessage
+                      message={form.formState.errors.image?.message?.toString()}
+                    />
                   </FormItem>
                 )}
               />
@@ -494,14 +488,17 @@ export default function ProductForm({
 
             <div className="flex gap-4">
               <Button
+                type="submit"
                 onClick={() => {
                   onSubmit(form.getValues())
                 }}
-                disabled={isLoading}
+                disabled={form.formState.isSubmitting}
                 className="w-fit"
               >
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {toSentenceCase(mode)} product
+                {form.formState.isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {toSentenceCase(mode)} product {toSentenceCase(mode)} product
               </Button>
               {mode === "edit" && initialProductData && (
                 <>
