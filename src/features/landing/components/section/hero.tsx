@@ -36,16 +36,16 @@ function Hero() {
   return (
     <>
       <div className="pt-0 md:pt-0 ">
-        <section className="mx-auto min-h-screen w-full items-center justify-center gap-4 text-center md:flex">
+        <section className="mx-auto mt-8 w-full items-center justify-center gap-4 text-center md:mt-0 md:flex md:min-h-screen">
           <div className="flex flex-col">
-            <h1 className="font-heading text-balance text-center text-3xl font-bold sm:text-5xl md:text-left md:text-6xl lg:text-7xl">
+            <h1 className="font-heading inline-block text-balance bg-gradient-to-r from-green-600 via-green-300 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl lg:text-7xl">
               Your One Stop Health Solutions
             </h1>
-            <p className="mt-6 text-center leading-normal text-muted-foreground sm:text-xl sm:leading-8 md:text-left">
+            <p className="mt-6 text-center leading-normal text-muted-foreground sm:text-lg sm:leading-8 md:text-left">
               Chat with doctors, visit hospitals, buy medicine, check labs and
               updates Information about health can all be found at ByeByeSick!
             </p>
-            <div className="mt-3 flex space-x-2">
+            <div className="mt-3 flex items-center justify-center space-x-2 md:justify-start ">
               <Button>Buy Now</Button>
               <Button variant="outline" className="hover:bg-apple-200">
                 Chat Doctors

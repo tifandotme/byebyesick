@@ -1,5 +1,3 @@
-// SortByDropdown.tsx
-
 import React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -21,7 +19,7 @@ interface SortByDropdownProps {
   options: { value: string; label: string }[]
 }
 
-const SortByDropdown: React.FC<SortByDropdownProps> = ({
+const DropdownFilter: React.FC<SortByDropdownProps> = ({
   filter,
   buttonOpener,
   title,
@@ -46,4 +44,4 @@ const SortByDropdown: React.FC<SortByDropdownProps> = ({
   </DropdownMenu>
 )
 
-export default SortByDropdown
+export default DropdownFilter

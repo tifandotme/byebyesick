@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import MainLayout from "@/components/layout/main-layout"
 import Loader from "@/components/loader"
-import SortByDropdown from "@/features/products/components/filter-sorter"
+import DropdownFilter from "@/features/products/components/filter-sorter"
 import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
 
@@ -44,6 +44,8 @@ export default function CategoriesPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
   const [sortBy, setSortBy] = useState("desc")
+  const [sort, setSort] = useState("date")
+
   const [, setCurrentPage] = useState<number>(1)
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce(search, 500)
@@ -51,11 +53,16 @@ export default function CategoriesPage({
     { value: "asc", label: "Ascending" },
     { value: "desc", label: "Descending" },
   ]
+  const options2 = [
+    { value: "date", label: "Date" },
+    { value: "name", label: "Name" },
+  ]
 
   const { data, error, isLoading } = useProductData({
     drug_class: categories[category],
     search: debouncedSearch,
     sort_by: sortBy,
+    sort: sort,
   })
 
   if (isLoading) {
@@ -93,12 +100,19 @@ export default function CategoriesPage({
           />
           <Button>Search</Button>
 
-          <SortByDropdown
+          <DropdownFilter
             filter={sortBy}
             setFilter={setSortBy}
+            options={options2}
+            title="Sort"
+            buttonOpener="Sort"
+          />
+          <DropdownFilter
+            filter={sort}
+            setFilter={setSort}
             options={options}
             title="Sort By"
-            buttonOpener="Sort"
+            buttonOpener="Sort By"
           />
         </div>
 
@@ -125,7 +139,7 @@ export default function CategoriesPage({
           <></>
         ) : (
           <PaginationComponent
-            currentPage={data?.data.current_page!}
+            page={data?.data.current_page!}
             setCurrentPage={setCurrentPage}
           />
         )}

@@ -3,6 +3,7 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import { Tablets } from "lucide-react"
+import useSWR from "swr"
 
 import type { ApiResponse, IDrugClassification, IProduct } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
@@ -57,20 +58,24 @@ export default function HomePage({
   data2: ApiResponse<IProduct[]>
   error: string | undefined
 }) {
-  // const [products, setProducts] = React.useState<IProduct[]>([])
+  // const [latitude, setLatitude] = React.useState<number | null>(null)
+  // const [longitude, setLongitude] = React.useState<number | null>(null)
 
   // React.useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition(async (position) => {
-  //     const { latitude, longitude } = position.coords
-
-  //     const res = await fetch(
-  //       `http://localhost:8080/v1/products?latitude=${latitude}&longitude=${longitude}&page=1`,
-  //     )
-  //     const data = await res.json()
-
-  //     setProducts(data.items)
+  //   navigator.geolocation.getCurrentPosition((position) => {
+  //     setLatitude(position.coords.latitude)
+  //     setLongitude(position.coords.longitude)
   //   })
   // }, [])
+
+  // const url =
+  //   latitude && longitude
+  //     ? `http://localhost:8080/v1/products?latitude=${latitude}&longitude=${longitude}&page=1`
+  //     : null
+
+  // const { data, isLoading } = useSWR(url)
+  // if (error) return <div>Error: {error}</div>
+  // if (isLoading) return <div>Loading...</div>
 
   return (
     <div>
@@ -90,7 +95,7 @@ export default function HomePage({
             <p>No Product Yet</p>
           </div>
         ) : (
-          <div className="mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {data1.data.items.map((cat) => (
               <div key={cat.id}>
                 <CategoryCard category={cat.name} icon={<Tablets />} />

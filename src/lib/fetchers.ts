@@ -1,4 +1,3 @@
-import { env } from "process"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -161,7 +160,7 @@ interface ProductsFilter {
   drug_class?: number
   search?: string
   limit?: number
-  sort?: "name" | "date"
+  sort?: string
   sort_by?: string
   page?: number
 }
@@ -172,8 +171,8 @@ export const useProductData = (filters: ProductsFilter) => {
   let url = "/v1/products?"
   if (search) url += `search=${search}&`
   if (limit) url += `limit=${limit}&`
-  if (sort) url += `sort=${sort}&`
-  if (sort_by) url += `sort_by=${sort_by}&`
+  // if (sort) url += `sort=${sort}&`
+  if (sort_by) url += `sort_by=${sort_by}&sort=${sort}&`
   if (drug_class) url += `drug_class=${drug_class}&`
   if (page) url += `page=${page}`
 

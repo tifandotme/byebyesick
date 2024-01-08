@@ -1,5 +1,3 @@
-// PaginationComponent.tsx
-
 import React from "react"
 
 import {
@@ -13,34 +11,44 @@ import {
 } from "@/components/ui/pagination"
 
 interface PaginationComponentProps {
-  currentPage: number
+  page: number
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
 
 const PaginationComponent: React.FC<PaginationComponentProps> = ({
-  currentPage,
+  page,
   setCurrentPage,
 }) => (
   <Pagination className="mb-3 mt-5">
     <PaginationContent>
       <PaginationItem>
-        <PaginationPrevious href="#" />
+        <PaginationPrevious
+          className="cursor-pointer"
+          onClick={() => {
+            setCurrentPage(page - 1)
+          }}
+        />
       </PaginationItem>
       <PaginationItem>
         <PaginationLink
           isActive
           onClick={() => {
-            setCurrentPage(currentPage + 1)
+            setCurrentPage(page + 1)
           }}
         >
-          {currentPage}
+          {page}
         </PaginationLink>
       </PaginationItem>
       <PaginationItem>
         <PaginationEllipsis />
       </PaginationItem>
       <PaginationItem>
-        <PaginationNext href="#" />
+        <PaginationNext
+          className="cursor-pointer"
+          onClick={() => {
+            setCurrentPage(page + 1)
+          }}
+        />
       </PaginationItem>
     </PaginationContent>
   </Pagination>
