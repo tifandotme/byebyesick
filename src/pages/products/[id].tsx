@@ -7,7 +7,7 @@ import type {
 import Head from "next/head"
 
 import type { ApiResponse, IProduct, ResponseById } from "@/types/api"
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import DetailProduct from "@/features/drug/component/section/detail-product"
 import OtherProduct from "@/features/drug/component/section/other-product"
 

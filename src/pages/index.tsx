@@ -5,7 +5,7 @@ import Head from "next/head"
 import { Tablets } from "lucide-react"
 
 import type { ApiResponse, IDrugClassification, IProduct } from "@/types/api"
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
@@ -57,11 +57,27 @@ export default function HomePage({
   data2: ApiResponse<IProduct[]>
   error: string | undefined
 }) {
+  // const [products, setProducts] = React.useState<IProduct[]>([])
+
+  // React.useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(async (position) => {
+  //     const { latitude, longitude } = position.coords
+
+  //     const res = await fetch(
+  //       `http://localhost:8080/v1/products?latitude=${latitude}&longitude=${longitude}&page=1`,
+  //     )
+  //     const data = await res.json()
+
+  //     setProducts(data.items)
+  //   })
+  // }, [])
+
   return (
     <div>
       <Head>
         <title>ByeByeSick | Home</title>
       </Head>
+
       <Hero />
       {error && (
         <div>
@@ -98,7 +114,7 @@ export default function HomePage({
             <p>No Product Yet</p>
           </div>
         ) : (
-          <div className="mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {data2.data.items.map((cat) => (
               <div key={cat.id}>
                 <ProductCard
