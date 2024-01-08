@@ -1,6 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { ExitIcon } from "@radix-ui/react-icons"
+import { signOut } from "next-auth/react"
 import { toast } from "sonner"
 
 import { siteConfig } from "@/config"
@@ -21,6 +23,7 @@ import { Icons } from "@/components/icons"
 import { MobileNav } from "@/components/layouts/mobile-nav"
 
 export function SiteHeader() {
+  const router = useRouter()
   // from zustand or else
   const loading = false
   const user = {
@@ -29,10 +32,6 @@ export function SiteHeader() {
     email: "foo@bar.com",
     password: "123456",
     role: "admin",
-  }
-
-  const onLogout = async () => {
-    toast.success("Logged out successfully")
   }
 
   return (
@@ -102,7 +101,11 @@ export function SiteHeader() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <button
-                      onClick={onLogout}
+                      onClick={() => {
+                        signOut({ redirect: false }).then(() => {
+                          router.replace("/auth/login")
+                        })
+                      }}
                       className="w-full cursor-pointer"
                     >
                       <ExitIcon className="mr-2 h-4 w-4" />

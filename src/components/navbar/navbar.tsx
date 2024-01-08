@@ -1,10 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { ExitIcon } from "@radix-ui/react-icons"
 import { ShoppingCart } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
 
-import { Avatar } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -19,6 +23,9 @@ import CartSheet from "@/components/checkout/cart-sheet"
 import { Icons } from "@/components/icons"
 
 function MainNavbar() {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+
   return (
     <header className="border-b-2 border-b-apple-300 bg-background">
       <div className="container py-2">
@@ -34,22 +41,19 @@ function MainNavbar() {
           <div className="flex items-center space-x-2 sm:justify-end lg:flex-1">
             <CartSheet />
 
-            {/* <ShoppingCart className="w-6 h-6 text-primary" /> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="secondary"
                   className="relative h-8 w-8 select-none rounded-full"
                 >
-                  <Avatar className="h-8 w-8">
-                    <Image
-                      src={`/favicon.ico`}
-                      alt="aaaa"
-                      priority
-                      className="h-10 w-10 rounded-full object-cover"
-                      width={10}
-                      height={10}
+                  <Avatar>
+                    <AvatarImage
+                      alt="Man"
+                      className="h-8 w-10"
+                      src={session?.user.image}
                     />
+                    <AvatarFallback>YY</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -57,12 +61,10 @@ function MainNavbar() {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {/* {user.name} */}
-                      Yafi
+                      {session?.user.name}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {/* {user.email} */}
-                      rawr@gmail.com
+                      {session?.user.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -89,7 +91,14 @@ function MainNavbar() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <button className="w-full cursor-pointer">
+                  <button
+                    onClick={() => {
+                      signOut({ redirect: false }).then(() => {
+                        router.replace("/auth/login")
+                      })
+                    }}
+                    className="w-full cursor-pointer"
+                  >
                     <ExitIcon className="mr-2 h-4 w-4" />
                     Log out
                   </button>

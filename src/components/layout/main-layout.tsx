@@ -9,7 +9,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
       <div className="sticky w-full">
         <MainNavbar />
       </div>
-      <div className="pyy-11 container">{children}</div>
+      <div className="container px-9 ">{children}</div>
       <SiteFooter />
     </div>
   )

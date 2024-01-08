@@ -73,10 +73,10 @@ function DetailProduct(data: IProduct) {
                 {data.generic_name}
               </h3>
               <h4 className="flex gap-2 text-sm">
-                <span className="flex items-center justify-center">
+                <span className="flex items-center justify-center truncate">
                   <MapPin className="h-4 w-4" />
                 </span>
-                {data.content}
+                {data.unit_in_pack}
               </h4>
             </div>
             <div>

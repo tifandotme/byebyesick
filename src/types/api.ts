@@ -143,4 +143,6 @@ export interface IProduct {
   price: string
   created_at: string
   updated_at: string
+  minimum_price: string
+  maximum_price: string
 }

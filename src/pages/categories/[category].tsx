@@ -4,17 +4,13 @@ import { useRouter } from "next/router"
 
 import { useProductData } from "@/lib/fetchers"
 import { unslugify } from "@/lib/utils"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
-import MainLayout from "@/components/layout/mainLayout"
+import { useDebounce } from "@/hooks/use-debounce"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import MainLayout from "@/components/layout/main-layout"
 import Loader from "@/components/loader"
+import SortByDropdown from "@/features/products/components/filter-sorter"
+import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
 
 export const categories = {
@@ -47,12 +43,19 @@ export default function CategoriesPage({
   category,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
-  const [sortBy, setSortBy] = useState<"asc" | "desc">("desc")
+  const [sortBy, setSortBy] = useState("desc")
   const [, setCurrentPage] = useState<number>(1)
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebounce(search, 500)
+  const options = [
+    { value: "asc", label: "Ascending" },
+    { value: "desc", label: "Descending" },
+  ]
 
   const { data, error, isLoading } = useProductData({
     drug_class: categories[category],
-    limit: 8,
+    search: debouncedSearch,
+    sort_by: sortBy,
   })
 
   if (isLoading) {
@@ -79,7 +82,26 @@ export default function CategoriesPage({
   return (
     <>
       <div>
-        <h1 className="text-2xl font-semibold capitalize">{categoryTitle}</h1>
+        <h1 className="mt-9 text-2xl font-semibold capitalize">
+          {categoryTitle}
+        </h1>
+        <div className="mt-5 flex w-full max-w-sm items-center space-x-2">
+          <Input
+            type="text"
+            placeholder="Search products here..."
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button>Search</Button>
+
+          <SortByDropdown
+            filter={sortBy}
+            setFilter={setSortBy}
+            options={options}
+            title="Sort By"
+            buttonOpener="Sort"
+          />
+        </div>
+
         <div>
           {data?.data.current_page_total_items == 0 ? (
             <div className="flex items-center justify-center">
@@ -102,29 +124,10 @@ export default function CategoriesPage({
         {data?.data.current_page_total_items == 0 ? (
           <></>
         ) : (
-          <Pagination className="mt-5">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink
-                  isActive
-                  onClick={() => {
-                    setCurrentPage(data?.data.current_page ?? 0 + 1)
-                  }}
-                >
-                  {data?.data.current_page}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <PaginationComponent
+            currentPage={data?.data.current_page!}
+            setCurrentPage={setCurrentPage}
+          />
         )}
       </div>
     </>

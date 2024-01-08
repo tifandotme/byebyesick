@@ -1,3 +1,4 @@
+import { env } from "process"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -17,6 +18,11 @@ import type {
   Pharmacy,
 } from "@/types/api"
 
+export const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6InlhZmkudGFtZmFuMDhAZ21haWwuY29tIiwidXNlcl9yb2xlX2lkIjo0LCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc2NTMwMywiaWF0IjoxNzA0Njc4OTAzfQ.sByurDbCjMAsSHTAu5u0RRWBYt0XUcNNwby1HRLMHU0"
+
+const tokenAdmin =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6InNlbmFAZW1haWwuY29tIiwidXNlcl9yb2xlX2lkIjoyLCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc4MTAwNiwiaWF0IjoxNzA0Njk0NjA2fQ.P9XAtz7xe1Nl3gzXZu7i11BkrFtaz_KZJU6lY9YblX0"
 /**
  * Generic fetcher for `swr`
  */
@@ -156,7 +162,7 @@ interface ProductsFilter {
   search?: string
   limit?: number
   sort?: "name" | "date"
-  sort_by?: "asc" | "desc"
+  sort_by?: string
   page?: number
 }
 
@@ -217,17 +223,15 @@ export async function updatePost(
     )
 
     const url = new URL(
-      `${
-        mode === "edit"
-          ? `http://10.20.191.30:8080/v1/products/${id}`
-          : "http://10.20.191.30:8080/v1/products"
-      }`,
+      `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
+      process.env.NEXT_PUBLIC_DB_URL,
     )
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
         accept: "application/json",
+        Authorization: `Bearer ${tokenAdmin}`,
       },
       body: formData,
     }
@@ -415,11 +419,6 @@ export async function getManufacturerName(manufacturer_id: number) {
   return manufacturersName
 }
 
-export const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJlbWFpbCI6InlhZmkudGFtZmFuMDhAZ21haWwuY29tIiwidXNlcl9yb2xlX2lkIjo0LCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc2NTMwMywiaWF0IjoxNzA0Njc4OTAzfQ.sByurDbCjMAsSHTAu5u0RRWBYt0XUcNNwby1HRLMHU0"
-
-const tokenAdmin =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJlbWFpbCI6InNlbmFAZW1haWwuY29tIiwidXNlcl9yb2xlX2lkIjoyLCJpbWFnZSI6IiIsImlzcyI6IkJ5ZUJ5ZVNpY2sgSGVhbHRoY2FyZSIsImV4cCI6MTcwNDc2NTc4MywiaWF0IjoxNzA0Njc5MzgzfQ.LrtpaPYUwWMq07yEaAIMO0xzkuuRKZ8XFn1pfDL72rc"
 export async function addToCart(payload: CartInputs): Promise<Response> {
   try {
     const { ...data } = payload

@@ -1,5 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -10,30 +13,74 @@ import {
 } from "@/components/ui/carousel"
 
 function Hero() {
-  const contentText = ["a", "b", "c"]
+  const contentText = [
+    {
+      text: "Consult with doctors online",
+      image: "/images/doctor-chat.svg",
+      description:
+        "Get professional medical advice from the comfort of your home.",
+    },
+    {
+      text: "Order your medications online",
+      image: "/images/doctor-delivery.svg",
+      description:
+        "Skip the pharmacy lines. Get your medications delivered to your doorstep.",
+    },
+    {
+      text: "Get your health solutions at one place",
+      image: "/images/doctor-c-3.svg",
+      description:
+        "From consultations to medication - we've got all your healthcare needs covered.",
+    },
+  ]
   return (
     <>
-      <div className="container max-w-6xl pt-0 md:pt-0">
-        <section className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-4 py-12 text-center md:pt-32">
-          <h1 className="font-heading text-balance text-center text-3xl font-bold sm:text-5xl md:text-6xl lg:text-7xl">
-            Your One Stop Health Solutions
-          </h1>
-          <p className="mt-6 max-w-6xl text-center leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            Chat with doctors, visit hospitals, buy medicine, check labs and
-            updates Information about health can all be found at ByeByeSick!
-          </p>
+      <div className="pt-0 md:pt-0 ">
+        <section className="mx-auto min-h-screen w-full items-center justify-center gap-4 text-center md:flex">
+          <div className="flex flex-col">
+            <h1 className="font-heading text-balance text-center text-3xl font-bold sm:text-5xl md:text-left md:text-6xl lg:text-7xl">
+              Your One Stop Health Solutions
+            </h1>
+            <p className="mt-6 text-center leading-normal text-muted-foreground sm:text-xl sm:leading-8 md:text-left">
+              Chat with doctors, visit hospitals, buy medicine, check labs and
+              updates Information about health can all be found at ByeByeSick!
+            </p>
+            <div className="mt-3 flex space-x-2">
+              <Button>Buy Now</Button>
+              <Button variant="outline" className="hover:bg-apple-200">
+                Chat Doctors
+              </Button>
+            </div>
+          </div>
+
+          <img
+            src="/images/doctor-homepage.svg"
+            className=""
+            width="600px"
+            height="600px"
+            alt=""
+          />
         </section>
-        <div className="p-5">
+        <div className="">
           <Carousel className="w-full">
             <CarouselPrevious />
             <CarouselContent>
-              {Array.from({ length: 5 }).map((_, index) => (
+              {contentText.map((item, index) => (
                 <CarouselItem key={index}>
-                  <Card>
-                    <CardContent className="flex items-center justify-center p-6">
-                      <span className="text-4xl font-semibold ">
-                        {contentText}
+                  <Card className="w-full">
+                    <CardContent className="flex flex-col items-center justify-center p-6">
+                      <img
+                        src={item.image}
+                        width="200px"
+                        height="200px"
+                        alt={item.text}
+                      />
+                      <span className="text-sm font-semibold md:text-4xl">
+                        {item.text}
                       </span>
+                      <p className="mt-2 text-center text-sm md:text-lg">
+                        {item.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </CarouselItem>
