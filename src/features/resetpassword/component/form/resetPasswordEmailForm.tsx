@@ -1,7 +1,7 @@
 import React from "react"
 
 function ResetPasswordEmailForm() {
-  return <div>ResetPasswordEmailForm</div>
+  return <div></div>
 }
 
 export default ResetPasswordEmailForm
