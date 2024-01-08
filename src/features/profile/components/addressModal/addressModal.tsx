@@ -1,8 +1,10 @@
 import React from "react"
+import { XIcon } from "lucide-react"
 
 import type { AddressI } from "@/types/api"
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
@@ -26,8 +28,11 @@ function AddressModal({
         {trigger}
       </AlertDialogTrigger>
       <AlertDialogContent className="h-1/2 overflow-auto">
-        <AlertDialogHeader>
+        <AlertDialogHeader className="flex flex-row justify-between">
           <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogCancel className="border-0 p-0">
+            <XIcon className="p-0" />
+          </AlertDialogCancel>
         </AlertDialogHeader>
         <AddressForm initialData={address} />
       </AlertDialogContent>
