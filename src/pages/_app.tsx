@@ -2,7 +2,7 @@ import React from "react"
 import Head from "next/head"
 import { SessionProvider, signIn, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
-import { SWRConfig, type Middleware, type SWRHook } from "swr"
+import { SWRConfig, type Middleware } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
 import { fetcher } from "@/lib/fetchers"
@@ -80,10 +80,10 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
         headers: { Authorization: `Bearer ${session.user.token}` },
       })
     }
-  }, [session?.user.token])
+  }, [session])
 
   // disable all SWR requests when unauthenticated
-  const middleware: Middleware = (useSWRNext: SWRHook) => {
+  const middleware: Middleware = (useSWRNext) => {
     return (key, fetcher, config) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       return useSWRNext(
@@ -97,15 +97,7 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        fetcher: async (...args: Parameters<typeof fetcher>) => {
-          const [endpoint, options] = args
-          return fetcher(endpoint, {
-            ...options,
-            headers: session
-              ? { Authorization: `Bearer ${session.user.token}` }
-              : undefined,
-          })
-        },
+        fetcher,
         revalidateOnFocus: false,
         use: [middleware],
       }}
