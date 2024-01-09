@@ -2,6 +2,7 @@ import React from "react"
 import Link from "next/link"
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { ShoppingCart } from "lucide-react"
+import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
@@ -30,6 +31,7 @@ export const useCartList = (token: string) => {
   const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
     "https://byebyesick-staging.irfancen.com/v1/cart-items",
     (url: string) => fetcher(url, token),
+    {},
   )
 
   return {
@@ -41,9 +43,15 @@ export const useCartList = (token: string) => {
 }
 
 export default function CartSheet() {
-  const { cartdata, cartisLoading, cartMutate } = useCartList(token)
-  console.log(cartdata, "cartdata in cart sheet page")
-  const itemCount = cartdata?.data.items.length
+  const { data: session } = useSession()
+  // const router
+
+  const { cartdata, cartisLoading, cartMutate, carterror } = useCartList(
+    session?.user.token!,
+  )
+  // if (session?.expires) return router
+  // console.log(cartdata, "cartdata in cart sheet page")
+  const itemCount = cartdata?.data.items.length ?? 0
   return (
     <Sheet>
       <SheetTrigger asChild>
