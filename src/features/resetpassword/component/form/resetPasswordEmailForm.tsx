@@ -32,10 +32,7 @@ function ResetPasswordEmailForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 "
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <h1 className="text-xl font-medium">Reset Password</h1>
         <FormField
           control={form.control}
