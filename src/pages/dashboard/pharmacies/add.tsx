@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { PharmacyForm } from "@/features/pharmacies/components/form"
+import { PharmacyForm } from "@/features/pharmacies/components/forms/pharmacy"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
 
 export default function AddPharmacyPage() {

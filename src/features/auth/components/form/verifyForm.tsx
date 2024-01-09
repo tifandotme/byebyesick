@@ -2,7 +2,7 @@ import React from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, type SubmitHandler } from "react-hook-form"
+import { Controller, useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { ApiResponse } from "@/types/api"
@@ -23,7 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { verify } from "@/features/auth/api/verify"
 
 function VerifyForm({ data }: RegisterToken) {
@@ -41,9 +40,8 @@ function VerifyForm({ data }: RegisterToken) {
       setIsLoading(true)
       const signup = await verify(
         {
+          ...formData,
           email: data,
-          user_role_id: parseInt(formData.role),
-          password: formData.password,
         },
         router.query.token,
       )
@@ -106,6 +104,7 @@ function VerifyForm({ data }: RegisterToken) {
                 value="4"
                 onClick={() => {
                   setIsDoctor(false)
+                  form.setValue("image", undefined)
                 }}
                 {...form.register("role")}
                 id="patient"
@@ -117,7 +116,7 @@ function VerifyForm({ data }: RegisterToken) {
               >
                 <Image
                   src={patient}
-                  alt="doctor"
+                  alt="patient"
                   className="container h-20 object-contain"
                   width={200}
                   height={200}
@@ -127,6 +126,19 @@ function VerifyForm({ data }: RegisterToken) {
             </div>
           </fieldset>
         </div>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="John Doe" type="text" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="password"
@@ -154,10 +166,44 @@ function VerifyForm({ data }: RegisterToken) {
           )}
         />
         {isDoctor && (
-          <div className="grid w-full max-w-sm items-center gap-2">
-            <Label htmlFor="picture">Doctor Certificate</Label>
-            <Input id="picture" type="file" />
-          </div>
+          <Controller
+            name="image"
+            control={form.control}
+            render={({ field: { onChange } }) => {
+              return (
+                <Input
+                  type="file"
+                  accept="image/*,application/pdf"
+                  onChange={(event) => {
+                    const files = event.target.files
+                    if (!files) return
+                    const file = files[0]
+                    if (!file) return
+                    onChange(file)
+                  }}
+                />
+              )
+            }}
+          />
+          // <FormField
+          //   control={form.control}
+          //   name="image"
+          //   render={({ field }) => (
+          //     <FormItem>
+          //       <FormLabel>Doctor Certificate</FormLabel>
+          //       <FormControl>
+          //         <Input type="file" accept="image/*,application/pdf" {...field} onChange={(event) => {
+          //           const files = event.target.files
+          //           if (!files) return
+          //           const file = files[0]
+          //           if (!file) return
+          //           field.onChange(file);
+          //         }} />
+          //       </FormControl>
+          //       <FormMessage />
+          //     </FormItem>
+          //   )}
+          // />
         )}
         <Button className="w-full" type="submit" disabled={loading}>
           Submit
