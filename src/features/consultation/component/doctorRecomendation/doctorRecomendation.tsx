@@ -8,11 +8,36 @@ function DoctorRecomendation() {
       <h2 className="text-2xl font-semibold text-primary">
         Doctor Recomendation
       </h2>
-      <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5">
         <DoctorCard
           image="https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
           name="Doctor Wasik"
           spesialization="Ahli Gizi Buruk"
+          experience={1}
+        />
+        <DoctorCard
+          image="https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
+          name="Doctor Wasik"
+          spesialization="Ahli Gizi Buruk"
+          experience={1}
+        />{" "}
+        <DoctorCard
+          image="https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
+          name="Doctor Wasik"
+          spesialization="Ahli Gizi Buruk"
+          experience={1}
+        />{" "}
+        <DoctorCard
+          image="https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
+          name="Doctor Wasik"
+          spesialization="Ahli Gizi Buruk"
+          experience={1}
+        />{" "}
+        <DoctorCard
+          image="https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
+          name="Doctor Wasik"
+          spesialization="Ahli Gizi Buruk"
+          experience={1}
         />
       </div>
     </>
