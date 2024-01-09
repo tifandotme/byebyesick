@@ -46,7 +46,7 @@ function DetailProduct(data: IProduct) {
   }
 
   return (
-    <div className="flex flex-col gap-16 md:flex-row">
+    <div className="mt-8 flex flex-col gap-16 md:flex-row">
       <div className="flex max-h-[336px] flex-auto justify-center md:w-1/2">
         {data.image?.length ? (
           <Image

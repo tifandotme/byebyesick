@@ -69,7 +69,8 @@ export default function CategoriesPage({
   if (error) {
     return (
       <div className="flex items-center justify-center">
-        <p>Error</p>{" "}
+        <p>Error {error.message}</p>
+        {}
       </div>
     )
   }
@@ -93,14 +94,13 @@ export default function CategoriesPage({
             </div>
           ) : (
             <>
-              <div className="min-w-md mt-5 flex w-full items-center space-x-2">
+              <div className="mt-5 flex w-full max-w-md items-center space-x-2">
                 <Input
                   type="text"
                   placeholder="Search products here..."
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <Button>Search</Button>
-
                 <DropdownFilter
                   filter={sortBy}
                   setFilter={setSortBy}
@@ -127,17 +127,13 @@ export default function CategoriesPage({
                   </div>
                 ))}
               </div>
+              <PaginationComponent
+                page={data?.data.current_page!}
+                setCurrentPage={setCurrentPage}
+              />
             </>
           )}
         </div>
-        {data?.data.current_page_total_items == 0 ? (
-          <></>
-        ) : (
-          <PaginationComponent
-            page={data?.data.current_page!}
-            setCurrentPage={setCurrentPage}
-          />
-        )}
       </div>
     </>
   )

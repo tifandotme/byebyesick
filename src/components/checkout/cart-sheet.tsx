@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
-import { token } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/sheet"
 import { CartLineItems } from "@/components/checkout/cart-items"
 
-const fetcher = (url: string, token: string) =>
+const fetchers = (url: string, token: string) =>
   fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -30,8 +29,7 @@ const fetcher = (url: string, token: string) =>
 export const useCartList = (token: string) => {
   const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
     "https://byebyesick-staging.irfancen.com/v1/cart-items",
-    (url: string) => fetcher(url, token),
-    {},
+    (url: string) => fetchers(url, token),
   )
 
   return {
@@ -44,14 +42,9 @@ export const useCartList = (token: string) => {
 
 export default function CartSheet() {
   const { data: session } = useSession()
-  // const router
+  const { cartdata } = useCartList(session?.user.token!)
+  const itemCount = cartdata?.data?.items.length ?? 0
 
-  const { cartdata, cartisLoading, cartMutate, carterror } = useCartList(
-    session?.user.token!,
-  )
-  // if (session?.expires) return router
-  // console.log(cartdata, "cartdata in cart sheet page")
-  const itemCount = cartdata?.data.items.length ?? 0
   return (
     <Sheet>
       <SheetTrigger asChild>

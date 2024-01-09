@@ -1,6 +1,6 @@
 import React from "react"
 import Head from "next/head"
-import { SessionProvider, signIn, useSession } from "next-auth/react"
+import { SessionProvider, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig, type Middleware } from "swr"
 
@@ -67,7 +67,10 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
       const [url, options] = args
       return originalFetch(url, {
         ...options,
-        headers: { Authorization: `Bearer ${session.user.token}` },
+        headers: {
+          ...options?.headers,
+          Authorization: `Bearer ${session.user.token}`,
+        },
       })
     }
   }, [session])

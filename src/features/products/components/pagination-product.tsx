@@ -15,43 +15,36 @@ interface PaginationComponentProps {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>
 }
 
-const PaginationComponent: React.FC<PaginationComponentProps> = ({
+export default function PaginationComponent({
   page,
   setCurrentPage,
-}) => (
-  <Pagination className="mb-3 mt-5">
-    <PaginationContent>
-      <PaginationItem>
-        <PaginationPrevious
-          className="cursor-pointer"
-          onClick={() => {
-            setCurrentPage(page - 1)
-          }}
-        />
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationLink
-          isActive
-          onClick={() => {
-            setCurrentPage(page + 1)
-          }}
-        >
-          {page}
-        </PaginationLink>
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationEllipsis />
-      </PaginationItem>
-      <PaginationItem>
-        <PaginationNext
-          className="cursor-pointer"
-          onClick={() => {
-            setCurrentPage(page + 1)
-          }}
-        />
-      </PaginationItem>
-    </PaginationContent>
-  </Pagination>
-)
-
-export default PaginationComponent
+}: PaginationComponentProps) {
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            className="cursor-pointer"
+            onClick={() => {
+              setCurrentPage(page - 1)
+            }}
+          />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink isActive>{page}</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            className="cursor-pointer"
+            onClick={() => {
+              setCurrentPage(page + 1)
+            }}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  )
+}
