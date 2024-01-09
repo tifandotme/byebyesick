@@ -37,6 +37,16 @@ export const dashboardConfig: DashboardConfig = {
   ],
 }
 
+export const SortConfig = [
+  { value: "date", label: "Date" },
+  { value: "name", label: "Name" },
+]
+
+export const SortByConfig = [
+  { value: "asc", label: "Ascending" },
+  { value: "desc", label: "Descending" },
+]
+
 export const usersRoleIds = {
   1: "admin",
   2: "pharmacyAdmin",
