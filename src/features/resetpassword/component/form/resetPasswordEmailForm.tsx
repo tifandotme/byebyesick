@@ -34,7 +34,7 @@ function ResetPasswordEmailForm() {
       if (!result?.ok) {
         throw new Error(result.statusText)
       }
-      toast.success("Login Successfull", { duration: 2000 })
+      toast.success("Verification Email Sent", { duration: 2000 })
     } catch (error) {
       const err = error as Error
       toast.error(err.message, { duration: 2000 })

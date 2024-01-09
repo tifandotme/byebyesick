@@ -9,9 +9,9 @@ export const getServerSideProps = (async (context) => {
   const token = context?.query?.token
   try {
     const verify = await fetch(
-      `${process.env.NEXT_PUBLIC_DB_URL}v1/auth/verify-forgot?token=${token}`,
+      `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/verify-forgot?token=${token}`,
     )
-    if (!verify.ok || verify.status === 400) {
+    if (!verify.ok) {
       throw new Error("Invalid Token")
     }
     const props: RegisterToken = await verify.json()
@@ -28,7 +28,6 @@ export const getServerSideProps = (async (context) => {
 function NewPasswordPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(props)
   return <ResetPasswordForm />
 }
 
