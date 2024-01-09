@@ -106,6 +106,7 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
           })
         },
         revalidateOnFocus: false,
+        keepPreviousData: true,
         use: [middleware],
       }}
     >

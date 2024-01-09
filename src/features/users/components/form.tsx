@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import type { UserInputs } from "@/types"
 import type { User } from "@/types/api"
 import { deleteAdmin, updateAdmin } from "@/lib/fetchers"
-import { toSentenceCase } from "@/lib/utils"
+import { removeLastSegment, toSentenceCase } from "@/lib/utils"
 import { userSchema } from "@/lib/validations/user"
 import { Button } from "@/components/ui/button"
 import {
@@ -35,8 +35,6 @@ interface UserFormProps {
 export function UserForm({ mode, initialData }: UserFormProps) {
   const router = useRouter()
 
-  const [isLoading, setIsLoading] = React.useState(false)
-
   const form = useForm<UserInputs>({
     resolver: zodResolver(userSchema),
     defaultValues: {
@@ -46,12 +44,14 @@ export function UserForm({ mode, initialData }: UserFormProps) {
   })
 
   const onSubmit = async (data: UserInputs) => {
-    setIsLoading(true)
-
     const { success, message } = await updateAdmin(mode, data, initialData?.id)
-    success ? toast.success(message) : toast.error(message)
 
-    setIsLoading(false)
+    if (success) {
+      toast.success(message)
+      router.push(removeLastSegment(router.asPath))
+    } else {
+      toast.error(message)
+    }
   }
 
   React.useEffect(() => {
@@ -93,13 +93,18 @@ export function UserForm({ mode, initialData }: UserFormProps) {
         />
 
         <div className="flex gap-4">
-          <Button type="submit" disabled={isLoading} className="w-fit">
-            {isLoading && (
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="w-fit"
+          >
+            {form.formState.isSubmitting && (
               <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
             {toSentenceCase(mode)} user
           </Button>
           {mode === "edit" && initialData && (
+            // TODO disable button when user already managed a pharmacy
             <Popover>
               <PopoverTrigger asChild>
                 <Button type="button" variant="destructive" className="w-fit">
@@ -117,7 +122,7 @@ export function UserForm({ mode, initialData }: UserFormProps) {
 
                           if (!success) throw new Error()
 
-                          router.push("/dashboard/users")
+                          router.push(removeLastSegment(router.asPath, 2))
                         }
 
                         toast.promise(handleDeletion(), {
