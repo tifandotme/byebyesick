@@ -5,7 +5,7 @@ import { type ColumnDef } from "@tanstack/react-table"
 
 import type { User } from "@/types/api"
 import { usersRoleIds } from "@/config"
-import { toSentenceCase } from "@/lib/utils"
+import { cn, toSentenceCase } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
@@ -19,9 +19,10 @@ import {
 
 interface UsersTableProps {
   data: User[]
+  pageCount: number
 }
 
-export function UsersTable({ data: users }: UsersTableProps) {
+export function UsersTable({ data: users, pageCount }: UsersTableProps) {
   const data = users.map((user) => ({
     id: user.id,
     email: user.email,
@@ -44,6 +45,7 @@ export function UsersTable({ data: users }: UsersTableProps) {
       },
       {
         accessorKey: "role",
+        enableSorting: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Role" />
         ),
@@ -52,12 +54,10 @@ export function UsersTable({ data: users }: UsersTableProps) {
 
           return toSentenceCase(role)
         },
-        filterFn: (row, id, value) => {
-          return value.includes(row.getValue(id))
-        },
       },
       {
         accessorKey: "isVerified",
+        enableSorting: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Status" />
         ),
@@ -65,9 +65,6 @@ export function UsersTable({ data: users }: UsersTableProps) {
           const status = cell.getValue() as Data["isVerified"]
 
           return <Badge variant="secondary">{toSentenceCase(status)}</Badge>
-        },
-        filterFn: (row, id, value) => {
-          return value.includes(row.getValue(id))
         },
       },
       {
@@ -78,14 +75,18 @@ export function UsersTable({ data: users }: UsersTableProps) {
               <Button
                 aria-label="Open menu"
                 variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                className={cn(
+                  "flex h-8 w-8 p-0 data-[state=open]:bg-muted",
+                  row.original.role !== "pharmacyAdmin" &&
+                    "pointer-events-none invisible",
+                )}
               >
                 <DotsHorizontalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
-                <Link href={`/dashboard/users/edit/${row.original.id}`}>
+                <Link href={`/dashboard/users/${row.original.id}/edit`}>
                   Edit
                 </Link>
               </DropdownMenuItem>
@@ -97,34 +98,5 @@ export function UsersTable({ data: users }: UsersTableProps) {
     [],
   )
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      filterableColumns={[
-        {
-          id: "role",
-          title: "Role",
-          options: Object.values(usersRoleIds).map((role) => ({
-            label: toSentenceCase(role),
-            value: role,
-          })),
-        },
-        {
-          id: "isVerified",
-          title: "Status",
-          options: (["verified", "not verified"] as const).map((status) => ({
-            label: toSentenceCase(status),
-            value: status,
-          })),
-        },
-      ]}
-      searchableColumns={[
-        {
-          id: "email",
-          title: "Email",
-        },
-      ]}
-    />
-  )
+  return <DataTable columns={columns} data={data} pageCount={pageCount} />
 }
