@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type cartSchema from "@/lib/validations/cart-schema"
 import type {
   pharmacyProductSchema,
   pharmacySchema,
@@ -9,9 +10,6 @@ import type { productSchema } from "@/lib/validations/products-schema"
 import type { userSchema } from "@/lib/validations/user"
 import type { Icons } from "@/components/icons"
 
-/**
- * Used in API routes and custom fetchers
- */
 export type Response<TData = unknown> = {
   success: boolean
   message?: string
@@ -58,3 +56,5 @@ export type UserInputs = z.infer<typeof userSchema>
 export type ProductInputs = z.infer<typeof productSchema>
 
 export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
+
+export type CartInputs = z.infer<typeof cartSchema>
