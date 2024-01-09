@@ -14,17 +14,19 @@ interface DashboardTabsProps {
 
 export function DashboardTabs({ tabs }: DashboardTabsProps) {
   const router = useRouter()
+  const pathname = router.asPath.split("?")[0]
 
   return (
     <Tabs
       defaultValue={tabs[0]?.href}
       className="sticky top-0 z-30 w-full overflow-auto bg-background px-1"
+      // TODO maybe fix this
       onValueChange={(value) => router.push(value)}
     >
       <TabsList className="inline-flex items-center justify-center space-x-1.5 text-muted-foreground">
         {tabs.map((tab) => {
           const isActive = [...(tab.additionalHrefs ?? []), tab.href].some(
-            (href) => router.asPath === href,
+            (href) => pathname === href,
           )
 
           return (
