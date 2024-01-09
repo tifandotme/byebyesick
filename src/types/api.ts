@@ -42,6 +42,26 @@ export type Pharmacy = {
   operational_days: string[]
 }
 
+// GET /v1/pharmacy-products?pharmacy_id=1
+
+export type PharmacyProduct = {
+  id: number
+  pharmacy_id: number
+  product_id: number
+  is_active: boolean
+  price: string
+  stock: number
+  product: IProduct & {
+    manufacturer: Omit<IManufacturer, "id">
+    drug_classification: Omit<IDrugClassification, "id">
+    product_category: Omit<IProductCategory, "id">
+  }
+}
+
+// GET /v1/pharmacy-products/:id
+
+export type PharmacyProductById = Omit<PharmacyProduct, "product">
+
 // GET /v1/users/:id
 
 export type User = {
@@ -62,30 +82,6 @@ export type ProductsCategoriesSchema = {
   data: {
     id: number
   } & z.infer<typeof productCategoriesSchema>
-}
-
-// GET ALL PRODUCTS AND PRODUCTS/:ID
-
-export type Item = {
-  id: number
-  name: string
-  generic_name: string
-  content: string
-  manufacturer_id: number
-  description: string
-  drug_classification_id: number
-  product_category_id: number
-  drug_form: string
-  unit_in_pack: string
-  selling_unit: string
-  weight: number
-  length: number
-  width: number
-  height: number
-  image: string
-  price: string
-  created_at: Date
-  updated_at: Date
 }
 
 // FOR REAL BACKEND USES
@@ -140,7 +136,6 @@ export interface IProduct {
   width: number
   height: number
   image: string
-  price: string
   created_at: string
   updated_at: string
   minimum_price: string

@@ -40,9 +40,17 @@ export function SiteHeader() {
         <MobileNav />
 
         <div className="hidden gap-6 md:flex">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link
+            href="/"
+            className="flex items-center space-x-2 text-apple-600 dark:text-apple-400"
+          >
             <Icons.Logo className="h-6 w-6" />
-            <span className="font-bold">{siteConfig.name}</span>
+            <span className="font-bold">
+              <span>Bye</span>
+              <span>Bye</span>
+              <span className="text-red-600 dark:text-red-400">Sick</span>
+              {/* {siteConfig.name} */}
+            </span>
           </Link>
         </div>
 

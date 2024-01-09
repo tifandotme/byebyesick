@@ -24,7 +24,6 @@ export function ProvinceCombobox({
   const isHydrating = useStore((state) => state.isHydrating)
   const provinces = useStore((state) => state.provinces)
   const updateProvinces = useStore((state) => state.updateProvinces)
-  const updateProvinceId = useStore((state) => state.updateProvinceId)
 
   const { data, isLoading } = useSWR(
     !provinces && !isHydrating ? "/api/rajaongkir/province" : null,
@@ -58,7 +57,6 @@ export function ProvinceCombobox({
       value={value}
       onValueChange={(value) => {
         onValueChange(value)
-        updateProvinceId(value)
       }}
       data={mappedData}
       isLoading={isLoading}

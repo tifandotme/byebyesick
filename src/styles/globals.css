@@ -73,6 +73,9 @@
 
   body {
     @apply min-h-screen bg-background font-sans text-foreground antialiased;
+
+    /* always show scrollbar */
+    @apply overflow-y-scroll;
   }
 }
 
@@ -81,6 +84,8 @@
     @apply px-4;
   }
 }
+
+/* leaflet */
 
 .leaflet-container {
   width: 100%;
@@ -92,6 +97,20 @@
   border: none;
 }
 
+/* remove increment/decrement arrows from <input type="number" /> */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* modify scrollbar */
+
 html {
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
@@ -102,13 +121,13 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  @apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  @apply bg-muted-foreground;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  @apply bg-muted-foreground/80;
 }

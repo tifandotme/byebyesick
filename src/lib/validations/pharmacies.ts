@@ -24,9 +24,20 @@ export const pharmacySchema = z
       .max(100, "District must be no more than 100 characters long"),
     city: z.string().min(1, "Required"),
     province: z.string().min(1, "Required"),
-    postalCode: z.string().min(1, "Required"),
-    latitude: z.number().gte(-90).lte(90),
-    longitude: z.number().gte(-180).lte(180),
+    postalCode: z
+      .string()
+      .min(1, "Required")
+      .regex(/^\d{5}$/, "Invalid postal code"),
+    latitude: z.coerce
+      .number()
+      .gte(-90)
+      .lte(90)
+      .pipe(z.string({ coerce: true })),
+    longitude: z.coerce
+      .number()
+      .gte(-180)
+      .lte(180)
+      .pipe(z.string({ coerce: true })),
     opensAt: z.string(),
     closesAt: z.string(),
     operationalDays: z.array(z.string()).min(1, "Required"),
@@ -38,3 +49,12 @@ export const pharmacySchema = z
     message: "Closing hour must come after opening hour",
     path: ["closesAt"],
   })
+
+export const pharmacyProductSchema = z.object({
+  product_id: z.number().min(1, "Required"),
+  is_active: z.boolean(),
+  price: z.coerce
+    .number()
+    .min(1, "Required")
+    .pipe(z.string({ coerce: true })),
+})

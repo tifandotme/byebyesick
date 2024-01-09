@@ -33,6 +33,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: "Users",
       href: "/dashboard/users",
+      icon: "Person",
     },
   ],
 }
