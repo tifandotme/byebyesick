@@ -1,7 +1,8 @@
 import React from "react"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, type SubmitHandler } from "react-hook-form"
+import { toast } from "sonner"
 
 import type { ResetPasswordEmailSchemeType } from "@/types"
 import { resetPasswordEmailScheme } from "@/lib/validations/reset-password"
@@ -16,17 +17,28 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { forgetPassword } from "@/features/resetpassword/api/forgetPassword"
 
 function ResetPasswordEmailForm() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const form = useForm<ResetPasswordEmailSchemeType>({
     resolver: zodResolver(resetPasswordEmailScheme),
   })
 
-  const onSubmit = async () => {
+  const onSubmit: SubmitHandler<ResetPasswordEmailSchemeType> = async (
+    data,
+  ) => {
     setIsLoading(true)
-
+    try {
+      const result = await forgetPassword(data.email)
+      if (!result?.ok) {
+        throw new Error(result.statusText)
+      }
+      toast.success("Login Successfull", { duration: 2000 })
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    }
     setIsLoading(false)
   }
 
