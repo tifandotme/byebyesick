@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Link from "next/link"
-import { register } from "@/features/auth/api/register"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -21,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { register } from "@/features/auth/api/register"
 
 export default function RegisterForm() {
   const form = useForm<RegisterFormSchemaType>({
