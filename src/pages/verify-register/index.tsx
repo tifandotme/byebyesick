@@ -1,10 +1,10 @@
 import React, { type ReactElement } from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
-import VerifyForm from "@/features/auth/components/form/verifyForm"
-import AuthLayout from "@/features/auth/components/layout/layout"
 
 import type { RegisterToken } from "@/types/user"
+import VerifyForm from "@/features/auth/components/form/verifyForm"
+import AuthLayout from "@/features/auth/components/layout/layout"
 
 export const getServerSideProps = (async (context) => {
   const token = context?.query?.token
