@@ -40,6 +40,7 @@
     "embla-carousel-autoplay": "8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc18",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "ldrs": "^1.0.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.305.0",

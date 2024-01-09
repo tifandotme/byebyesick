@@ -53,7 +53,7 @@ export default function RegisterForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 lg:w-1/2"
+        className="w-full max-w-md space-y-6"
       >
         <h1 className="text-xl font-medium">Register Account</h1>
         <FormField

@@ -1,6 +1,6 @@
 import React from "react"
 import Head from "next/head"
-import { SessionProvider, useSession } from "next-auth/react"
+import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig, type Middleware } from "swr"
 
@@ -11,6 +11,10 @@ import { Toaster } from "@/components/ui/sonner"
 
 import "@/styles/globals.css"
 import "leaflet/dist/leaflet.css"
+
+import { jwtDecode } from "jwt-decode"
+
+import type { userJWT } from "@/types/user"
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
@@ -60,6 +64,8 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!session?.user.token) return
+    const decoded: userJWT = jwtDecode(session.user.token)
+    if (decoded.exp * 1000 <= Date.now()) signOut()
 
     // "monkey patch" fetch to add the token to all requests
     const originalFetch = window.fetch
