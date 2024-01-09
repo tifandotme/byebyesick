@@ -58,16 +58,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   const { data: session, status } = useSession()
 
-  // TODO remove when auth UI is ready
-  React.useEffect(() => {
-    if (status !== "unauthenticated") return
-    signIn("credentials", {
-      redirect: false,
-      email: "sena@email.com",
-      password: "password",
-    })
-  }, [status])
-
   React.useEffect(() => {
     if (!session?.user.token) return
 
@@ -77,7 +67,10 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
       const [url, options] = args
       return originalFetch(url, {
         ...options,
-        headers: { Authorization: `Bearer ${session.user.token}` },
+        headers: {
+          ...options?.headers,
+          Authorization: `Bearer ${session.user.token}`,
+        },
       })
     }
   }, [session])
@@ -97,8 +90,17 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        fetcher,
+        fetcher: async (...args: Parameters<typeof fetcher>) => {
+          const [endpoint, options] = args
+          return fetcher(endpoint, {
+            ...options,
+            headers: session
+              ? { Authorization: `Bearer ${session.user.token}` }
+              : undefined,
+          })
+        },
         revalidateOnFocus: false,
+        keepPreviousData: true,
         use: [middleware],
       }}
     >
