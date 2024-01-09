@@ -5,7 +5,6 @@ import { ExitIcon } from "@radix-ui/react-icons"
 import { signOut } from "next-auth/react"
 import { toast } from "sonner"
 
-import { siteConfig } from "@/config"
 import avatarImg from "@/assets/images/avatar.webp"
 import { Avatar } from "@/components/ui/avatar"
 import { Button, buttonVariants } from "@/components/ui/button"
