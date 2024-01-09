@@ -37,6 +37,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
+    "embla-carousel-autoplay": "8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc18",
     "js-cookie": "^3.0.5",
     "ldrs": "^1.0.1",

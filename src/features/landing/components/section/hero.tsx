@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React from "react"
+import Autoplay from "embla-carousel-autoplay"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -38,14 +39,14 @@ function Hero() {
       <div className="pt-0 md:pt-0 ">
         <section className="mx-auto mt-8 w-full items-center justify-center gap-4 text-center md:mt-0 md:flex md:min-h-screen">
           <div className="flex flex-col">
-            <h1 className="font-heading inline-block text-balance bg-gradient-to-r from-green-600 via-green-300 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl lg:text-7xl">
+            <h1 className="text-pretty bg-gradient-to-r from-green-600 via-green-300 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl lg:text-6xl">
               Your One Stop Health Solutions
             </h1>
-            <p className="mt-6 text-center leading-normal text-muted-foreground sm:text-lg sm:leading-8 md:text-left">
+            <p className="mt-6 text-center text-lg leading-relaxed text-muted-foreground sm:text-lg sm:leading-8 md:text-left">
               Chat with doctors, visit hospitals, buy medicine, check labs and
               updates Information about health can all be found at ByeByeSick!
             </p>
-            <div className="mt-3 flex items-center justify-center space-x-2 md:justify-start ">
+            <div className="mt-5 flex items-center justify-center space-x-2 md:justify-start ">
               <Button>Buy Now</Button>
               <Button variant="outline" className="hover:bg-apple-200">
                 Chat Doctors
@@ -62,7 +63,17 @@ function Hero() {
           />
         </section>
         <div className="">
-          <Carousel className="w-full">
+          <Carousel
+            className="w-full"
+            opts={{
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 2000,
+              }),
+            ]}
+          >
             <CarouselPrevious />
             <CarouselContent>
               {contentText.map((item, index) => (
@@ -78,7 +89,7 @@ function Hero() {
                       <span className="text-sm font-semibold md:text-4xl">
                         {item.text}
                       </span>
-                      <p className="mt-2 text-center text-sm md:text-lg">
+                      <p className="mt-2 text-center text-sm text-muted-foreground md:text-lg">
                         {item.description}
                       </p>
                     </CardContent>

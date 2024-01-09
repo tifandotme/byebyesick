@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -16,7 +17,11 @@ import type {
   IProduct,
   IProductCategory,
   Pharmacy,
+  PharmacyProduct,
 } from "@/types/api"
+import { handleFailedRequest } from "@/lib/utils"
+
+const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
  * Generic fetcher for `swr`
@@ -156,6 +161,42 @@ export async function deleteAdmin(id: number): Promise<Response> {
   }
 }
 
+export async function updatePharmacyProduct(
+  mode: "add" | "edit",
+  payload: PharmacyProductInputs & Pick<PharmacyProduct, "pharmacy_id">,
+  id?: number,
+): Promise<Response> {
+  try {
+    const { pharmacy_id, product_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/pharmacy-products" : `/v1/pharmacy-products/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { pharmacy_id, product_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: `Pharmacy product ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
 interface ProductsFilter {
   drug_class?: number
   search?: string
@@ -171,7 +212,6 @@ export const useProductData = (filters: ProductsFilter) => {
   let url = "/v1/products?"
   if (search) url += `search=${search}&`
   if (limit) url += `limit=${limit}&`
-  // if (sort) url += `sort=${sort}&`
   if (sort_by) url += `sort_by=${sort_by}&sort=${sort}&`
   if (drug_class) url += `drug_class=${drug_class}&`
   if (page) url += `page=${page}`
@@ -230,7 +270,6 @@ export async function updatePost(
       method: mode === "add" ? "POST" : "PUT",
       headers: {
         accept: "application/json",
-        Authorization: `Bearer ${tokenAdmin}`,
       },
       body: formData,
     }
@@ -421,14 +460,11 @@ export async function getManufacturerName(manufacturer_id: number) {
 export async function addToCart(payload: CartInputs): Promise<Response> {
   try {
     const { ...data } = payload
-
     const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
-    // const url = new URL("http://10.20.191.30:8080/v1/cart-items")
     const options: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         ...data,
@@ -468,7 +504,6 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
     }
 

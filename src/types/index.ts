@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type cartSchema from "@/lib/validations/cart-schema"
 import type {
   pharmacyProductSchema,
   pharmacySchema,

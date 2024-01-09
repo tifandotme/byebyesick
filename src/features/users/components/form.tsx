@@ -48,8 +48,6 @@ export function UserForm({ mode, initialData }: UserFormProps) {
   const onSubmit = async (data: UserInputs) => {
     setIsLoading(true)
 
-    console.log(data)
-
     const { success, message } = await updateAdmin(mode, data, initialData?.id)
     success ? toast.success(message) : toast.error(message)
 

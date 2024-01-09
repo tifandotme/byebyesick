@@ -3,12 +3,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { EyeOpenIcon } from "@radix-ui/react-icons"
 import { LoaderIcon } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
 import type { ProductsSchema } from "@/types/api"
-import { addToCart, token } from "@/lib/fetchers"
+import { addToCart } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -36,8 +37,10 @@ export function ProductCard({
   className,
   ...props
 }: ProductCardProps) {
+  const { data: session } = useSession()
+
   const [isLoading, setIsLoading] = React.useState(false)
-  const { cartMutate } = useCartList(token)
+  const { cartMutate } = useCartList(session?.user.token!)
 
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)
@@ -83,7 +86,7 @@ export function ProductCard({
             {product.data.name}
           </CardTitle>
           <CardDescription className="line-clamp-1">
-            {formatPrice(product.data.price)}
+            {/* {formatPrice(product.data.price)} */}
           </CardDescription>
         </CardContent>
       </Link>
@@ -93,10 +96,13 @@ export function ProductCard({
             aria-label="Add to cart"
             size="sm"
             className="h-8 w-full rounded-sm"
-            onClick={() => {
-              addToCartt({ product_id: product.data.id, quantity: 1 }).then(
-                () => cartMutate(),
-              )
+            onClick={async () => {
+              try {
+                await addToCartt({ product_id: product.data.id, quantity: 1 })
+                cartMutate()
+              } catch (error) {
+                console.error(error)
+              }
             }}
             disabled={isLoading}
           >
