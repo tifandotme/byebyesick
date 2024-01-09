@@ -18,6 +18,7 @@ export default async function middleware(req: NextRequestWithAuth) {
     if (token && token.user_role_id === 2) {
       return NextResponse.redirect(new URL("/dashboard/pharmacies", req.url))
     }
+
     return NextResponse.redirect(new URL("/", req.url))
   }
 
