@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
+import { useCartList } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -19,30 +20,8 @@ import {
 } from "@/components/ui/sheet"
 import { CartLineItems } from "@/components/checkout/cart-items"
 
-const fetchers = (url: string, token: string) =>
-  fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((r) => r.json())
-
-export const useCartList = (token: string) => {
-  const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
-    "https://byebyesick-staging.irfancen.com/v1/cart-items",
-    (url: string) => fetchers(url, token),
-  )
-
-  return {
-    cartdata: data,
-    cartisLoading: isLoading,
-    carterror: error,
-    cartMutate: mutate,
-  }
-}
-
 export default function CartSheet() {
-  const { data: session } = useSession()
-  const { cartdata } = useCartList(session?.user.token!)
+  const { cartdata } = useCartList()
   const itemCount = cartdata?.data?.items.length ?? 0
 
   return (

@@ -9,7 +9,7 @@ import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
 import type { ProductsSchema } from "@/types/api"
-import { addToCart } from "@/lib/fetchers"
+import { addToCart, useCartList } from "@/lib/fetchers"
 import { cn, formatPrice } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -21,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useCartList } from "@/components/checkout/cart-sheet"
 import { PlaceholderImage } from "@/components/image-placeholer"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,10 +36,8 @@ export function ProductCard({
   className,
   ...props
 }: ProductCardProps) {
-  const { data: session } = useSession()
-
   const [isLoading, setIsLoading] = React.useState(false)
-  const { cartMutate } = useCartList(session?.user.token!)
+  const { cartMutate } = useCartList()
 
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)

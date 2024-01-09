@@ -1,4 +1,3 @@
-import { getSession } from "next-auth/react"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -11,13 +10,14 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
-  ApiResponse,
+  ICart,
   IDrugClassification,
   IManufacturer,
   IProduct,
   IProductCategory,
   Pharmacy,
   PharmacyProduct,
+  ResponseGetAll,
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
@@ -217,7 +217,7 @@ export const useProductData = (filters: ProductsFilter) => {
   if (page) url += `page=${page}`
 
   const { data, isLoading, mutate, error } =
-    useSWR<ApiResponse<IProduct[]>>(url)
+    useSWR<ResponseGetAll<IProduct[]>>(url)
 
   const resetFilters = () => {
     mutate()
@@ -413,7 +413,7 @@ export async function getDrugClassificationName(
   const response = await fetch(
     `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
   )
-  const data: ApiResponse<IDrugClassification[]> = await response.json()
+  const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
 
   data.data.items.forEach((item: IDrugClassification) => {
@@ -429,7 +429,7 @@ export async function getProductCategoryName(product_category_id: number) {
   const response = await fetch(
     `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
   )
-  const data: ApiResponse<IProductCategory[]> = await response.json()
+  const data: ResponseGetAll<IProductCategory[]> = await response.json()
   let productCategoryName = "Unknown"
 
   data.data.items.forEach((item: IProductCategory) => {
@@ -445,7 +445,7 @@ export async function getManufacturerName(manufacturer_id: number) {
   const response = await fetch(
     `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
   )
-  const data: ApiResponse<IManufacturer[]> = await response.json()
+  const data: ResponseGetAll<IManufacturer[]> = await response.json()
   let manufacturersName = "Unknown"
 
   data.data.items.forEach((item: IManufacturer) => {
@@ -524,5 +524,17 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
       success: false,
       message: error instanceof Error ? error.message : "Something went wrong",
     }
+  }
+}
+
+export const useCartList = () => {
+  const { data, isLoading, error, mutate } =
+    useSWR<ResponseGetAll<ICart[]>>("/v1/cart-items")
+
+  return {
+    cartdata: data,
+    cartisLoading: isLoading,
+    carterror: error,
+    cartMutate: mutate,
   }
 }

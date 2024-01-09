@@ -90,7 +90,15 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        fetcher,
+        fetcher: async (...args: Parameters<typeof fetcher>) => {
+          const [endpoint, options] = args
+          return fetcher(endpoint, {
+            ...options,
+            headers: session
+              ? { Authorization: `Bearer ${session.user.token}` }
+              : undefined,
+          })
+        },
         revalidateOnFocus: false,
         use: [middleware],
       }}
