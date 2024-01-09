@@ -5,27 +5,27 @@ import { DashboardTabs } from "@/components/dashboard-tabs"
 export function PharmaciesTabs() {
   const router = useRouter()
 
-  const { id, productId } = router.query
+  const { pharmacyId, productId } = router.query as Record<string, string>
 
   return (
     <DashboardTabs
       tabs={[
         {
           title: "Pharmacy",
-          href: `/dashboard/pharmacies/${id}`,
-          additionalHrefs: [`/dashboard/pharmacies/${id}/edit`],
+          href: `/dashboard/pharmacies/${pharmacyId}`,
+          additionalHrefs: [`/dashboard/pharmacies/${pharmacyId}/edit`],
         },
         {
           title: "Products",
-          href: `/dashboard/pharmacies/${id}/products`,
+          href: `/dashboard/pharmacies/${pharmacyId}/products`,
           additionalHrefs: [
-            `/dashboard/pharmacies/${id}/products/add`,
-            `/dashboard/pharmacies/${id}/products/${productId}/edit`,
+            `/dashboard/pharmacies/${pharmacyId}/products/add`,
+            `/dashboard/pharmacies/${pharmacyId}/products/${productId}/edit`,
           ],
         },
         {
           title: "Journal",
-          href: `/dashboard/pharmacies/${id}/journal`,
+          href: `/dashboard/pharmacies/${pharmacyId}/journal`,
         },
       ]}
     />

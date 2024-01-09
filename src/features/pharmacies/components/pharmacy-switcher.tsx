@@ -43,7 +43,7 @@ export function PharmacySwitcher() {
     })) ?? []
 
   const currPharmacy = pharmacies.find((pharmacy) => {
-    return pharmacy.id === Number(router.query.id as string)
+    return pharmacy.id === Number(router.query.pharmacyId as string)
   })
 
   return (
