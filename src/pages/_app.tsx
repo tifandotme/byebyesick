@@ -65,7 +65,8 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   React.useEffect(() => {
     if (!session?.user.token) return
     const decoded: userJWT = jwtDecode(session.user.token)
-    if (decoded.exp <= Date.now()) signOut()
+    if (decoded.exp * 1000 <= Date.now()) signOut()
+
     // "monkey patch" fetch to add the token to all requests
     const originalFetch = window.fetch
     window.fetch = async (...args) => {
