@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import useSWR from "swr"
 
 import type { PharmacyProductById, ResponseById } from "@/types/api"
+import { removeLastSegment } from "@/lib/utils"
 import {
   Card,
   CardContent,
@@ -18,12 +19,12 @@ import { PharmacyProductForm } from "@/features/pharmacies/components/forms/phar
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
 import { PharmaciesTabs } from "@/features/pharmacies/components/tabs"
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
-  context,
-) => {
-  const id = context.params?.id as string | undefined
+export const getServerSideProps: GetServerSideProps<{
+  productId: string
+}> = async (context) => {
+  const productId = context.params?.productId as string | undefined
 
-  if (!id || isNaN(Number(id))) {
+  if (!productId || isNaN(Number(productId))) {
     return {
       notFound: true,
     }
@@ -31,56 +32,29 @@ export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
 
   return {
     props: {
-      id,
+      productId,
     },
   }
 }
 
 export default function EditPharmacyProductPage({
-  id,
+  productId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
   const { data, isLoading } = useSWR<ResponseById<PharmacyProductById>>(
-    `/v1/pharmacy-products/${id}`,
+    `/v1/pharmacy-products/${productId}`,
     {
       onError: () => {
-        router.push(`/dashboard/pharmacies/${id}/products`)
+        router.push(removeLastSegment(router.asPath, 2))
       },
     },
   )
 
   return (
     <>
-      {isLoading && (
-        <Card>
-          <CardHeader className="space-y-1">
-            <Skeleton className="h-8 w-1/5" />
-            <Skeleton className="h-5 w-2/6" />
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full max-w-2xl gap-5">
-              <div className="space-y-2.5">
-                <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-[74px]" />
-              </div>
-              <div className="space-y-2.5">
-                <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-10" />
-              </div>
-              <div className="space-y-2.5">
-                <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-8 w-1/6" />
-                <Skeleton className="h-5 w-2/5" />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Skeleton className="mt-4 h-10 w-24" />
-          </CardFooter>
-        </Card>
-      )}
-      {!isLoading && data && (
+      {isLoading && <PharmacyProductFormSkeleton />}
+      {data && (
         <Card>
           <CardHeader className="space-y-1 p-4 sm:p-6">
             <CardTitle className="text-2xl">Edit product</CardTitle>
@@ -92,6 +66,37 @@ export default function EditPharmacyProductPage({
         </Card>
       )}
     </>
+  )
+}
+
+function PharmacyProductFormSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="space-y-1">
+        <Skeleton className="h-8 w-1/5" />
+        <Skeleton className="h-5 w-2/6" />
+      </CardHeader>
+      <CardContent>
+        <div className="grid w-full max-w-2xl gap-5">
+          <div className="space-y-2.5">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-[74px]" />
+          </div>
+          <div className="space-y-2.5">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-10" />
+          </div>
+          <div className="space-y-2.5">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-8 w-1/6" />
+            <Skeleton className="h-5 w-2/5" />
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Skeleton className="mt-4 h-10 w-24" />
+      </CardFooter>
+    </Card>
   )
 }
 

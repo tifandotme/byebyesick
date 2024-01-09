@@ -18,10 +18,12 @@ import {
 
 interface PharmacyProductsTableProps {
   data: PharmacyProduct[]
+  pageCount: number
 }
 
 export function PharmacyProductsTable({
   data: pharmacyProducts,
+  pageCount,
 }: PharmacyProductsTableProps) {
   const data = pharmacyProducts.map((product) => ({
     id: product.id,
@@ -39,6 +41,7 @@ export function PharmacyProductsTable({
       {
         accessorKey: "name",
         enableHiding: false,
+        enableSorting: false,
         maxSize: 200,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
@@ -53,6 +56,7 @@ export function PharmacyProductsTable({
       },
       {
         accessorKey: "stock",
+        enableSorting: false,
         enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Stock" />
@@ -60,6 +64,7 @@ export function PharmacyProductsTable({
       },
       {
         accessorKey: "isActive",
+        enableSorting: false,
         enableHiding: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Status" />
@@ -102,26 +107,5 @@ export function PharmacyProductsTable({
     [],
   )
 
-  return (
-    <DataTable
-      columns={columns}
-      data={data}
-      filterableColumns={[
-        {
-          id: "isActive",
-          title: "Status",
-          options: ["active", "inactive"].map((status) => ({
-            value: status,
-            label: toSentenceCase(status),
-          })),
-        },
-      ]}
-      searchableColumns={[
-        {
-          id: "name",
-          title: "Name",
-        },
-      ]}
-    />
-  )
+  return <DataTable columns={columns} data={data} pageCount={pageCount} />
 }
