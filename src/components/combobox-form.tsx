@@ -58,7 +58,7 @@ export function ComboboxFormItem({
               )}
               disabled={isLoading}
             >
-              {value && data
+              {value !== "0" && data
                 ? data.find((entry) => entry.value === value)?.label
                 : `Select ${label}`}
               <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

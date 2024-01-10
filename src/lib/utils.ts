@@ -1,8 +1,6 @@
 import type { NextRouter } from "next/router"
 import { clsx, type ClassValue } from "clsx"
-import { toast } from "sonner"
 import { twMerge } from "tailwind-merge"
-import { z } from "zod"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,19 +16,6 @@ export function isBrowser() {
 
 export function isMacOS() {
   return isBrowser() && window.navigator.userAgent.includes("Mac")
-}
-
-export function catchError(err: unknown) {
-  if (err instanceof z.ZodError) {
-    const errors = err.issues.map((issue) => {
-      return issue.message
-    })
-    return toast(errors.join("\n"))
-  } else if (err instanceof Error) {
-    return toast(err.message)
-  } else {
-    return toast("Something went wrong, please try again later.")
-  }
 }
 
 export function formatPrice(price: number | string) {
@@ -57,8 +42,10 @@ export function toSentenceCase(str: string) {
     .replace(/^./, (str) => str.toUpperCase())
 }
 
-export function removeLastSegment(url: string) {
-  return url.substring(0, url.lastIndexOf("/"))
+export function removeLastSegment(url: string, nth = 1) {
+  const segments = url.split("/")
+  segments.splice(-nth, nth)
+  return segments.join("/")
 }
 
 export function slugify(text: string): string {
@@ -95,47 +82,6 @@ export async function handleFailedRequest(res: Response) {
   if (errors.length) console.error(errors)
 
   throw new Error("Operation failed. Please try again later.")
-}
-
-export async function convertToCloudinaryURL(url: string) {
-  try {
-    // Skip if already a cloudinary url
-    if (!url.startsWith("blob")) {
-      return url
-    }
-
-    const data = new FormData()
-    data.append("file", await fetch(url).then((res) => res.blob()))
-    data.append("upload_preset", "crumpled-paper")
-
-    const res = await fetch(
-      "https://api.cloudinary.com/v1_1/tifan/image/upload",
-      {
-        method: "POST",
-        body: data,
-      },
-    )
-
-    if (!res.ok) {
-      throw new Error("failed to upload product photo")
-    }
-
-    const json = await res.json()
-
-    // Remove version
-    const secureUrl = new URL(json.secure_url as string)
-    const segments = secureUrl.pathname.split("/")
-    segments.splice(4, 1)
-    secureUrl.pathname = segments.join("/")
-
-    return secureUrl.toString()
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message)
-    }
-
-    return null
-  }
 }
 
 /**
