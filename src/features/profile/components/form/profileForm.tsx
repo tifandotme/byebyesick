@@ -1,11 +1,14 @@
-import React from "react"
+import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useSession } from "next-auth/react"
+import { useForm, type SubmitHandler } from "react-hook-form"
+import { toast } from "sonner"
 
+import type { IProfileUser, ResponseById } from "@/types/api"
 import {
-  verifyFormSchema,
-  type VerifyFormSchemaType,
-} from "@/lib/validations/auth"
+  userProfileFormSchema,
+  type UserProfileFormSchemaType,
+} from "@/lib/validations/profile"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,28 +19,93 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { updateProfile } from "@/features/profile/api/updateProfile"
 
-function ProfileForm() {
-  const form = useForm<VerifyFormSchemaType>({
-    resolver: zodResolver(verifyFormSchema),
+function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
+  const { data: session, update } = useSession()
+  const form = useForm<UserProfileFormSchemaType>({
+    resolver: zodResolver(userProfileFormSchema),
+    defaultValues: {
+      name: userProfile?.name,
+      date: userProfile?.date_of_birth,
+    },
   })
+
+  const [image, setImage] = useState<{
+    image: File
+    url: string
+  }>()
+
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+    const file = files[0]
+    if (!file) return
+    setImage({
+      url: URL.createObjectURL(file),
+      image: file,
+    })
+  }
+
+  const onSubmit: SubmitHandler<UserProfileFormSchemaType> = async (data) => {
+    try {
+      const result = await updateProfile(
+        {
+          date_of_birth: data.date,
+          name: data.name,
+        },
+        image?.image,
+      )
+      if (!result?.ok) {
+        throw new Error(result.statusText)
+      }
+      const userData: ResponseById<IProfileUser> = await result.json()
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          ...userData.data,
+        },
+      })
+      toast.success("Success Update Profile", { duration: 2000 })
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    }
+  }
 
   return (
     <Form {...form}>
-      <form className="flex w-full  flex-col space-y-6">
-        <img
-          alt="Man"
-          src={`https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png`}
-          className="h-40 w-40 self-center rounded-full object-cover"
-        />
+      <form
+        className="flex w-full flex-col space-y-6"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <label htmlFor="profile" className="self-center ">
+          <img
+            alt="Man"
+            src={
+              image?.url ??
+              userProfile?.profile_photo ??
+              "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
+            }
+            className="h-40 w-40 rounded-full object-cover"
+          />
+          <input
+            type="file"
+            className="hidden"
+            accept="image/*"
+            id="profile"
+            onChange={handleChangeImage}
+          />
+        </label>
         <FormField
           control={form.control}
-          name="password"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="text" {...field} />
+                <Input placeholder="John Doe" type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -45,19 +113,19 @@ function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="date"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Date Of Birth</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="date" {...field} />
+                <Input type="date" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="flex">
-          <Button type="button" variant={"default"}>
+          <Button type="submit" variant={"default"}>
             Edit Profile
           </Button>
         </div>

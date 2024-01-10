@@ -385,13 +385,10 @@ export async function deleteProductCategory(id: number): Promise<Response> {
     const options: RequestInit = {
       method: "DELETE",
     }
-
     const res = await fetch(url, options)
-
     if (!res.ok) {
       throw new Error("Failed to delete a product category")
     }
-
     return {
       success: true,
       message: "Product category deleted",
@@ -415,13 +412,11 @@ export async function getDrugClassificationName(
   )
   const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
-
   data.data.items.forEach((item: IDrugClassification) => {
     if (item.id === drug_classification_id) {
       classificationName = item.name
     }
   })
-
   return classificationName
 }
 
