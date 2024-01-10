@@ -30,12 +30,12 @@ import { PharmacyForm } from "@/features/pharmacies/components/forms/pharmacy"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
 import { PharmaciesTabs } from "@/features/pharmacies/components/tabs"
 
-export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
-  context,
-) => {
-  const id = context.params?.id as string | undefined
+export const getServerSideProps: GetServerSideProps<{
+  pharmacyId: string
+}> = async (context) => {
+  const pharmacyId = context.params?.pharmacyId as string | undefined
 
-  if (!id || isNaN(Number(id))) {
+  if (!pharmacyId || isNaN(Number(pharmacyId))) {
     return {
       notFound: true,
     }
@@ -43,18 +43,18 @@ export const getServerSideProps: GetServerSideProps<{ id: string }> = async (
 
   return {
     props: {
-      id,
+      pharmacyId,
     },
   }
 }
 
 export default function PharmacyPage({
-  id,
+  pharmacyId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter()
 
   const { data, isLoading } = useSWR<ResponseById<Pharmacy>>(
-    `/v1/pharmacies/${id}`,
+    `/v1/pharmacies/${pharmacyId}`,
     {
       onError: () => {
         router.push(removeLastSegment(router.asPath))
@@ -65,7 +65,7 @@ export default function PharmacyPage({
   return (
     <>
       {isLoading && <PharmacyFormSkeleton />}
-      {!isLoading && data && (
+      {data && (
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl">Edit pharmacy</CardTitle>
@@ -103,7 +103,7 @@ export default function PharmacyPage({
                   onClick={() => {
                     const handleDeletion = async () => {
                       const { success, message } = await deletePharmacy(
-                        Number(id),
+                        Number(pharmacyId),
                       )
                       if (!success) throw new Error(message)
 

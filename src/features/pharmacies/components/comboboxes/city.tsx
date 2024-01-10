@@ -1,8 +1,7 @@
 import React from "react"
 import useSWR from "swr"
 
-import type { Response } from "@/types"
-import type { City } from "@/types/rajaongkir"
+import type { AddressResponse, City } from "@/types/api"
 import { useStore } from "@/lib/stores/pharmacies"
 import { ComboboxFormItem } from "@/components/combobox-form"
 
@@ -12,7 +11,7 @@ type FormItemProps = Pick<
 >
 
 type CityComboboxProps = {
-  provinceId: string
+  provinceId: number
 } & Pick<FormItemProps, "label" | "value" | "onValueChange">
 
 export function CityCombobox({
@@ -24,39 +23,27 @@ export function CityCombobox({
   const cities = useStore((state) => state.cities)
   const updateCities = useStore((state) => state.updateCities)
 
-  const { data, isLoading } = useSWR(
-    provinceId && !cities ? "/api/rajaongkir/city" : null,
-    async (url: string) => {
-      const res = await fetch(url)
-      const data: Response<City[]> = await res.json()
-
-      return data.data
-    },
+  const { data, isLoading } = useSWR<AddressResponse<City[]>>(
+    provinceId && !cities ? "v1/address-area/cities/no-params" : null,
     {
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
         data && updateCities(data)
       },
-      fallbackData: cities ?? undefined,
+      fallbackData: cities ? { data: cities } : undefined,
+      keepPreviousData: false,
     },
   )
 
   const filteredData = React.useMemo(() => {
     if (!data || !provinceId) return
 
-    return data
+    return data.data
       .filter((city) => city.province_id === provinceId)
       .map((city) => ({
-        label: `${city.type} ${city.city_name}`,
-        value: city.city_id,
+        label: city.city_name,
+        value: city.city_id.toString(),
       }))
   }, [data, provinceId])
-
-  React.useEffect(() => {
-    if (!value) return
-    onValueChange("")
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [provinceId])
 
   return (
     <ComboboxFormItem
