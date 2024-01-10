@@ -57,8 +57,10 @@ export function toSentenceCase(str: string) {
     .replace(/^./, (str) => str.toUpperCase())
 }
 
-export function removeLastSegment(url: string) {
-  return url.substring(0, url.lastIndexOf("/"))
+export function removeLastSegment(url: string, nth = 1) {
+  const segments = url.split("/")
+  segments.splice(-nth, nth)
+  return segments.join("/")
 }
 
 export function slugify(text: string): string {
