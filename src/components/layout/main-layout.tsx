@@ -1,15 +1,15 @@
 import React from "react"
 
 import { SiteFooter } from "@/components/layouts/site-footer"
-import MainNavbar from "@/components/navbar/mainNavbar"
+import MainNavbar from "@/components/navbar/navbar"
 
 function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen flex-col overflow-auto">
+    <div className="min-h-screen">
       <div className="sticky w-full">
         <MainNavbar />
       </div>
-      <div className="container max-w-6xl grow py-11">{children}</div>
+      <div className="container max-w-6xl ">{children}</div>
       <SiteFooter />
     </div>
   )

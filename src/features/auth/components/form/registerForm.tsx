@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Link from "next/link"
-import { register } from "@/features/auth/api/register"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -21,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { register } from "@/features/auth/api/register"
 
 export default function RegisterForm() {
   const form = useForm<RegisterFormSchemaType>({
@@ -53,7 +53,7 @@ export default function RegisterForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 lg:w-1/2"
+        className="w-full max-w-md space-y-6"
       >
         <h1 className="text-xl font-medium">Register Account</h1>
         <FormField

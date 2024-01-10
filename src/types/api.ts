@@ -110,6 +110,15 @@ export interface IProductCategory {
   id: number
   name: string
 }
+
+export interface ICart {
+  id: number
+  user_id: number
+  product_id: number
+  quantity: number
+  product: IProduct
+}
+
 export interface IProduct {
   id: number
   name: string
@@ -129,6 +138,8 @@ export interface IProduct {
   image: string
   created_at: string
   updated_at: string
+  minimum_price: string
+  maximum_price: string
 }
 
 export type AddressI = {

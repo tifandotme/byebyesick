@@ -10,3 +10,13 @@ export interface UserI {
 export interface RegisterToken {
   data: string
 }
+
+export interface userJWT {
+  user_id: number
+  email: string
+  user_role_id: number
+  image: string
+  iss: string
+  exp: number
+  iat: number
+}

@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import Head from "next/head"
 import { useSession } from "next-auth/react"
 
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import { getUserProfile } from "@/features/profile/api/getUserProfile"
 import ProfileForm from "@/features/profile/components/form/profileForm"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
