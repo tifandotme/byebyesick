@@ -3,12 +3,10 @@ import { Slot } from "@radix-ui/react-slot"
 import { ImageIcon } from "lucide-react"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
-// import type { CartLineItem } from "@/types"
 import { cn, formatPrice } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 import { UpdateCart } from "@/components/checkout/update-cart-items"
-
-// import { UpdateCart } from "@/components/checkout/update-cart"
 
 interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ResponseGetAll<ICart[]>
@@ -72,10 +70,12 @@ export function CartLineItems({
                   </span>
                   {isEditable ? (
                     <span className="line-clamp-1 text-xs text-muted-foreground">
-                      {/* {formatPrice(item.product.price)} x {item.quantity} ={" "}
+                      {/* {formatPrice(item.product.maximum_price)} x{" "}
+                      {item.quantity} ={" "}
                       {formatPrice(
                         (
-                          Number(item.product.price) * Number(item.quantity)
+                          Number(item.product.maximum_price) *
+                          Number(item.quantity)
                         ).toFixed(2),
                       )} */}
                     </span>
@@ -84,11 +84,6 @@ export function CartLineItems({
                       Qty {item.quantity}
                     </span>
                   )}
-                  {/* <span className="text-xs capitalize line-clamp-1 text-muted-foreground">
-                    {`${item.product.} ${
-                      item.subcategory ? `/ ${item.subcategory}` : ""
-                    }`}
-                  </span> */}
                 </div>
               </div>
               {isEditable ? (
@@ -96,17 +91,15 @@ export function CartLineItems({
               ) : (
                 <div className="flex flex-col space-y-1 font-medium">
                   <span className="ml-auto line-clamp-1 text-sm">
-                    {/* {formatPrice(
-                      (Number(item.price) * item.quantity).toFixed(2),
-                    )} */}
+                    {formatPrice(item.product.maximum_price)}
                   </span>
                   <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {/* {formatPrice(item.price)} each */}
+                    {formatPrice(item.product.maximum_price)} each
                   </span>
                 </div>
               )}
             </div>
-            {/* {variant === "default" ? <Separator /> : null} */}
+            <Separator />
           </div>
         ))}
       </div>

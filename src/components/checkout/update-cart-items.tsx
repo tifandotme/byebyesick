@@ -4,11 +4,10 @@ import { toast } from "sonner"
 import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
-import { addToCart, deleteCart, token } from "@/lib/fetchers"
+import { addToCart, deleteCart, useCartList } from "@/lib/fetchers"
 import { catchError } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useCartList } from "@/components/checkout/cart-sheet"
 
 interface UpdateCartProps {
   cartLineItem: CartInputs
@@ -16,40 +15,16 @@ interface UpdateCartProps {
 
 export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const [isLoading, setIsLoading] = React.useState(false)
-  const { cartMutate } = useCartList(token)
-
+  const { cartMutate } = useCartList()
   const [quantity, setQuantity] = React.useState(cartLineItem.quantity)
+  console.log(quantity)
 
-  const handleDecrement = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity > 0 ? prevQuantity - 1 : 0
-      addToCartt({
-        product_id: cartLineItem.product_id,
-        quantity: newQuantity,
-      }).then(() => cartMutate())
-      return newQuantity
-    })
-  }
-
-  const handleIncrement = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1
-      addToCartt({
-        product_id: cartLineItem.product_id,
-        quantity: newQuantity,
-      }).then(() => cartMutate())
-      return newQuantity
-    })
-  }
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)
 
     const { success, message } = await addToCart(data)
-
     success ? toast.success(message) : toast.error(message)
-
     mutate(data)
-
     setIsLoading(false)
   }
 
@@ -62,7 +37,14 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           variant="outline"
           size="icon"
           className="h-8 w-8 rounded-r-none"
-          onClick={handleIncrement}
+          onClick={() => {
+            const newQuantity = quantity > 1 ? quantity - 1 : 1
+            setQuantity(newQuantity)
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
+          }}
           disabled={isLoading}
         >
           <MinusIcon className="h-3 w-3" aria-hidden="true" />
@@ -73,16 +55,21 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           min="1"
           className="h-8 w-14 rounded-none border-x-0"
           value={quantity}
-          onChange={(e) => {
-            const newQuantity = Number(e.target.value)
-            setQuantity(newQuantity >= 1 ? newQuantity : 1)
-          }}
+          disabled
         />
         <Button
           variant="outline"
           size="icon"
           className="h-8 w-8 rounded-l-none"
-          onClick={handleDecrement}
+          onClick={() => {
+            const newQuantity = quantity + 1
+            setQuantity(newQuantity)
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
+          }}
+          disabled={isLoading}
         >
           <PlusIcon className="h-3 w-3" aria-hidden="true" />
           <span className="sr-only">Add one item</span>

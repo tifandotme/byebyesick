@@ -70,7 +70,6 @@ export default function CategoriesPage({
     return (
       <div className="flex items-center justify-center">
         <p>Error {error.message}</p>
-        {}
       </div>
     )
   }
@@ -119,11 +118,7 @@ export default function CategoriesPage({
               <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data?.data.items.map((items) => (
                   <div key={items.id}>
-                    <ProductCard
-                      product={{
-                        data: items,
-                      }}
-                    />
+                    <ProductCard product={items} />
                   </div>
                 ))}
               </div>
