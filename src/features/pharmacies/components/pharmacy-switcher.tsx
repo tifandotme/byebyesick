@@ -75,6 +75,7 @@ export function PharmacySwitcher() {
                 {pharmacies.map((pharmacy) => (
                   <CommandItem
                     key={pharmacy.id}
+                    value={pharmacy.id.toString()}
                     onSelect={() => {
                       router.push({
                         pathname: "/dashboard/pharmacies/[id]",

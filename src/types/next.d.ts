@@ -19,5 +19,7 @@ declare module "querystring" {
     per_page?: string
     search?: string
     sort?: string
+    start_date?: string
+    end_date?: string
   }
 }

@@ -40,6 +40,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   pageCount: number
   filterableColumns?: DataTableFilterableColumn<TData>[]
+  includeSearch?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -47,21 +48,15 @@ export function DataTable<TData, TValue>({
   data,
   pageCount,
   filterableColumns = [],
+  includeSearch = true,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
 
-  const pathname = React.useMemo(
-    () => router.asPath.split("?")[0],
-    [router.asPath],
-  )
-  const searchParams = React.useMemo(
-    () => new URLSearchParams(router.asPath.split("?")[1]),
-    [router.asPath],
-  )
+  const pathname = router.asPath.split("?")[0]
 
   const createQueryString = React.useCallback(
     (params: Record<string, string | number | null>) => {
-      const newSearchParams = searchParams
+      const newSearchParams = new URLSearchParams(router.asPath.split("?")[1])
 
       for (const [key, value] of Object.entries(params)) {
         if (value === null) {
@@ -73,7 +68,7 @@ export function DataTable<TData, TValue>({
 
       return newSearchParams.toString()
     },
-    [searchParams],
+    [router.asPath],
   )
 
   const [columnVisibility, setColumnVisibility] =
@@ -91,7 +86,7 @@ export function DataTable<TData, TValue>({
   const perPageAsNumber = Number(per_page)
   const fallbackPerPage = isNaN(perPageAsNumber) ? 10 : perPageAsNumber
 
-  const sort = searchParams?.get("sort")
+  const sort = new URLSearchParams(router.asPath.split("?")[1])?.get("sort")
   const [column, order] = sort?.split(".") ?? []
 
   // Server-side pagination
@@ -221,7 +216,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full space-y-3 overflow-auto">
-      <DataTableToolbar table={table} filterableColumns={filterableColumns} />
+      <DataTableToolbar
+        table={table}
+        filterableColumns={filterableColumns}
+        includeSearch={includeSearch}
+      />
 
       <div className="rounded-md border">
         <Table>
