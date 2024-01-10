@@ -3,7 +3,7 @@ import { PlusIcon } from "lucide-react"
 
 import type { AddressI } from "@/types/api"
 import { Button } from "@/components/ui/button"
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import AddressModal from "@/features/profile/components/addressModal/addressModal"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
 import UserAddressList from "@/features/profile/components/userAddressList/userAddressList"

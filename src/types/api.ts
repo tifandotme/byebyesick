@@ -154,3 +154,27 @@ export type AddressI = {
   latitude: string
   longitude: string
 }
+
+export interface IProfileUser {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  date_of_birth: string
+}
+
+export interface IProfileDoctor {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: string
+  consultation_fee: string
+  is_online: boolean
+}
