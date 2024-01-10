@@ -6,6 +6,10 @@ import type {
 } from "@/lib/validations/pharmacies"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
+import type {
+  newPasswordScheme,
+  resetPasswordEmailScheme,
+} from "@/lib/validations/reset-password"
 import type { userSchema } from "@/lib/validations/user"
 import type { Icons } from "@/components/icons"
 
@@ -58,3 +62,9 @@ export type UserInputs = z.infer<typeof userSchema>
 export type ProductInputs = z.infer<typeof productSchema>
 
 export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
+
+export type ResetPasswordEmailSchemeType = z.infer<
+  typeof resetPasswordEmailScheme
+>
+
+export type NewPasswordEmailSchemeType = z.infer<typeof newPasswordScheme>
