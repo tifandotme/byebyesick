@@ -5,7 +5,12 @@ import Head from "next/head"
 import { Tablets } from "lucide-react"
 import useSWR from "swr"
 
-import type { ApiResponse, IDrugClassification, IProduct } from "@/types/api"
+import type {
+  ApiResponse,
+  IDrugClassification,
+  IProduct,
+  ResponseGetAll,
+} from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
 import Hero from "@/features/landing/components/section/hero"
@@ -55,27 +60,27 @@ export default function HomePage({
   error,
 }: {
   data1: ApiResponse<IDrugClassification[]>
-  data2: ApiResponse<IProduct[]>
+  data2: ResponseGetAll<IProduct[]>
   error: string | undefined
 }) {
-  // const [latitude, setLatitude] = React.useState<number | null>(null)
-  // const [longitude, setLongitude] = React.useState<number | null>(null)
+  const [latitude, setLatitude] = React.useState<number | null>(null)
+  const [longitude, setLongitude] = React.useState<number | null>(null)
 
-  // React.useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition((position) => {
-  //     setLatitude(position.coords.latitude)
-  //     setLongitude(position.coords.longitude)
-  //   })
-  // }, [])
+  React.useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position.coords.latitude)
+      setLongitude(position.coords.longitude)
+    })
+  }, [])
 
-  // const url =
-  //   latitude && longitude
-  //     ? `http://localhost:8080/v1/products?latitude=${latitude}&longitude=${longitude}&page=1`
-  //     : null
+  const url =
+    latitude && longitude
+      ? `https://byebyesick-staging.irfancen.com/v1/products?latitude=${latitude}&longitude=${longitude}`
+      : null
 
-  // const { data, isLoading } = useSWR(url)
-  // if (error) return <div>Error: {error}</div>
-  // if (isLoading) return <div>Loading...</div>
+  const { data: fix, isLoading } = useSWR<ResponseGetAll<IProduct[]>>(url)
+  if (error) return <div>Error: {error}</div>
+  if (isLoading) return <div>Loading...</div>
 
   return (
     <div>
@@ -114,7 +119,7 @@ export default function HomePage({
         <div className="mt-5 text-2xl font-semibold">
           <h2>Around You</h2>
         </div>
-        {data2.data.current_page_total_items == 0 ? (
+        {fix?.data.current_page_total_items == 0 ? (
           <div>
             <p>No Product Yet</p>
           </div>
@@ -122,11 +127,7 @@ export default function HomePage({
           <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {data2.data.items.map((cat) => (
               <div key={cat.id}>
-                <ProductCard
-                  product={{
-                    data: cat,
-                  }}
-                />
+                <ProductCard product={cat} />
               </div>
             ))}
           </div>
