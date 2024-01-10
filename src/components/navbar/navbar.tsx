@@ -5,7 +5,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ExitIcon } from "@radix-ui/react-icons"
-import { ShoppingCart } from "lucide-react"
 import { signOut, useSession } from "next-auth/react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
