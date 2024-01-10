@@ -1,10 +1,12 @@
 import React from "react"
 import Head from "next/head"
-import { SessionProvider, signIn, useSession } from "next-auth/react"
+import { jwtDecode } from "jwt-decode"
+import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig, type Middleware } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
+import type { userJWT } from "@/types/user"
 import { fetcher } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
 import { Toaster } from "@/components/ui/sonner"
@@ -61,13 +63,19 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   React.useEffect(() => {
     if (!session?.user.token) return
 
+    const decoded: userJWT = jwtDecode(session.user.token)
+    if (decoded.exp * 1000 <= Date.now()) signOut()
+
     // "monkey patch" fetch to add the token to all requests
     const originalFetch = window.fetch
     window.fetch = async (...args) => {
       const [url, options] = args
       return originalFetch(url, {
         ...options,
-        headers: { Authorization: `Bearer ${session.user.token}` },
+        headers: {
+          ...options?.headers,
+          Authorization: `Bearer ${session.user.token}`,
+        },
       })
     }
   }, [session])
@@ -87,8 +95,17 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   return (
     <SWRConfig
       value={{
-        fetcher,
+        fetcher: async (...args: Parameters<typeof fetcher>) => {
+          const [endpoint, options] = args
+          return fetcher(endpoint, {
+            ...options,
+            headers: session
+              ? { Authorization: `Bearer ${session.user.token}` }
+              : undefined,
+          })
+        },
         revalidateOnFocus: false,
+        keepPreviousData: true,
         use: [middleware],
       }}
     >

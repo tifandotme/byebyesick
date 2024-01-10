@@ -13,7 +13,7 @@ export function PharmaciesLayout({ children }: React.PropsWithChildren) {
   const router = useRouter()
 
   const isPharmacyDetailPage = router.route.startsWith(
-    "/dashboard/pharmacies/[id]",
+    "/dashboard/pharmacies/[pharmacyId]",
   )
   const isPharmacyListPage = router.route === "/dashboard/pharmacies"
 
