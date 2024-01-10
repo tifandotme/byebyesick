@@ -2,6 +2,7 @@ import React from "react"
 import Link from "next/link"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
+import type { KeyedMutator } from "swr"
 
 import type { PharmacyProduct } from "@/types/api"
 import { toSentenceCase } from "@/lib/utils"
@@ -9,22 +10,28 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header"
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { StockMutationForm } from "@/features/pharmacies/components/forms/stock-mutation"
 
 interface PharmacyProductsTableProps {
   data: PharmacyProduct[]
   pageCount: number
+  mutate: KeyedMutator<any>
 }
 
 export function PharmacyProductsTable({
   data: pharmacyProducts,
   pageCount,
+  mutate,
 }: PharmacyProductsTableProps) {
+  const [open, setOpen] = React.useState(false)
+
   const data = pharmacyProducts.map((product) => ({
     id: product.id,
     pharmacyId: product.pharmacy_id,
@@ -81,30 +88,42 @@ export function PharmacyProductsTable({
       {
         id: "actions",
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-              >
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/dashboard/pharmacies/${row.original.pharmacyId}/products/${row.original.id}/edit`}
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  aria-label="Open menu"
+                  variant="ghost"
+                  className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
                 >
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <DotsHorizontalIcon className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[130px]">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/dashboard/pharmacies/${row.original.pharmacyId}/products/${row.original.id}/edit`}
+                  >
+                    Edit
+                  </Link>
+                </DropdownMenuItem>
+                <DialogTrigger asChild>
+                  <DropdownMenuItem>Update stock</DropdownMenuItem>
+                </DialogTrigger>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <StockMutationForm
+              pharmacyProductId={row.original.id}
+              mutate={mutate}
+              closeDialog={() => setOpen(false)}
+              currStock={row.original.stock}
+            />
+          </Dialog>
         ),
       },
     ],
-    [],
+    [mutate, open],
   )
 
   return <DataTable columns={columns} data={data} pageCount={pageCount} />
