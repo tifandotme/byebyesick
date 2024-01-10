@@ -18,12 +18,12 @@ export default function PharmaciesPage() {
         Array.from({ length: 3 }).map((_, i) => (
           <PharmacyCardSkeleton key={i} />
         ))}
-      {data?.data.items.length === 0 && (
+      {data?.data?.items.length === 0 && (
         <span className="col-span-full my-5 text-center">
           No pharmacies found. Please add a pharmacy.
         </span>
       )}
-      {data?.data.items.map((pharmacy) => (
+      {data?.data?.items.map((pharmacy) => (
         <PharmacyCard
           key={pharmacy.id}
           pharmacy={pharmacy}

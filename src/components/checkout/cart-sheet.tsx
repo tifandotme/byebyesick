@@ -79,7 +79,7 @@ export default function CartSheet() {
                       className: "w-full",
                     })}
                   >
-                    Continue to checkout
+                    View your cart
                   </Link>
                 </SheetTrigger>
               </SheetFooter>

@@ -24,14 +24,11 @@ import { PlaceholderImage } from "@/components/image-placeholer"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   product: IProduct
-  isAddedToCart?: boolean
-  onSwitch?: () => Promise<void>
 }
 
 export function ProductCard({
   product,
-  isAddedToCart = false,
-  onSwitch,
+
   className,
   ...props
 }: ProductCardProps) {

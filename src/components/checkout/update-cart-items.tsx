@@ -17,7 +17,6 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const [isLoading, setIsLoading] = React.useState(false)
   const { cartMutate } = useCartList()
   const [quantity, setQuantity] = React.useState(cartLineItem.quantity)
-  console.log(quantity)
 
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)
@@ -55,7 +54,6 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           min="1"
           className="h-8 w-14 rounded-none border-x-0"
           value={quantity}
-          disabled
         />
         <Button
           variant="outline"

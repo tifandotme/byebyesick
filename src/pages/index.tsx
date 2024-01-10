@@ -119,7 +119,7 @@ export default function HomePage({
         <div className="mt-5 text-2xl font-semibold">
           <h2>Around You</h2>
         </div>
-        {fix?.data.current_page_total_items == 0 ? (
+        {data2.data.current_page_total_items == 0 ? (
           <div>
             <p>No Product Yet</p>
           </div>
