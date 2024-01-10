@@ -3,10 +3,7 @@ import { useRouter } from "next/router"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import type { Table } from "@tanstack/react-table"
 
-import type {
-  DataTableFilterableColumn,
-  DataTableSearchableColumn,
-} from "@/types"
+import type { DataTableFilterableColumn } from "@/types"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Button } from "@/components/ui/button"
 import { DataTableFilter } from "@/components/ui/data-table/data-table-filter"
@@ -16,12 +13,13 @@ import { Input } from "@/components/ui/input"
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
   filterableColumns?: DataTableFilterableColumn<TData>[]
-  searchableColumns?: DataTableSearchableColumn<TData>[]
+  includeSearch?: boolean
 }
 
 export function DataTableToolbar<TData>({
   table,
   filterableColumns = [],
+  includeSearch = true,
 }: DataTableToolbarProps<TData>) {
   const router = useRouter()
 
@@ -81,12 +79,14 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex w-full items-center justify-between space-x-2 overflow-auto p-1">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder={`Search...`}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+        {includeSearch && (
+          <Input
+            placeholder={`Search...`}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
+        )}
 
         {filterableColumns.length > 0 &&
           filterableColumns.map(

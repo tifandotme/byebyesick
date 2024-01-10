@@ -36,24 +36,26 @@ export default function PharmacyProductsPage({
   const router = useRouter()
   const { page, per_page, search, sort } = router.query
 
-  const { data, isLoading, isValidating } = useSWR<
-    ResponseGetAll<PharmacyProduct[]>
-  >(() => {
-    const params = new URLSearchParams()
-    params.set("pharmacy_id", pharmacyId)
-    if (page) params.set("page", page)
-    if (per_page) params.set("limit", per_page)
-    if (search) params.set("search", search)
-    if (sort) params.set("sort_by", sort.split(".")[0] as string)
-    if (sort) params.set("sort", sort.split(".")[1] as string)
+  const { data, isLoading, mutate } = useSWR<ResponseGetAll<PharmacyProduct[]>>(
+    () => {
+      const params = new URLSearchParams()
+      params.set("pharmacy_id", pharmacyId)
+      if (page) params.set("page", page)
+      if (per_page) params.set("limit", per_page)
+      if (search) params.set("search", search)
+      if (sort) params.set("sort_by", sort.split(".")[0] as string)
+      if (sort) params.set("sort", sort.split(".")[1] as string)
 
-    return `/v1/pharmacy-products?${params.toString()}`
-  })
+      return `/v1/pharmacy-products?${params.toString()}`
+    },
+  )
 
   return (
     <div className="space-y-6 overflow-auto">
       <div className="flex flex-col gap-4 xs:flex-row xs:items-center xs:justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Products</h2>
+        <h2 className="text-2xl font-bold leading-10 tracking-tight">
+          Products
+        </h2>
         <Button size="sm" className="w-fit" asChild>
           <Link href={`/dashboard/pharmacies/${pharmacyId}/products/add`}>
             Add product
@@ -61,11 +63,14 @@ export default function PharmacyProductsPage({
         </Button>
       </div>
 
-      {isLoading && !isValidating && <DataTableSkeleton columnCount={5} />}
+      {isLoading && !data && (
+        <DataTableSkeleton columnCount={5} filterableFieldCount={0} />
+      )}
       {data && (
         <PharmacyProductsTable
           data={data.data.items}
           pageCount={data.data.total_pages}
+          mutate={mutate}
         />
       )}
     </div>
