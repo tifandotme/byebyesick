@@ -6,9 +6,7 @@ import MainNavbar from "@/components/navbar/navbar"
 function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
-      <div className="sticky w-full">
-        <MainNavbar />
-      </div>
+      <MainNavbar />
       <div className="container max-w-6xl ">{children}</div>
       <SiteFooter />
     </div>

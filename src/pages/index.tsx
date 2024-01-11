@@ -78,8 +78,12 @@ export default function HomePage({
       ? `https://byebyesick-staging.irfancen.com/v1/products?latitude=${latitude}&longitude=${longitude}`
       : null
 
-  const { data: fix, isLoading } = useSWR<ResponseGetAll<IProduct[]>>(url)
-  if (error) return <div>Error: {error}</div>
+  const {
+    data: fix,
+    isLoading,
+    error: fixError,
+  } = useSWR<ResponseGetAll<IProduct[]>>(url)
+  if (fixError) return <div>Error: {error}</div>
   if (isLoading) return <div>Loading...</div>
 
   return (
@@ -119,13 +123,32 @@ export default function HomePage({
         <div className="mt-5 text-2xl font-semibold">
           <h2>Around You</h2>
         </div>
-        {data2.data.current_page_total_items == 0 ? (
+        {/* {fix?.data.current_page_total_items == 0 ? (
+          <div>
+            <p>No Product Yet</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 mt-5 mb-3 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {fix?.data.items.map((cat) => (
+              <div key={cat.id}>
+                <ProductCard product={cat} />
+              </div>
+            ))}
+          </div>
+        )} */}
+
+        {isLoading && (
+          <div>
+            <p>Loading...</p>
+          </div>
+        )}
+        {fix?.data.current_page_total_items == 0 ? (
           <div>
             <p>No Product Yet</p>
           </div>
         ) : (
           <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {data2.data.items.map((cat) => (
+            {fix?.data.items.map((cat) => (
               <div key={cat.id}>
                 <ProductCard product={cat} />
               </div>

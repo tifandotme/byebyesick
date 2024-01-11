@@ -54,6 +54,14 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           min="1"
           className="h-8 w-14 rounded-none border-x-0"
           value={quantity}
+          onChange={(e) => {
+            const newQuantity = Number(e.target.value)
+            setQuantity(newQuantity)
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
+          }}
         />
         <Button
           variant="outline"

@@ -1,26 +1,23 @@
 import { create } from "zustand"
 
-type State = {
-  checkedItems: { [key: string]: boolean }
-  setCheckedItem: (id: string, isChecked: boolean) => void
-  checkAll: (isChecked: boolean) => void
+import type { ICart } from "@/types/api"
+
+interface CartCheckState {
+  selectedCard: number[]
 }
 
-export const useStore = create<State>((set) => ({
-  checkedItems: {},
-  setCheckedItem: (id, isChecked) =>
-    set((state) => ({
-      checkedItems: { ...state.checkedItems, [id]: isChecked },
-    })),
-  checkAll: (isChecked) =>
-    set((state) => {
-      const newCheckedItems = Object.keys(state.checkedItems).reduce(
-        (result, key) => {
-          result[key] = isChecked
-          return result
-        },
-        {},
-      )
-      return { checkedItems: newCheckedItems }
-    }),
+export const useCartCheckStore = create<CartCheckState>((set) => ({
+  selectedCard: [],
 }))
+
+export const useCartActions = () => {
+  const toggledCheckoutCard = (id: number) => {
+    useCartCheckStore.setState((state) => {
+      const selectedCard = state.selectedCard.includes(id)
+        ? state.selectedCard.filter((i) => i !== id)
+        : [...state.selectedCard, id]
+
+      return { selectedCard }
+    })
+  }
+}
