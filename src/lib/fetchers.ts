@@ -46,7 +46,7 @@ export async function updatePharmacy(
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       body: JSON.stringify({
         pharmacy_admin_id: 1,
@@ -232,13 +232,14 @@ export const useProductData = (filters: ProductsFilter) => {
   }
 }
 
-export async function updatePost(
+export async function updateProducts(
   mode: "add" | "edit",
   payload: ProductInputs,
   id?: number,
 ): Promise<Response> {
   try {
     const formData = new FormData()
+
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
     formData.append("content", payload.content)
@@ -268,9 +269,9 @@ export async function updatePost(
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
-      headers: {
-        accept: "application/json",
-      },
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
       body: formData,
     }
 
@@ -298,7 +299,7 @@ export async function updatePost(
   }
 }
 
-export async function deletePost(id: number): Promise<Response> {
+export async function deleteProducts(id: number): Promise<Response> {
   try {
     const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
     const options: RequestInit = {
