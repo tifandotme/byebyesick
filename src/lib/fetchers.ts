@@ -65,8 +65,8 @@ export async function updatePharmacy(
         address: payload.address,
         sub_district: payload.subDistrict,
         district: payload.district,
-        province: Number(payload.province),
-        city: Number(payload.city),
+        province_id: Number(payload.provinceId),
+        city_id: Number(payload.cityId),
         postal_code: payload.postalCode,
         latitude: payload.latitude,
         longitude: payload.longitude,
@@ -102,7 +102,7 @@ export async function deletePharmacy(id?: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
