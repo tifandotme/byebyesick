@@ -284,9 +284,6 @@ export async function updatePost(
   id?: number,
 ): Promise<Response> {
   try {
-    const image = await fetch(payload.image).then((res) => res.blob())
-
-    const extension = image.type.split("/")[1]
     const formData = new FormData()
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
