@@ -29,8 +29,8 @@ export type Pharmacy = {
   address: string
   sub_district: string
   district: string
-  city: string
-  province: string
+  city: number
+  province: number
   postal_code: string
   latitude: string
   longitude: string
@@ -69,6 +69,44 @@ export type User = {
   email: string
   user_role_id: keyof typeof usersRoleIds
   is_verified: boolean
+}
+
+// GET /v1/report-stock-mutations?pharmacy_id=1
+
+export type StockMutationReport = {
+  id: number
+  pharmacy_product_id: number
+  product_stock_mutation_type_id: number
+  stock: number
+  pharmacy_product: {
+    product: Pick<IProduct, "name" | "generic_name" | "content"> & {
+      manufacturer: Pick<IManufacturer, "name">
+    }
+  }
+  product_stock_mutation_type: {
+    name: string
+  }
+}
+
+// /v1/address-area Response
+
+export type AddressResponse<TData = unknown> = {
+  data: TData
+}
+
+// GET /v1/address-area/provinces/no-params
+
+export type Province = {
+  province_id: number
+  province: string
+}
+
+// GET /v1/address-area/cities/no-params
+
+export type City = {
+  province_id: number
+  city_id: number
+  city_name: string
 }
 
 // FOR SCHEMAS

@@ -2,6 +2,8 @@ import React from "react"
 import L, { type LatLngLiteral } from "leaflet"
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet"
 
+import { useDebounce } from "@/hooks/use-debounce"
+
 interface LeafletMapProps extends React.ComponentProps<typeof MapContainer> {
   coords: LatLngLiteral
   onCoordsChange: (coords: LatLngLiteral) => void
@@ -12,24 +14,17 @@ export default function LeafletMap({
   onCoordsChange,
   ...props
 }: LeafletMapProps) {
-  const [position, setPosition] = React.useState(coords)
-
-  React.useEffect(() => {
-    onCoordsChange(position)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position])
+  const debouncedCoords = useDebounce(coords, 500)
 
   return (
-    <MapContainer center={position} {...props}>
+    <MapContainer center={debouncedCoords} {...props}>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <LocationMarker
-        coords={coords}
-        position={position}
-        setPosition={setPosition}
+        coords={debouncedCoords}
+        onCoordsChange={onCoordsChange}
       />
     </MapContainer>
   )
@@ -37,15 +32,10 @@ export default function LeafletMap({
 
 interface LocationMarkerProps {
   coords: LatLngLiteral
-  position: LatLngLiteral
-  setPosition: (position: LatLngLiteral) => void
+  onCoordsChange: (coords: LatLngLiteral) => void
 }
 
-function LocationMarker({
-  coords,
-  position,
-  setPosition,
-}: LocationMarkerProps) {
+function LocationMarker({ coords, onCoordsChange }: LocationMarkerProps) {
   const markerRef = React.useRef<any | null>(null)
 
   const eventHandlers = React.useMemo(
@@ -53,23 +43,21 @@ function LocationMarker({
       dragend() {
         const marker = markerRef.current
         if (marker != null) {
-          setPosition(marker.getLatLng())
+          onCoordsChange(marker.getLatLng())
         }
       },
     }),
-    [setPosition],
+    [onCoordsChange],
   )
 
   const map = useMapEvents({
     click() {
-      map.flyTo(position, map.getZoom())
+      map.flyTo(coords, map.getZoom())
     },
   })
 
   React.useEffect(() => {
-    setPosition(coords)
     map.flyTo(coords, map.getZoom())
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords])
 
@@ -77,7 +65,7 @@ function LocationMarker({
     <Marker
       draggable={true}
       eventHandlers={eventHandlers}
-      position={position}
+      position={coords}
       ref={markerRef}
       icon={L.icon({
         iconUrl: "/images/marker-icon-2x.png",
