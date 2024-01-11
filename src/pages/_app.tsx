@@ -1,10 +1,12 @@
 import React from "react"
 import Head from "next/head"
-import { SessionProvider, useSession } from "next-auth/react"
+import { jwtDecode } from "jwt-decode"
+import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig, type Middleware } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
+import type { userJWT } from "@/types/user"
 import { fetcher } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
 import { Toaster } from "@/components/ui/sonner"
@@ -61,6 +63,9 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   React.useEffect(() => {
     if (!session?.user.token) return
 
+    const decoded: userJWT = jwtDecode(session.user.token)
+    if (decoded.exp * 1000 <= Date.now()) signOut()
+
     // "monkey patch" fetch to add the token to all requests
     const originalFetch = window.fetch
     window.fetch = async (...args) => {
@@ -100,6 +105,7 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
           })
         },
         revalidateOnFocus: false,
+        keepPreviousData: true,
         use: [middleware],
       }}
     >

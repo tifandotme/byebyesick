@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -7,6 +8,7 @@ import type {
   ProductCategoriesInputs,
   ProductInputs,
   Response,
+  StockMutationInputs,
   UserInputs,
 } from "@/types"
 import type {
@@ -29,9 +31,16 @@ const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 export async function fetcher<TData = unknown>(
   endpoint: string,
   options?: RequestInit,
-): Promise<TData> {
+): Promise<TData | undefined> {
   const url = new URL(endpoint, BASE_URL)
   const res = await fetch(url, options)
+
+  if (!res.ok) {
+    const { errors } = await res.json()
+    errors?.forEach((msg: string) => console.error(msg))
+
+    return
+  }
 
   return res.json()
 }
@@ -42,6 +51,8 @@ export async function updatePharmacy(
   id?: number,
 ): Promise<Response> {
   try {
+    const session = await getSession()
+
     const endpoint = mode === "add" ? "/v1/pharmacies" : `/v1/pharmacies/${id}`
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
@@ -49,13 +60,13 @@ export async function updatePharmacy(
         "Content-Type": "multipart/form-data",
       },
       body: JSON.stringify({
-        pharmacy_admin_id: 1,
+        pharmacy_admin_id: session?.user.user_id,
         name: payload.name,
         address: payload.address,
         sub_district: payload.subDistrict,
         district: payload.district,
-        province: payload.province,
-        city: payload.city,
+        province: Number(payload.province),
+        city: Number(payload.city),
         postal_code: payload.postalCode,
         latitude: payload.latitude,
         longitude: payload.longitude,
@@ -125,7 +136,7 @@ export async function updateAdmin(
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -147,11 +158,46 @@ export async function deleteAdmin(id: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
       message: "Admin deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function addStockMutation(
+  payload: StockMutationInputs & {
+    pharmacy_product_id: number
+  },
+): Promise<Response> {
+  try {
+    const { stock, ...data } = payload
+
+    const endpoint = "/v1/stock-mutations"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        stock: Number(stock),
+      } satisfies Record<keyof typeof payload, number>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation added",
     }
   } catch (err) {
     return {
@@ -183,7 +229,7 @@ export async function updatePharmacyProduct(
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,

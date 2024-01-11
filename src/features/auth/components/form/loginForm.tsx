@@ -76,8 +76,9 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 lg:w-1/2"
+        className="w-full max-w-md space-y-6"
       >
+        <h1 className="text-xl font-medium">Login</h1>
         <FormField
           control={form.control}
           name="email"
@@ -114,7 +115,7 @@ export default function LoginForm() {
               Register
             </Link>
           </div>
-          <Link href={"/"} className="text-apple-600">
+          <Link href={"/reset/password"} className="text-apple-600">
             Reset Password
           </Link>
         </div>
