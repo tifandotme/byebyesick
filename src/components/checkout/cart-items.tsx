@@ -4,7 +4,7 @@ import { ImageIcon } from "lucide-react"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
 // import type { CartLineItem } from "@/types"
-import { cn, formatPrice } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { UpdateCart } from "@/components/checkout/update-cart-items"
 

@@ -23,7 +23,7 @@ import { Icons } from "@/components/icons"
 
 function MainNavbar() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
   return (
     <header className="border-b-2 border-b-apple-300 bg-background">

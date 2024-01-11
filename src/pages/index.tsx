@@ -3,7 +3,6 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import { Tablets } from "lucide-react"
-import useSWR from "swr"
 
 import type { ApiResponse, IDrugClassification, IProduct } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
