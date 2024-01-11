@@ -284,6 +284,9 @@ export async function updatePost(
   id?: number,
 ): Promise<Response> {
   try {
+    const image = await fetch(payload.image).then((res) => res.blob())
+
+    const extension = image.type.split("/")[1]
     const formData = new FormData()
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
@@ -295,7 +298,20 @@ export async function updatePost(
     formData.append("length", payload.length.toString())
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
-    formData.append("image", payload.image)
+
+    // formData.append(
+    //   "image",
+    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
+    //     type: "png",
+    //   }),
+    // )
+
+    formData.append(
+      "image",
+      await fetch(payload.image).then((res) => res.blob()),
+      "image.png",
+    )
+
     formData.append("manufacturer_id", payload.manufacturer_id.toString())
     formData.append("selling_unit", payload.selling_unit.toString())
     formData.append(
@@ -306,6 +322,8 @@ export async function updatePost(
       "product_category_id",
       payload.product_category_id.toString(),
     )
+
+    console.log(formData.get("image"))
 
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,

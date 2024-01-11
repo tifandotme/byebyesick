@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { ApiResponse, IProductCategory } from "@/types/api"
+import type { IProductCategory, ResponseGetAll } from "@/types/api"
 import { deleteProductCategory } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -29,10 +29,15 @@ import {
 
 interface ProductsTableProps<TData = IProductCategory[]> {
   data: TData
-  mutate: KeyedMutator<ApiResponse<TData>>
+  mutate: KeyedMutator<ResponseGetAll<TData>>
+  pageCount: number
 }
 
-export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
+export function ProductCategoriesTable({
+  data,
+  mutate,
+  pageCount,
+}: ProductsTableProps) {
   const productscategories = data.map((m) => ({
     id: m.id,
     name: m.name,
@@ -147,12 +152,7 @@ export function ProductCategoriesTable({ data, mutate }: ProductsTableProps) {
     <DataTable
       columns={columns}
       data={productscategories}
-      searchableColumns={[
-        {
-          id: "name",
-          title: "Name",
-        },
-      ]}
+      pageCount={pageCount}
     />
   )
 }
