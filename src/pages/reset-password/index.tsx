@@ -25,9 +25,7 @@ export const getServerSideProps = (async (context) => {
   props: RegisterToken
 }>
 
-function NewPasswordPage({
-  props,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function NewPasswordPage() {
   return <ResetPasswordForm />
 }
 

@@ -47,7 +47,7 @@ function ResetPasswordForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full space-y-6 "
+        className="w-full max-w-lg space-y-6 "
       >
         <h1 className="text-xl font-medium">Set New Password</h1>
         <FormField
