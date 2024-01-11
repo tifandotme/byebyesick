@@ -29,7 +29,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
@@ -322,104 +321,92 @@ export default function ProductForm({
             />
 
             <div className="flex space-x-2">
-              <div className="">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="weight"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Weight</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="in grams"
-                            {...field}
-                            onChange={(event) => {
-                              const numericValue = +event.target.value
-                              field.onChange(
-                                isNaN(numericValue) ? 0 : numericValue,
-                              )
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="length"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Length</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="in cm"
-                            {...field}
-                            onChange={(event) => {
-                              const numericValue = +event.target.value
-                              field.onChange(
-                                isNaN(numericValue) ? 0 : numericValue,
-                              )
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="width"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Product Width</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="in cm"
-                          {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="height"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Product Height</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="in cm"
-                          {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="weight"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Product Weight</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="in grams"
+                        {...field}
+                        onChange={(event) => {
+                          const numericValue = +event.target.value
+                          field.onChange(isNaN(numericValue) ? 0 : numericValue)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="length"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Product Length</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="in cm"
+                        {...field}
+                        onChange={(event) => {
+                          const numericValue = +event.target.value
+                          field.onChange(isNaN(numericValue) ? 0 : numericValue)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
+                name="width"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Product Width</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="in cm"
+                        {...field}
+                        onChange={(event) => {
+                          const numericValue = +event.target.value
+                          field.onChange(isNaN(numericValue) ? 0 : numericValue)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="height"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Product Height</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="in cm"
+                        {...field}
+                        onChange={(event) => {
+                          const numericValue = +event.target.value
+                          field.onChange(isNaN(numericValue) ? 0 : numericValue)
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div>
@@ -443,7 +430,8 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
-                              form.setValue("image", files[0])
+                              console.log(files[0], "image")
+                              field.onChange("image", URL.createObjectURL(file))
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -478,9 +466,10 @@ export default function ProductForm({
                         />
                       )}
                     </div>
-                    <UncontrolledFormMessage
+                    <FormMessage />
+                    {/* <UncontrolledFormMessage
                       message={form.formState.errors.image?.message?.toString()}
-                    />
+                    /> */}
                   </FormItem>
                 )}
               />
@@ -489,9 +478,6 @@ export default function ProductForm({
             <div className="flex gap-4">
               <Button
                 type="submit"
-                onClick={() => {
-                  onSubmit(form.getValues())
-                }}
                 disabled={form.formState.isSubmitting}
                 className="w-fit"
               >
