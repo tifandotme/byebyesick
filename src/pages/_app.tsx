@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           <ThemeProvider attribute="class">
             {getLayout(<Component {...pageProps} />)}
 
-            <Toaster richColors closeButton />
+            <Toaster richColors />
           </ThemeProvider>
         </SWRConfigWrapper>
       </SessionProvider>
