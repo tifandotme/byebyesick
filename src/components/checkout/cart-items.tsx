@@ -1,12 +1,10 @@
 import React from "react"
 import Image from "next/image"
-import { Slot } from "@radix-ui/react-slot"
 import { ImageIcon } from "lucide-react"
 
 import type { ICart, ResponseGetAll } from "@/types/api"
 import { cn, formatPrice } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { UpdateCart } from "@/components/checkout/update-cart-items"
 
@@ -14,99 +12,106 @@ interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ResponseGetAll<ICart[]>
   isScrollable?: boolean
   isCheckable?: boolean
+  checkedItems?: Record<number, boolean>
+  onChecked?: (id: string, isChecked: boolean) => void
 }
 
 export function CartLineItems({
   items,
   isScrollable = true,
-  isCheckable = false,
+  isCheckable = true,
+  onChecked,
+  checkedItems,
+
   className,
   ...props
 }: CartLineItemsProps) {
-  const Comp = isScrollable ? ScrollArea : Slot
-  const [isChecked, setIsChecked] = React.useState(false)
-  const toggleCheckbox = () => setIsChecked(!isChecked)
+  // const Comp = isScrollable ? ScrollArea : Slot
+
+  // const [checked, setChecked] = React.useState(false)
 
   return (
-    <Comp className="h-full">
-      <div
-        className={cn(
-          "flex w-full flex-col gap-5",
-          isScrollable && "pr-6",
-          className,
-        )}
-        {...props}
-      >
-        {items.data.items.map((item, index) => (
-          <div key={index} className="space-y-3">
-            <div
-              className={cn(
-                "flex items-start justify-between gap-4",
-                isCheckable && "flex-col xs:flex-row",
+    // <Comp className="h-full">
+    <div
+      className={cn(
+        "flex w-full flex-col gap-5",
+        isScrollable && "pr-6",
+        className,
+      )}
+      {...props}
+    >
+      {items.data.items.map((item, index) => (
+        <div key={index} className="space-y-3">
+          <div
+            className={cn(
+              "flex items-start justify-between gap-4",
+              isCheckable && "flex-col xs:flex-row",
+            )}
+          >
+            <div className="flex items-center space-x-4">
+              {isCheckable && (
+                <Checkbox
+                  checked={checkedItems?.[item.id] || false}
+                  onCheckedChange={(isChecked) =>
+                    onChecked && onChecked(String(item.id), Boolean(isChecked))
+                  }
+                  className="shrink-0"
+                />
               )}
-            >
-              <div className="flex items-center space-x-4">
-                {isCheckable && (
-                  <Checkbox
-                    checked={isChecked}
-                    onCheckedChange={toggleCheckbox}
-                    className="shrink-0"
+              <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
+                {item?.product.image?.length ? (
+                  <Image
+                    src={
+                      item.product.image ?? "/images/product-placeholder.webp"
+                    }
+                    alt={item.product.name ?? item.product.name}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    fill
+                    className="absolute object-cover"
+                    loading="lazy"
                   />
-                )}
-                <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
-                  {item?.product.image?.length ? (
-                    <Image
-                      src={
-                        item.product.image ?? "/images/product-placeholder.webp"
-                      }
-                      alt={item.product.name ?? item.product.name}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      fill
-                      className="absolute object-cover"
-                      loading="lazy"
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-secondary">
+                    <ImageIcon
+                      className="h-4 w-4 text-muted-foreground"
+                      aria-hidden="true"
                     />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-secondary">
-                      <ImageIcon
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden="true"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col space-y-1 self-start">
-                  <span className="line-clamp-1 text-sm font-medium">
-                    {item.product.name}
-                  </span>
-                  {isCheckable ? (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
-                      {formatPrice(Number(item.product.maximum_price))}
-                    </span>
-                  ) : (
-                    <span className="line-clamp-1 text-xs text-muted-foreground">
-                      Qty {item.quantity}
-                    </span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-              {isCheckable ? (
-                <UpdateCart cartLineItem={item} />
-              ) : (
-                <div className="flex flex-col space-y-1 font-medium">
-                  <span className="ml-auto line-clamp-1 text-sm">
-                    {formatPrice(item.product.maximum_price)}
-                  </span>
+
+              <div className="flex flex-col space-y-1 self-start">
+                <span className="line-clamp-1 text-sm font-medium">
+                  {item.product.name}
+                </span>
+                {isCheckable ? (
                   <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {formatPrice(item.product.maximum_price)} each
+                    {formatPrice(Number(item.product.maximum_price))}
                   </span>
-                </div>
-              )}
+                ) : (
+                  <span className="line-clamp-1 text-xs text-muted-foreground">
+                    Qty {item.quantity}
+                  </span>
+                )}
+              </div>
             </div>
-            <Separator />
+            {isCheckable ? (
+              <UpdateCart cartLineItem={item} />
+            ) : (
+              <div className="flex flex-col space-y-1 font-medium">
+                <span className="ml-auto line-clamp-1 text-sm">
+                  {formatPrice(item.product.maximum_price)}
+                </span>
+                <span className="line-clamp-1 text-xs text-muted-foreground">
+                  {formatPrice(item.product.maximum_price)} each
+                </span>
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-    </Comp>
+          <Separator />
+        </div>
+      ))}
+    </div>
+    // </Comp>
   )
 }

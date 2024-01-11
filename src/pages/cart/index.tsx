@@ -1,6 +1,7 @@
 import React, { type ReactElement } from "react"
 
 import { useCartList } from "@/lib/fetchers"
+import { useCartCheckStore } from "@/lib/stores/cart"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,15 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CartLineItems } from "@/components/checkout/cart-items"
 import { CheckoutCard } from "@/components/checkout/checkout-card"
@@ -26,6 +18,12 @@ import MainLayout from "@/components/layout/main-layout"
 
 export default function CartPage() {
   const { cartdata, cartisLoading } = useCartList()
+
+  const [checkedItems, setCheckedItems] = React.useState({})
+
+  const handleCheckChange = (itemId: string, isChecked: boolean) => {
+    setCheckedItems((prevState) => ({ ...prevState, [itemId]: isChecked }))
+  }
 
   if (cartisLoading) {
     return <Skeleton />
@@ -46,6 +44,8 @@ export default function CartPage() {
               items={cartdata}
               className="mt-5"
               isCheckable={true}
+              onChecked={handleCheckChange}
+              checkedItems={checkedItems}
             />
           </div>
 
@@ -59,7 +59,13 @@ export default function CartPage() {
               </CardHeader>
               <CardContent>
                 <div>
-                  <p>TES</p>
+                  <p>
+                    <span>Total Items: </span>
+
+                    <span>
+                      {checkedItems && Object.keys(checkedItems).length}
+                    </span>
+                  </p>
                 </div>
               </CardContent>
               <CardFooter>

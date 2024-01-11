@@ -52,7 +52,11 @@ export default function CartSheet() {
         </SheetHeader>
         {itemCount! > 0 ? (
           <>
-            <CartLineItems items={cartdata!} className="flex-1" />
+            <CartLineItems
+              items={cartdata!}
+              className="flex-1"
+              isCheckable={false}
+            />
             <div className="space-y-4 pr-6">
               <Separator />
               <div className="space-y-1.5 text-sm">
