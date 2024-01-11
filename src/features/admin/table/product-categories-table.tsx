@@ -38,8 +38,8 @@ export function ProductCategoriesTable({
   mutate,
   pageCount,
 }: ProductsTableProps) {
-  const productscategories = data.map((m) => ({
-    id: m.id,
+  const productscategories = data.map((m, index) => ({
+    id: index + 1,
     name: m.name,
   }))
 

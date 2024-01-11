@@ -6,7 +6,12 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import { deletePost } from "@/lib/fetchers"
+import {
+  deletePost,
+  getDrugClassificationName,
+  getManufacturerName,
+  getProductCategoryName,
+} from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,8 +40,8 @@ interface ProductsTableProps<TData = IProduct[]> {
 }
 
 export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
-  const product = data.map((m) => ({
-    id: m.id,
+  const product = data.map((m, index) => ({
+    id: index + 1,
     name: m.name,
     generic_name: m.generic_name,
   }))
@@ -150,5 +155,12 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
     [mutate],
   )
 
-  return <DataTable columns={columns} data={product} pageCount={pageCount} />
+  return (
+    <DataTable
+      columns={columns}
+      data={product}
+      pageCount={pageCount}
+      includeSearch={true}
+    />
+  )
 }
