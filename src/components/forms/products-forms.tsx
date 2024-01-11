@@ -18,7 +18,7 @@ import {
   type IProductCategory,
   type ProductsSchema,
 } from "@/types/api"
-import { updatePost } from "@/lib/fetchers"
+import { updateProducts } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { productSchema } from "@/lib/validations/products-schema"
 import { Button } from "@/components/ui/button"
@@ -29,7 +29,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
@@ -52,6 +51,8 @@ export default function ProductForm({
   initialProductData,
 }: ProductFormProps) {
   const router = useRouter()
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [preview, setPreview] = React.useState<string | null>()
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
     `/v1/product-categories`,
@@ -86,7 +87,9 @@ export default function ProductForm({
   })
 
   const onSubmit = async (data: ProductInputs) => {
-    const { success, message } = await updatePost(
+    setIsLoading(true)
+
+    const { success, message } = await updateProducts(
       mode,
       data,
       initialProductData?.data.id,
@@ -443,6 +446,8 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
+                              setPreview("image")
+
                               form.setValue("image", files[0])
                             }}
                             accept="image/*"
@@ -461,6 +466,8 @@ export default function ProductForm({
                               </div>
                             </Button>
                           </label>
+
+                          {preview && <img src={preview} alt="" />}
                         </>
                       </FormControl>
                       {mode === "add" &&
