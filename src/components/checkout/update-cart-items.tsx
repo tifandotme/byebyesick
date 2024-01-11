@@ -4,11 +4,10 @@ import { toast } from "sonner"
 import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
-import { addToCart, deleteCart, token } from "@/lib/fetchers"
-import { catchError } from "@/lib/utils"
+import { addToCart, deleteCart, useCartList } from "@/lib/fetchers"
+import { handleFailedRequest } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useCartList } from "@/components/checkout/cart-sheet"
 
 interface UpdateCartProps {
   cartLineItem: CartInputs
@@ -16,7 +15,7 @@ interface UpdateCartProps {
 
 export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const [isLoading, setIsLoading] = React.useState(false)
-  const { cartMutate } = useCartList(token)
+  const { cartMutate } = useCartList()
 
   const [quantity, setQuantity] = React.useState(cartLineItem.quantity)
 
@@ -98,7 +97,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
             const { success } = await deleteCart(product_ids)
             cartMutate()
 
-            if (!success) catchError
+            if (!success) handleFailedRequest
             setIsLoading(false)
           }
 
