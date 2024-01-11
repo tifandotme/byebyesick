@@ -1,20 +1,18 @@
 import React from "react"
 import Head from "next/head"
+import { jwtDecode } from "jwt-decode"
 import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { SWRConfig, type Middleware } from "swr"
 
 import type { AppPropsWithLayout } from "@/types/next"
+import type { userJWT } from "@/types/user"
 import { fetcher } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
 import { Toaster } from "@/components/ui/sonner"
 
 import "@/styles/globals.css"
 import "leaflet/dist/leaflet.css"
-
-import { jwtDecode } from "jwt-decode"
-
-import type { userJWT } from "@/types/user"
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
@@ -64,6 +62,7 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!session?.user.token) return
+
     const decoded: userJWT = jwtDecode(session.user.token)
     if (decoded.exp * 1000 <= Date.now()) signOut()
 
