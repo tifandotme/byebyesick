@@ -38,7 +38,7 @@ function ProfilePage(
           <title>ByeByeSick | Profile</title>
         </Head>
         <ProfileForm userProfile={props.userProfile.data} />
-        <ResetPassword />
+        <ResetPassword {...props.userProfile.data} />
       </ProfileLayout>
     </div>
   )
