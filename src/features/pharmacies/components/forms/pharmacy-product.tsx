@@ -1,7 +1,11 @@
 import React from "react"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { CheckIcon } from "@radix-ui/react-icons"
+import {
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@radix-ui/react-icons"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import useSWR from "swr"
@@ -12,6 +16,7 @@ import { updatePharmacyProduct } from "@/lib/fetchers"
 import { cn, toSentenceCase } from "@/lib/utils"
 import { pharmacyProductSchema } from "@/lib/validations/pharmacies"
 import { useDebounce } from "@/hooks/use-debounce"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -56,7 +61,7 @@ export function PharmacyProductForm({
     const { success, message } = await updatePharmacyProduct(
       mode,
       {
-        pharmacy_id: Number(router.query.id),
+        pharmacy_id: Number(router.query.pharmacyId),
         ...data,
       },
       initialData?.id,
@@ -64,7 +69,7 @@ export function PharmacyProductForm({
 
     if (success) {
       toast.success(message)
-      router.push(`/dashboard/pharmacies/${router.query.id}/products`)
+      router.push(`/dashboard/pharmacies/${router.query.pharmacyId}/products`)
     } else {
       toast.error(message)
     }
@@ -161,16 +166,27 @@ function ProductsCombobox({
   value,
   onValueChange,
 }: ProductsComboboxProps) {
+  const router = useRouter()
+
+  const { pharmacyId } = router.query
+
+  const [page, setPage] = React.useState(1)
   const [query, setQuery] = React.useState("")
   const debouncedQuery = useDebounce(query)
 
   const { data, isLoading: isLoadingProducts } = useSWR<
     ResponseGetAll<IProduct[]>
   >(() => {
+    if (!pharmacyId) return null
+
     const params = new URLSearchParams()
+    params.set("pharmacy_id", pharmacyId)
+    params.set("not_added", String(mode === "add"))
+    params.set("page", String(page))
+    params.set("limit", "100")
     if (debouncedQuery) params.set("search", debouncedQuery)
 
-    return `/v1/products?${params.toString()}`
+    return `/v1/products/admin?${params.toString()}`
   })
 
   const currProduct = React.useMemo(() => {
@@ -182,7 +198,7 @@ function ProductsCombobox({
   return (
     <FormItem>
       <FormLabel>Product</FormLabel>
-      <div className="rounded-bg flex justify-between rounded-md border p-4">
+      <div className="flex justify-between rounded-md border p-4">
         {currProduct ? (
           <div className="flex flex-col text-sm">
             {currProduct.name}
@@ -197,46 +213,97 @@ function ProductsCombobox({
         )}
       </div>
       {mode === "add" && (
-        <Command shouldFilter={false} className="h-[380px] rounded-md border">
-          <CommandInput
-            placeholder="Search product.."
-            onValueChange={(value) => setQuery(value)}
-            className="w-full"
-          />
-          <CommandList aria-label="Products" className="max-h-none">
-            {isLoadingProducts &&
-              Array.from({ length: 3 }).map((_, i) => (
-                <div className="p-[10px]" key={i}>
-                  <Skeleton className="h-[53px] w-full" />
-                </div>
-              ))}
-            {data?.data.items.length === 0 && (
-              <div className="p-4 text-center text-sm leading-10">
-                No products found
-              </div>
-            )}
-            {!isLoadingProducts &&
-              data?.data.items.map((product, idx) => (
-                <CommandItem
-                  key={product.id}
-                  value={String(product.id)}
-                  className={cn(
-                    "flex items-center justify-between border-b p-4 hover:cursor-pointer",
-                    idx === product.length && "border-0",
-                  )}
-                  onSelect={onValueChange}
-                >
-                  <div className="flex flex-col">
-                    {product.name}
-                    <span className="text-muted-foreground">
-                      {product.generic_name}
-                    </span>
+        <>
+          <Command shouldFilter={false} className="h-[480px] rounded-md border">
+            <CommandInput
+              placeholder="Search product.."
+              onValueChange={(value) => setQuery(value)}
+              className="w-full"
+            />
+            <CommandList aria-label="Products" className="max-h-none">
+              {isLoadingProducts &&
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div className="p-[10px]" key={i}>
+                    <Skeleton className="h-[53px] w-full" />
                   </div>
-                  {value === product.id && <CheckIcon className="h-4 w-4" />}
-                </CommandItem>
-              ))}
-          </CommandList>
-        </Command>
+                ))}
+              {data?.data.items.length === 0 && (
+                <div className="p-4 text-center text-sm leading-10">
+                  No products found
+                </div>
+              )}
+              {!isLoadingProducts &&
+                data?.data.items.map((product, idx) => (
+                  <CommandItem
+                    key={product.id}
+                    value={String(product.id)}
+                    className={cn(
+                      "flex items-center justify-between border-b p-4 hover:cursor-pointer",
+                      idx === product.length && "border-0",
+                    )}
+                    onSelect={onValueChange}
+                  >
+                    <div className="flex flex-col">
+                      {product.name}
+                      <span className="text-muted-foreground">
+                        {product.generic_name}
+                      </span>
+                    </div>
+                    <div className="flex gap-2">
+                      <Badge
+                        variant="outline"
+                        className="hidden lg:inline-flex"
+                      >
+                        {product.drug_form}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="hidden lg:inline-flex"
+                      >
+                        {product.unit_in_pack + " / " + product.selling_unit}
+                      </Badge>
+                      <CheckIcon
+                        className={cn(
+                          "h-4 w-4",
+                          value !== product.id && "invisible",
+                        )}
+                      />
+                    </div>
+                  </CommandItem>
+                ))}
+            </CommandList>
+          </Command>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9"
+              disabled={page === 1}
+              onClick={() =>
+                setPage((prev) => {
+                  if (prev === 1) return prev
+                  return prev - 1
+                })
+              }
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9"
+              disabled={data?.data.total_pages === page}
+              onClick={() =>
+                setPage((prev) => {
+                  if (data?.data.total_pages === prev) return prev
+                  return prev + 1
+                })
+              }
+            >
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </>
       )}
       <FormMessage />
     </FormItem>
