@@ -60,8 +60,8 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       address: initialData?.address ?? "",
       subDistrict: initialData?.sub_district ?? "",
       district: initialData?.district ?? "",
-      city: initialData?.city ?? 0,
-      province: initialData?.province ?? 0,
+      cityId: initialData?.city_id ?? 0,
+      provinceId: initialData?.province_id ?? 0,
       postalCode: initialData?.postal_code ?? "",
       latitude: initialData?.latitude ?? INITIAL_COORDS[0],
       longitude: initialData?.longitude ?? INITIAL_COORDS[1],
@@ -88,6 +88,10 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       toast.error(message)
     }
   }
+
+  React.useEffect(() => {
+    form.reset(initialData)
+  }, [form, initialData])
 
   React.useEffect(() => {
     mode === "add" && form.setFocus("name")
@@ -159,15 +163,15 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
         <div className="flex flex-col items-start gap-6 sm:flex-row">
           <FormField
             control={form.control}
-            name="province"
+            name="provinceId"
             render={({ field }) => (
               <ProvinceCombobox
                 label="Province"
                 value={field.value.toString()}
                 onValueChange={(value) => {
-                  form.setValue("province", Number(value))
-                  if (form.getValues("city")) {
-                    form.setValue("city", 0)
+                  form.setValue("provinceId", Number(value))
+                  if (form.getValues("cityId")) {
+                    form.setValue("cityId", 0)
                   }
                 }}
               />
@@ -175,13 +179,15 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
           />
           <FormField
             control={form.control}
-            name="city"
+            name="cityId"
             render={({ field }) => (
               <CityCombobox
                 label="City"
                 value={field.value.toString()}
-                onValueChange={(value) => form.setValue("city", Number(value))}
-                provinceId={form.watch("province")}
+                onValueChange={(value) =>
+                  form.setValue("cityId", Number(value))
+                }
+                provinceId={form.watch("provinceId")}
               />
             )}
           />
@@ -446,10 +452,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
         <div className="flex gap-4">
           <Button
             type="submit"
-            disabled={
-              form.formState.isSubmitting ||
-              (mode === "edit" && !form.formState.isDirty)
-            }
+            disabled={form.formState.isSubmitting}
             className="w-fit"
           >
             {form.formState.isSubmitting && (
@@ -473,10 +476,11 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
   const provinces = useStore((state) => state.provinces)
 
   const onClick = async () => {
-    const city = cities?.find((city) => city.city_id === form.getValues("city"))
-      ?.city_name
+    const city = cities?.find(
+      (city) => city.city_id === form.getValues("cityId"),
+    )?.city_name
     const province = provinces?.find(
-      (province) => province.province_id === form.getValues("province"),
+      (province) => province.province_id === form.getValues("provinceId"),
     )?.province
 
     const addressArr = [
