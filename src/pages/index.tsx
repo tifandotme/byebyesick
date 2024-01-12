@@ -84,9 +84,6 @@ export default function HomePage({
   if (error) return <div>Error: {error}</div>
   if (isLoading) return <div>Loading...</div>
 
-  if (locationError)
-    toast.error("Please enable location to see products around you")
-
   return (
     <div>
       <Head>
