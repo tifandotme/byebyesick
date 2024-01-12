@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ExternalLinkIcon } from "@radix-ui/react-icons"
-import { Loader2 } from "lucide-react"
+import { Loader2, UploadCloudIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import useSWR from "swr"
@@ -29,6 +29,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
@@ -51,10 +52,9 @@ export default function ProductForm({
   initialProductData,
 }: ProductFormProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState(false)
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
-    `/v1/product-categories/no-params`,
+    `/v1/product-categories`,
   )
   const { data: prodmanuf } = useSWR<ApiResponse<IManufacturer[]>>(
     `/v1/manufacturers/no-params`,
@@ -69,7 +69,7 @@ export default function ProductForm({
       name: initialProductData?.data.name ?? "",
       generic_name: initialProductData?.data.generic_name ?? "",
       content: initialProductData?.data.content ?? "",
-      // image: initialProductData?.data.image ?? "",
+      image: initialProductData?.data.image ?? "",
       manufacturer_id: initialProductData?.data.manufacturer_id ?? 1,
       description: initialProductData?.data.description ?? "",
       drug_classification_id:
@@ -82,21 +82,17 @@ export default function ProductForm({
       length: initialProductData?.data.length ?? 0,
       width: initialProductData?.data.width ?? 0,
       height: initialProductData?.data.height ?? 0,
-      price: initialProductData?.data.price ?? "0",
     },
   })
 
   const onSubmit = async (data: ProductInputs) => {
-    setIsLoading(true)
-
     const { success, message } = await updatePost(
       mode,
       data,
       initialProductData?.data.id,
     )
-    success ? toast.success(message) : toast.error(message)
 
-    setIsLoading(false)
+    success ? toast.success(message) : toast.error(message)
 
     router.push("/dashboard/products")
   }
@@ -176,7 +172,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodmanuf?.data.items.map((option) => (
+                          {prodmanuf?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -231,7 +227,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {drugclass?.data.items.map((option) => (
+                          {drugclass?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -268,7 +264,7 @@ export default function ProductForm({
                       </FormControl>
                       <SelectContent>
                         <SelectGroup>
-                          {prodcat?.data.items.map((option) => (
+                          {prodcat?.data.items?.map((option) => (
                             <SelectItem
                               key={option.id}
                               value={String(option.id)}
@@ -425,20 +421,8 @@ export default function ProductForm({
                 />
               </div>
             </div>
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Price</FormLabel>
-                  <FormControl>
-                    <Input type="text" placeholder="100000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* <div>
+
+            <div>
               <FormField
                 control={form.control}
                 name="image"
@@ -459,14 +443,8 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
-                              form.setValue(
-                                "image",
-                                URL.createObjectURL(file),
-                                {
-                                  shouldDirty: true,
-                                  shouldValidate: true,
-                                },
-                              )
+                              field.onChange(URL.createObjectURL(file))
+                              // convert to string
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -475,7 +453,7 @@ export default function ProductForm({
                           <label htmlFor="imageUpload" className="w-full">
                             <Button
                               variant="outline"
-                              className="w-full font-medium cursor-pointer"
+                              className="w-full cursor-pointer font-medium"
                               asChild
                             >
                               <div>
@@ -495,24 +473,33 @@ export default function ProductForm({
                           src={
                             form.getFieldState("image").isDirty
                               ? field.value
-                              : initialProductData.image
+                              : initialProductData.data.image
                           }
-                          alt={initialProductData.name}
+                          alt={initialProductData.data.name}
                         />
                       )}
                     </div>
                     <UncontrolledFormMessage
-                      message={form.formState.errors.image?.message}
+                      message={form.formState.errors.image?.message?.toString()}
                     />
                   </FormItem>
                 )}
               />
-            </div> */}
+            </div>
 
             <div className="flex gap-4">
-              <Button type="submit" disabled={isLoading} className="w-fit">
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {toSentenceCase(mode)} product
+              <Button
+                type="submit"
+                // onClick={() => {
+                //   onSubmit(form.getValues())
+                // }}
+                disabled={form.formState.isSubmitting}
+                className="w-fit"
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {toSentenceCase(mode)} Product
               </Button>
               {mode === "edit" && initialProductData && (
                 <>
@@ -523,7 +510,7 @@ export default function ProductForm({
                     asChild
                   >
                     <Link
-                      href={`/${initialProductData?.data.id}`}
+                      href={`/products/${initialProductData?.data.id}`}
                       target="_blank"
                     >
                       View product

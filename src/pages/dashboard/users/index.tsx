@@ -1,4 +1,5 @@
 import React from "react"
+import { useRouter } from "next/router"
 import useSWR from "swr"
 
 import type { ResponseGetAll, User } from "@/types/api"
@@ -8,14 +9,28 @@ import { UsersLayout } from "@/features/users/components/layout"
 import { UsersTable } from "@/features/users/components/table"
 
 export default function UsersPage() {
-  const { data, isLoading } = useSWR<ResponseGetAll<User[]>>("/v1/users")
+  const router = useRouter()
+  const { page, per_page, search, sort } = router.query
+
+  const { data, isLoading } = useSWR<ResponseGetAll<User[]>>(() => {
+    const params = new URLSearchParams()
+    if (page) params.set("page", page)
+    if (per_page) params.set("limit", per_page)
+    if (search) params.set("search", search)
+    if (sort) params.set("sort_by", sort.split(".")[0] as string)
+    if (sort) params.set("sort", sort.split(".")[1] as string)
+
+    return `/v1/users?${params.toString()}`
+  })
 
   return (
     <div className="space-y-6 overflow-auto">
-      {isLoading && (
+      {isLoading && !data && (
         <DataTableSkeleton columnCount={4} filterableFieldCount={1} />
       )}
-      {!isLoading && data && <UsersTable data={data?.data.items} />}
+      {data && (
+        <UsersTable data={data.data.items} pageCount={data.data.total_pages} />
+      )}
     </div>
   )
 }

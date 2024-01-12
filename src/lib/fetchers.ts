@@ -1,27 +1,46 @@
-import { mutate } from "swr"
+import { getSession } from "next-auth/react"
+import useSWR, { mutate } from "swr"
 
 import type {
+  CartInputs,
   PharmacyInputs,
   PharmacyProductInputs,
   ProductCategoriesInputs,
   ProductInputs,
   Response,
+  StockMutationInputs,
   UserInputs,
 } from "@/types"
-import type { Pharmacy, PharmacyProduct } from "@/types/api"
+import type {
+  ICart,
+  IDrugClassification,
+  IManufacturer,
+  IProduct,
+  IProductCategory,
+  Pharmacy,
+  PharmacyProduct,
+  ResponseGetAll,
+} from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
-const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
- * Fetcher function for SWR
+ * Generic fetcher for `swr`
  */
 export async function fetcher<TData = unknown>(
   endpoint: string,
   options?: RequestInit,
-): Promise<TData> {
+): Promise<TData | undefined> {
   const url = new URL(endpoint, BASE_URL)
   const res = await fetch(url, options)
+
+  if (!res.ok) {
+    const { errors } = await res.json()
+    errors?.forEach((msg: string) => console.error(msg))
+
+    return
+  }
 
   return res.json()
 }
@@ -32,6 +51,8 @@ export async function updatePharmacy(
   id?: number,
 ): Promise<Response> {
   try {
+    const session = await getSession()
+
     const endpoint = mode === "add" ? "/v1/pharmacies" : `/v1/pharmacies/${id}`
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
@@ -39,13 +60,13 @@ export async function updatePharmacy(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        pharmacy_admin_id: 1,
+        pharmacy_admin_id: session?.user.user_id,
         name: payload.name,
         address: payload.address,
         sub_district: payload.subDistrict,
         district: payload.district,
-        province: payload.province,
-        city: payload.city,
+        province_id: Number(payload.provinceId),
+        city_id: Number(payload.cityId),
         postal_code: payload.postalCode,
         latitude: payload.latitude,
         longitude: payload.longitude,
@@ -81,7 +102,7 @@ export async function deletePharmacy(id?: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -115,7 +136,7 @@ export async function updateAdmin(
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -137,11 +158,46 @@ export async function deleteAdmin(id: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
       message: "Admin deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function addStockMutation(
+  payload: StockMutationInputs & {
+    pharmacy_product_id: number
+  },
+): Promise<Response> {
+  try {
+    const { stock, ...data } = payload
+
+    const endpoint = "/v1/stock-mutations"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        stock: Number(stock),
+      } satisfies Record<keyof typeof payload, number>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation added",
     }
   } catch (err) {
     return {
@@ -173,7 +229,7 @@ export async function updatePharmacyProduct(
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -187,26 +243,96 @@ export async function updatePharmacyProduct(
   }
 }
 
+interface ProductsFilter {
+  drug_class?: number
+  search?: string
+  limit?: number
+  sort?: string
+  sort_by?: string
+  page?: number
+}
+
+export const useProductData = (filters: ProductsFilter) => {
+  const { drug_class, search, limit, sort, sort_by, page } = filters
+
+  let url = "/v1/products?"
+  if (search) url += `search=${search}&`
+  if (limit) url += `limit=${limit}&`
+  if (sort_by) url += `sort_by=${sort_by}&sort=${sort}&`
+  if (drug_class) url += `drug_class=${drug_class}&`
+  if (page) url += `page=${page}`
+
+  const { data, isLoading, mutate, error } =
+    useSWR<ResponseGetAll<IProduct[]>>(url)
+
+  const resetFilters = () => {
+    mutate()
+  }
+
+  return {
+    data,
+    error,
+    isLoading,
+    mutate,
+    resetFilters,
+  }
+}
+
 export async function updatePost(
   mode: "add" | "edit",
   payload: ProductInputs,
   id?: number,
 ): Promise<Response> {
   try {
-    const { ...data } = payload
+    const formData = new FormData()
+    formData.append("name", payload.name)
+    formData.append("generic_name", payload.generic_name)
+    formData.append("content", payload.content)
+    formData.append("description", payload.description)
+    formData.append("drug_form", payload.drug_form)
+    formData.append("unit_in_pack", payload.unit_in_pack)
+    formData.append("weight", payload.weight.toString())
+    formData.append("length", payload.length.toString())
+    formData.append("width", payload.width.toString())
+    formData.append("height", payload.height.toString())
+
+    // formData.append(
+    //   "image",
+    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
+    //     type: "png",
+    //   }),
+    // )
+
+    formData.append(
+      "image",
+      await fetch(payload.image).then((res) => res.blob()),
+      "image.png",
+    )
+
+    formData.append("manufacturer_id", payload.manufacturer_id.toString())
+    formData.append("selling_unit", payload.selling_unit.toString())
+    formData.append(
+      "drug_classification_id",
+      payload.drug_classification_id.toString(),
+    )
+    formData.append(
+      "product_category_id",
+      payload.product_category_id.toString(),
+    )
+
+    console.log(formData.get("image"))
 
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
+
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
-        "Content-Type": "application/json",
+        accept: "application/json",
       },
-      body: JSON.stringify({
-        ...data,
-      }),
+      body: formData,
     }
 
     const res = await fetch(url, options)
@@ -217,6 +343,8 @@ export async function updatePost(
 
     if (mode === "edit") {
       mutate(url)
+      const id = (await res.json()).id as string
+      await fetch(`/api/revalidate/products/${id}`)
     }
 
     return {
@@ -337,5 +465,131 @@ export async function deleteProductCategory(id: number): Promise<Response> {
           ? err.message
           : "Something went wrong please try again",
     }
+  }
+}
+
+export async function getDrugClassificationName(
+  drug_classification_id: number,
+) {
+  const response = await fetch(`${BASE_URL}/v1/drug-classifications/no-params`)
+  const data: ResponseGetAll<IDrugClassification[]> = await response.json()
+  let classificationName = "Unknown"
+
+  data.data.items.forEach((item: IDrugClassification) => {
+    if (item.id === drug_classification_id) {
+      classificationName = item.name
+    }
+  })
+
+  return classificationName
+}
+
+export async function getProductCategoryName(product_category_id: number) {
+  const response = await fetch(`${BASE_URL}/v1/product-categories/no-params`)
+  const data: ResponseGetAll<IProductCategory[]> = await response.json()
+  let productCategoryName = "Unknown"
+
+  data.data.items.forEach((item: IProductCategory) => {
+    if (item.id === product_category_id) {
+      productCategoryName = item.name
+    }
+  })
+
+  return productCategoryName
+}
+
+export async function getManufacturerName(manufacturer_id: number) {
+  const response = await fetch(`${BASE_URL}/v1/manufacturers/no-params`)
+  const data: ResponseGetAll<IManufacturer[]> = await response.json()
+  let manufacturersName = "Unknown"
+
+  data.data.items.forEach((item: IManufacturer) => {
+    if (item.id === manufacturer_id) {
+      manufacturersName = item.name
+    }
+  })
+
+  return manufacturersName
+}
+
+export async function addToCart(payload: CartInputs): Promise<Response> {
+  try {
+    const { ...data } = payload
+    const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+      }),
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed adding item to cart")
+    }
+
+    mutate(url)
+    return {
+      success: true,
+      message: `Cart Added`,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function deleteCart(product_ids: number[]): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/cart-items?product_ids=${product_ids}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+
+    const options: RequestInit = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a product")
+    }
+
+    mutate(url)
+
+    return {
+      success: true,
+      message: "Cart deleted",
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    }
+  }
+}
+
+export const useCartList = () => {
+  const { data, isLoading, error, mutate } =
+    useSWR<ResponseGetAll<ICart[]>>("/v1/cart-items")
+
+  return {
+    cartdata: data,
+    cartisLoading: isLoading,
+    carterror: error,
+    cartMutate: mutate,
   }
 }

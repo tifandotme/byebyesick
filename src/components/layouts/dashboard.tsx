@@ -27,9 +27,7 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
             </ScrollArea>
           </aside>
 
-          <main className="flex w-full flex-col overflow-hidden">
-            {children}
-          </main>
+          <main className="flex w-full flex-col">{children}</main>
         </div>
 
         <SiteFooter />

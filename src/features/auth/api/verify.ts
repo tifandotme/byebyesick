@@ -16,7 +16,7 @@ export function verify(
     body: formData,
   }
   return fetch(
-    `${process.env.BASE_URL}/v1/auth/register?token=${token}`,
+    `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/register?token=${token}`,
     requestOptions,
   )
 }

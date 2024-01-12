@@ -16,8 +16,8 @@ export const authOptions: NextAuthOptions = {
           const resp = await fetch(`${process.env.BASE_URL}/v1/auth/login`, {
             method: "POST",
             body: JSON.stringify({
-              email: email,
-              password: password,
+              email,
+              password,
             }),
           })
           const parsedResponse = await resp.json()
