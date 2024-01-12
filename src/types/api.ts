@@ -29,8 +29,8 @@ export type Pharmacy = {
   address: string
   sub_district: string
   district: string
-  city: number
-  province: number
+  city_id: number
+  province_id: number
   postal_code: string
   latitude: string
   longitude: string
