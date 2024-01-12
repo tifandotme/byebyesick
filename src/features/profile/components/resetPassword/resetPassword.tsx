@@ -23,8 +23,10 @@ function ResetPassword(props: IProfileUser | IProfileDoctor) {
   return (
     <>
       <div className="mt-10 space-y-1">
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>Send reset password request to email</CardDescription>
+        <CardTitle className="text-lg md:text-2xl">Reset Password</CardTitle>
+        <CardDescription className="text-xs md:text-base">
+          Send reset password request to email
+        </CardDescription>
       </div>
       <Separator className="my-4" />
       <Button

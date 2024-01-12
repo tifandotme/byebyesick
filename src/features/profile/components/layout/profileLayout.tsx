@@ -27,8 +27,8 @@ function ProfileLayout({
   const { data: session } = useSession()
   const { pathname } = useRouter()
   return (
-    <div className="flex gap-5">
-      <Card className="h-fit w-1/2">
+    <div className="flex flex-col gap-5 py-5 md:flex-row">
+      <Card className="h-fit md:w-1/2">
         <CardHeader className="flex flex-col items-center">
           <img
             alt="Man"
@@ -39,7 +39,7 @@ function ProfileLayout({
           <CardDescription>{session?.user.email}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="mt-3 flex w-full flex-col gap-2 p-1">
+          <div className="mt-3 flex w-full flex-row gap-2 p-1 md:flex-col">
             <Link
               href={"/user/profile"}
               className={`${
@@ -85,8 +85,10 @@ function ProfileLayout({
         <CardHeader>
           <div className="flex flex-row justify-between">
             <div>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{desc}</CardDescription>
+              <CardTitle className="text-base md:text-2xl">{title}</CardTitle>
+              <CardDescription className="text-xs md:text-base">
+                {desc}
+              </CardDescription>
             </div>
             <div>{action}</div>
           </div>
