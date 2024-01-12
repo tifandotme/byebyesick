@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const config = {
-  output: "standalone",
   reactStrictMode: false,
   env: {
     BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
