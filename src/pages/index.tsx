@@ -3,7 +3,6 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import { Tablets } from "lucide-react"
-import { toast } from "sonner"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
