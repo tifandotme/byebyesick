@@ -6,7 +6,6 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -27,8 +26,8 @@ function AddressModal({
       <AlertDialogTrigger className="flex items-center gap-2">
         {trigger}
       </AlertDialogTrigger>
-      <AlertDialogContent className="h-1/2 overflow-auto">
-        <AlertDialogHeader className="flex flex-row justify-between">
+      <AlertDialogContent className="h-1/2 w-5/6 overflow-auto">
+        <AlertDialogHeader className="flex flex-row items-center justify-between">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogCancel className="border-0 p-0">
             <XIcon className="p-0" />

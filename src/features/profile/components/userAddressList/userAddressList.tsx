@@ -5,7 +5,7 @@ import UserAddress from "@/features/profile/components/userAddress/userAddress"
 
 function UserAddressList({ addresses }: { addresses: AddressI[] }) {
   return addresses.map((address) => (
-    <div key={address.id}>
+    <div key={address.name}>
       <UserAddress {...address} />
     </div>
   ))

@@ -4,6 +4,8 @@ import type { usersRoleIds } from "@/config"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 
+import type { PharmacyInputs } from "."
+
 export type ResponseGetAll<TData = unknown> = {
   data: {
     total_items: number
@@ -180,18 +182,17 @@ export interface IProduct {
   maximum_price: string
 }
 
-export type AddressI = {
-  id: number
-  name: string
-  address: string
-  sub_district: string
-  district: string
-  city: string
-  province: string
-  postal_code: string
-  latitude: string
-  longitude: string
-}
+export type AddressI = Omit<
+  PharmacyInputs,
+  | "operationalDays"
+  | "closesAt"
+  | "opensAt"
+  | "pharmacistPhone"
+  | "pharmacistName"
+  | "pharmacistLicense"
+  | "operational_hours_open"
+  | "operational_hours_close"
+>
 
 export interface IProfileUser {
   id: number
