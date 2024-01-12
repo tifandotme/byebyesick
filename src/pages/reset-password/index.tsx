@@ -1,5 +1,5 @@
 import React from "react"
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import type { GetServerSideProps } from "next"
 
 import type { RegisterToken } from "@/types/user"
 import ResetPasswordForm from "@/features/resetpassword/component/form/resetPasswordForm"

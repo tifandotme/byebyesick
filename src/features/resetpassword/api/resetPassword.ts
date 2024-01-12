@@ -6,7 +6,7 @@ export function resetPassword(password: string, token: string | undefined) {
     }),
   }
   return fetch(
-    `${process.env.BASE_URL}/v1/auth/reset-password?token=${token}`,
+    `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/reset-password?token=${token}`,
     requestOptions,
   )
 }
