@@ -5,5 +5,8 @@ export function forgetPassword(email: string) {
       email: email,
     }),
   }
-  return fetch(`${process.env.BASE_URL}/v1/auth/forgot-token`, requestOptions)
+  return fetch(
+    `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/forgot-token`,
+    requestOptions,
+  )
 }
