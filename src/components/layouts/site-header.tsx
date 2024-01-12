@@ -1,9 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { ExitIcon } from "@radix-ui/react-icons"
-import { toast } from "sonner"
+import { signOut, useSession } from "next-auth/react"
 
-import { siteConfig } from "@/config"
 import avatarImg from "@/assets/images/avatar.webp"
 import { Avatar } from "@/components/ui/avatar"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -21,18 +21,14 @@ import { Icons } from "@/components/icons"
 import { MobileNav } from "@/components/layouts/mobile-nav"
 
 export function SiteHeader() {
-  // from zustand or else
-  const loading = false
-  const user = {
-    id: 1,
-    name: "John Doe",
-    email: "foo@bar.com",
-    password: "123456",
-    role: "admin",
-  }
+  const router = useRouter()
+
+  const { data: session, status } = useSession()
 
   const onLogout = async () => {
-    toast.success("Logged out successfully")
+    await signOut({ redirect: false })
+
+    router.replace("/auth/login")
   }
 
   return (
@@ -50,7 +46,6 @@ export function SiteHeader() {
               <span>Bye</span>
               <span>Bye</span>
               <span className="text-red-600 dark:text-red-400">Sick</span>
-              {/* {siteConfig.name} */}
             </span>
           </Link>
         </div>
@@ -59,8 +54,10 @@ export function SiteHeader() {
           {/* <SearchCommandMenu /> */}
 
           <nav className="flex items-center space-x-2">
-            {loading && <Skeleton className="h-8 w-8 rounded-full" />}
-            {!loading && user && (
+            {status === "loading" && (
+              <Skeleton className="h-8 w-8 rounded-full" />
+            )}
+            {status === "authenticated" && session && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -68,7 +65,7 @@ export function SiteHeader() {
                     className="relative h-8 w-8 select-none rounded-full"
                   >
                     <Avatar className="h-8 w-8">
-                      <Image src={avatarImg} alt={user.name} priority />
+                      <Image src={avatarImg} alt={session.user.name} priority />
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
@@ -76,10 +73,10 @@ export function SiteHeader() {
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">
-                        {user.name}
+                        {session.user.name}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
+                        {session.user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -95,9 +92,12 @@ export function SiteHeader() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard/item1" className="cursor-pointer">
-                        <Icons.CreditCard className="mr-2 h-4 w-4" />
-                        Item 1
+                      <Link
+                        href="/dashboard/pharmacies"
+                        className="cursor-pointer"
+                      >
+                        <Icons.Pharmacies className="mr-2 h-4 w-4" />
+                        Pharmacies
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -120,9 +120,9 @@ export function SiteHeader() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            {!loading && !user && (
+            {status === "unauthenticated" && (
               <Link
-                href="/signin"
+                href="/auth/login"
                 className={buttonVariants({
                   size: "sm",
                 })}

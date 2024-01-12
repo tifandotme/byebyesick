@@ -22,8 +22,8 @@ export const pharmacySchema = z
       .string()
       .min(1, "Required")
       .max(100, "District must be no more than 100 characters long"),
-    city: z.string().min(1, "Required"),
-    province: z.string().min(1, "Required"),
+    cityId: z.number().min(1, "Required"),
+    provinceId: z.number().min(1, "Required"),
     postalCode: z
       .string()
       .min(1, "Required")

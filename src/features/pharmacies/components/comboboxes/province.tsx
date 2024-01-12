@@ -1,8 +1,7 @@
 import React from "react"
 import useSWR from "swr"
 
-import type { Response } from "@/types"
-import type { Province } from "@/types/rajaongkir"
+import type { AddressResponse, Province } from "@/types/api"
 import { useStore } from "@/lib/stores/pharmacies"
 import { ComboboxFormItem } from "@/components/combobox-form"
 
@@ -25,28 +24,23 @@ export function ProvinceCombobox({
   const provinces = useStore((state) => state.provinces)
   const updateProvinces = useStore((state) => state.updateProvinces)
 
-  const { data, isLoading } = useSWR(
-    !provinces && !isHydrating ? "/api/rajaongkir/province" : null,
-    async (url: string) => {
-      const res = await fetch(url)
-      const data: Response<Province[]> = await res.json()
-
-      return data.data
-    },
+  const { data, isLoading } = useSWR<AddressResponse<Province[]>>(
+    !provinces && !isHydrating ? "/v1/address-area/provinces/no-params" : null,
     {
-      onSuccess: (data) => {
+      onSuccess: ({ data }) => {
         data && updateProvinces(data)
       },
-      fallbackData: provinces ?? undefined,
+      fallbackData: provinces ? { data: provinces } : undefined,
+      keepPreviousData: false,
     },
   )
 
   const mappedData = React.useMemo(() => {
     if (!data) return
 
-    return data.map((province) => ({
+    return data.data.map((province) => ({
       label: province.province,
-      value: province.province_id,
+      value: province.province_id.toString(),
     }))
   }, [data])
 
@@ -55,9 +49,7 @@ export function ProvinceCombobox({
       className="w-full"
       label={label}
       value={value}
-      onValueChange={(value) => {
-        onValueChange(value)
-      }}
+      onValueChange={onValueChange}
       data={mappedData}
       isLoading={isLoading}
     />

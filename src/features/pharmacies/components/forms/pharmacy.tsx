@@ -2,12 +2,15 @@ import React from "react"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Crosshair2Icon } from "@radix-ui/react-icons"
+import type { LatLngLiteral } from "leaflet"
+import { useForm, type UseFormReturn } from "react-hook-form"
 import { toast } from "sonner"
 
-import type { PharmacyInputs } from "@/types"
+import type { PharmacyInputs, Response } from "@/types"
 import type { Pharmacy } from "@/types/api"
 import { updatePharmacy } from "@/lib/fetchers"
+import { useStore } from "@/lib/stores/pharmacies"
 import { removeLastSegment, toSentenceCase } from "@/lib/utils"
 import { pharmacySchema } from "@/lib/validations/pharmacies"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -34,6 +37,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Icons } from "@/components/icons"
 import { CityCombobox } from "@/features/pharmacies/components/comboboxes/city"
 import { ProvinceCombobox } from "@/features/pharmacies/components/comboboxes/province"
+import type { Geocode } from "@/pages/api/geocode"
 
 const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
   ssr: false,
@@ -56,8 +60,8 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       address: initialData?.address ?? "",
       subDistrict: initialData?.sub_district ?? "",
       district: initialData?.district ?? "",
-      city: initialData?.city ?? "",
-      province: initialData?.province ?? "",
+      cityId: initialData?.city_id ?? 0,
+      provinceId: initialData?.province_id ?? 0,
       postalCode: initialData?.postal_code ?? "",
       latitude: initialData?.latitude ?? INITIAL_COORDS[0],
       longitude: initialData?.longitude ?? INITIAL_COORDS[1],
@@ -84,6 +88,10 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
       toast.error(message)
     }
   }
+
+  React.useEffect(() => {
+    form.reset(initialData)
+  }, [form, initialData])
 
   React.useEffect(() => {
     mode === "add" && form.setFocus("name")
@@ -155,24 +163,31 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
         <div className="flex flex-col items-start gap-6 sm:flex-row">
           <FormField
             control={form.control}
-            name="province"
+            name="provinceId"
             render={({ field }) => (
               <ProvinceCombobox
                 label="Province"
-                value={field.value}
-                onValueChange={(value) => form.setValue("province", value)}
+                value={field.value.toString()}
+                onValueChange={(value) => {
+                  form.setValue("provinceId", Number(value))
+                  if (form.getValues("cityId")) {
+                    form.setValue("cityId", 0)
+                  }
+                }}
               />
             )}
           />
           <FormField
             control={form.control}
-            name="city"
+            name="cityId"
             render={({ field }) => (
               <CityCombobox
                 label="City"
-                value={field.value}
-                onValueChange={(value) => form.setValue("city", value)}
-                provinceId={form.watch("province")}
+                value={field.value.toString()}
+                onValueChange={(value) =>
+                  form.setValue("cityId", Number(value))
+                }
+                provinceId={form.watch("provinceId")}
               />
             )}
           />
@@ -406,16 +421,20 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
         </div>
 
         <FormItem className="mb-3">
-          <FormLabel>Map Preview</FormLabel>
-          <FormMessage className="text-muted-foreground">
-            Marker is draggable. To center view on marker, click anywhere on the
-            map.
-          </FormMessage>
+          <FormLabel>Geolocation</FormLabel>
+          <PinpointButton
+            form={form}
+            onPinpoint={(coords) => {
+              form.setValue("latitude", Number(coords.lat).toString())
+              form.setValue("longitude", Number(coords.lng).toString())
+            }}
+          />
+
           <AspectRatio ratio={16 / 9} className="z-0 -mx-6 lg:m-0">
             <LeafletMap
               coords={{
-                lat: Number(form.getValues("latitude")),
-                lng: Number(form.getValues("longitude")),
+                lat: Number(form.watch("latitude")),
+                lng: Number(form.watch("longitude")),
               }}
               onCoordsChange={(coords) => {
                 form.setValue("latitude", Number(coords.lat).toString())
@@ -424,6 +443,10 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
               zoom={14}
             />
           </AspectRatio>
+          <FormMessage className="text-muted-foreground">
+            Marker is draggable. To center view on marker, click anywhere on the
+            map.
+          </FormMessage>
         </FormItem>
 
         <div className="flex gap-4">
@@ -440,5 +463,69 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
         </div>
       </form>
     </Form>
+  )
+}
+
+interface PinpointButtonProps {
+  form: UseFormReturn<PharmacyInputs, any, undefined>
+  onPinpoint: (coords: LatLngLiteral) => void
+}
+
+function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
+  const cities = useStore((state) => state.cities)
+  const provinces = useStore((state) => state.provinces)
+
+  const onClick = async () => {
+    const city = cities?.find(
+      (city) => city.city_id === form.getValues("cityId"),
+    )?.city_name
+    const province = provinces?.find(
+      (province) => province.province_id === form.getValues("provinceId"),
+    )?.province
+
+    const addressArr = [
+      ...form.getValues(["address", "district", "subDistrict"]),
+      city,
+      province,
+    ]
+
+    if (addressArr.some((v) => !v)) {
+      toast.error(
+        "Please fill out address, district, sub-district, city, and province first",
+      )
+      return
+    }
+
+    const address = addressArr.filter((value) => value).join(", ")
+
+    const handlePinpoint = async () => {
+      const res = await fetch(`/api/geocode?address=${address}`)
+
+      const data: Response<Geocode[]> = await res.json()
+      if (!data.success) throw new Error("Failed to pinpoint location")
+
+      const coords = data.data?.[0]?.location
+      if (!coords) throw new Error("Could not find location from address")
+
+      onPinpoint(coords)
+    }
+
+    toast.promise(handlePinpoint(), {
+      loading: "Pinpointing...",
+      success: "Location pinpointed",
+      error: (err) => err.message,
+    })
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={onClick}
+    >
+      <Crosshair2Icon className="mr-2 h-3.5 w-3.5" />
+      Pinpoint By Address
+    </Button>
   )
 }
