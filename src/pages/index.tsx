@@ -3,6 +3,7 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import { Tablets } from "lucide-react"
+import { toast } from "sonner"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
@@ -57,7 +58,6 @@ export default function HomePage({
 
   React.useEffect(() => {
     if (navigator.geolocation) {
-      setLocationError("Please activate or allow your GPS.")
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLatitude(position.coords.latitude)
@@ -65,13 +65,13 @@ export default function HomePage({
           setLocationError(null)
         },
         (err) => {
-          setLocationError("Please activate or allow your GPS.")
+          setLocationError(err.message)
         },
       )
     } else {
       setLocationError("Geolocation is not supported by this browser.")
     }
-  }, [])
+  }, [latitude, longitude])
 
   const dbUrl = process.env.NEXT_PUBLIC_DB_URL
 
@@ -83,6 +83,9 @@ export default function HomePage({
   const { data: around, isLoading } = useSWR<ResponseGetAll<IProduct[]>>(url)
   if (error) return <div>Error: {error}</div>
   if (isLoading) return <div>Loading...</div>
+
+  if (locationError)
+    toast.error("Please enable location to see products around you")
 
   return (
     <div>
@@ -121,25 +124,24 @@ export default function HomePage({
         <div className="mt-5 text-2xl font-semibold">
           <h2>Around You</h2>
         </div>
-        {locationError ? (
-          <p className="mt-3">{locationError}</p>
-        ) : around?.data.current_page_total_items == 0 ? (
+
+        {around?.data.total_items === 0 && (
           <div>
-            <p>No Product Yet</p>
-          </div>
-        ) : (
-          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {around?.data.items.map((cat) => (
-              <div key={cat.id}>
-                <ProductCard
-                  product={{
-                    data: cat,
-                  }}
-                />
-              </div>
-            ))}
+            <p>There are no products around you</p>
           </div>
         )}
+
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {around?.data.items.map((cat) => (
+            <div key={cat.id}>
+              <ProductCard
+                product={{
+                  data: cat,
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </>
     </div>
   )
