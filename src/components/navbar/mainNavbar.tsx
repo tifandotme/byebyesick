@@ -42,7 +42,7 @@ function MainNavbar() {
                       className="group flex shrink-0 items-center rounded-lg"
                     >
                       <span className="sr-only">Menu</span>
-                      <img
+                      <Image
                         alt="Man"
                         src={`${
                           session?.user.image !== ""

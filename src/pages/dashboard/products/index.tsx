@@ -3,11 +3,6 @@ import { useRouter } from "next/router"
 import useSWR from "swr"
 
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import {
-  getDrugClassificationName,
-  getManufacturerName,
-  getProductCategoryName,
-} from "@/lib/fetchers"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { ProductTable } from "@/features/admin/table/product-table"
