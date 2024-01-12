@@ -23,7 +23,7 @@ import type {
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
-const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
  * Generic fetcher for `swr`
@@ -471,9 +471,7 @@ export async function deleteProductCategory(id: number): Promise<Response> {
 export async function getDrugClassificationName(
   drug_classification_id: number,
 ) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/drug-classifications/no-params`)
   const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
 
@@ -487,9 +485,7 @@ export async function getDrugClassificationName(
 }
 
 export async function getProductCategoryName(product_category_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/product-categories/no-params`)
   const data: ResponseGetAll<IProductCategory[]> = await response.json()
   let productCategoryName = "Unknown"
 
@@ -503,9 +499,7 @@ export async function getProductCategoryName(product_category_id: number) {
 }
 
 export async function getManufacturerName(manufacturer_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/manufacturers/no-params`)
   const data: ResponseGetAll<IManufacturer[]> = await response.json()
   let manufacturersName = "Unknown"
 
