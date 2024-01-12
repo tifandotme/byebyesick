@@ -23,7 +23,7 @@ import type {
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
-const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
  * Generic fetcher for `swr`
@@ -65,8 +65,8 @@ export async function updatePharmacy(
         address: payload.address,
         sub_district: payload.subDistrict,
         district: payload.district,
-        province: Number(payload.province),
-        city: Number(payload.city),
+        province_id: Number(payload.provinceId),
+        city_id: Number(payload.cityId),
         postal_code: payload.postalCode,
         latitude: payload.latitude,
         longitude: payload.longitude,
@@ -102,7 +102,7 @@ export async function deletePharmacy(id?: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -295,7 +295,20 @@ export async function updatePost(
     formData.append("length", payload.length.toString())
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
-    formData.append("image", payload.image)
+
+    // formData.append(
+    //   "image",
+    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
+    //     type: "png",
+    //   }),
+    // )
+
+    formData.append(
+      "image",
+      await fetch(payload.image).then((res) => res.blob()),
+      "image.png",
+    )
+
     formData.append("manufacturer_id", payload.manufacturer_id.toString())
     formData.append("selling_unit", payload.selling_unit.toString())
     formData.append(
@@ -306,6 +319,8 @@ export async function updatePost(
       "product_category_id",
       payload.product_category_id.toString(),
     )
+
+    console.log(formData.get("image"))
 
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
@@ -453,9 +468,7 @@ export async function deleteProductCategory(id: number): Promise<Response> {
 export async function getDrugClassificationName(
   drug_classification_id: number,
 ) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/drug-classifications/no-params`)
   const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
   data.data.items.forEach((item: IDrugClassification) => {
@@ -467,9 +480,7 @@ export async function getDrugClassificationName(
 }
 
 export async function getProductCategoryName(product_category_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/product-categories/no-params`)
   const data: ResponseGetAll<IProductCategory[]> = await response.json()
   let productCategoryName = "Unknown"
 
@@ -483,9 +494,7 @@ export async function getProductCategoryName(product_category_id: number) {
 }
 
 export async function getManufacturerName(manufacturer_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/manufacturers/no-params`)
   const data: ResponseGetAll<IManufacturer[]> = await response.json()
   let manufacturersName = "Unknown"
 
