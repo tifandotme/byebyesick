@@ -1,6 +1,6 @@
 import React, { type ReactElement } from "react"
 
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 
 export default function CheckoutPage() {
   return (

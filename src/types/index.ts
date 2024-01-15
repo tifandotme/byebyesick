@@ -1,6 +1,7 @@
 import type { z } from "zod"
 
 import type cartSchema from "@/lib/validations/cart-schema"
+import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type {
   pharmacyProductSchema,
   pharmacySchema,
@@ -63,6 +64,8 @@ export type ProductInputs = z.infer<typeof productSchema>
 export type StockMutationInputs = z.infer<typeof stockMutationSchema>
 
 export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
+
+export type ManufacturersInput = z.infer<typeof manufacturersSchema>
 
 export type CartInputs = z.infer<typeof cartSchema>
 

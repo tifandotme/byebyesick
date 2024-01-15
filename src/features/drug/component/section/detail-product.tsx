@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { LoaderIcon, MapPin, PlusIcon } from "lucide-react"
+import { LoaderIcon, MapPin } from "lucide-react"
 import { toast } from "sonner"
 
 import type { CartInputs } from "@/types"

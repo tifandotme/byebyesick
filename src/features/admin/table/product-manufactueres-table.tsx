@@ -5,7 +5,11 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { IProductCategory, ResponseGetAll } from "@/types/api"
+import type {
+  IManufacturer,
+  IProductCategory,
+  ResponseGetAll,
+} from "@/types/api"
 import { deleteProductCategory } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -27,13 +31,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = IProductCategory[]> {
+interface ProductsTableProps<TData = IManufacturer[]> {
   data: TData
   mutate: KeyedMutator<ResponseGetAll<TData>>
   pageCount: number
 }
 
-export function ProductCategoriesTable({
+export function ProductManufacturersTable({
   data,
   mutate,
   pageCount,
@@ -41,6 +45,7 @@ export function ProductCategoriesTable({
   const productscategories = data.map((m, index) => ({
     id: index + 1,
     name: m.name,
+    image: m.image,
   }))
 
   type Data = (typeof productscategories)[number]
@@ -62,6 +67,14 @@ export function ProductCategoriesTable({
         maxSize: 200,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
+        ),
+      },
+      {
+        accessorKey: "image",
+        minSize: 200,
+        maxSize: 200,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Image" />
         ),
       },
 

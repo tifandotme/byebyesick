@@ -3,6 +3,7 @@ import useSWR, { mutate } from "swr"
 
 import type {
   CartInputs,
+  ManufacturersInput,
   PharmacyInputs,
   PharmacyProductInputs,
   ProductCategoriesInputs,
@@ -23,7 +24,7 @@ import type {
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
-const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 /**
  * Generic fetcher for `swr`
@@ -65,8 +66,8 @@ export async function updatePharmacy(
         address: payload.address,
         sub_district: payload.subDistrict,
         district: payload.district,
-        province: Number(payload.province),
-        city: Number(payload.city),
+        province_id: Number(payload.provinceId),
+        city_id: Number(payload.cityId),
         postal_code: payload.postalCode,
         latitude: payload.latitude,
         longitude: payload.longitude,
@@ -102,7 +103,7 @@ export async function deletePharmacy(id?: number): Promise<Response> {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) handleFailedRequest(res)
+    if (!res.ok) await handleFailedRequest(res)
 
     return {
       success: true,
@@ -296,7 +297,20 @@ export async function updateProducts(
     formData.append("length", payload.length.toString())
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
-    formData.append("image", payload.image)
+
+    // formData.append(
+    //   "image",
+    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
+    //     type: "png",
+    //   }),
+    // )
+
+    formData.append(
+      "image",
+      await fetch(payload.image).then((res) => res.blob()),
+      "image.png",
+    )
+
     formData.append("manufacturer_id", payload.manufacturer_id.toString())
     formData.append("selling_unit", payload.selling_unit.toString())
     formData.append(
@@ -457,9 +471,7 @@ export async function deleteProductCategory(id: number): Promise<Response> {
 export async function getDrugClassificationName(
   drug_classification_id: number,
 ) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/drug-classifications/no-params`)
   const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
 
@@ -473,9 +485,7 @@ export async function getDrugClassificationName(
 }
 
 export async function getProductCategoryName(product_category_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/product-categories/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/product-categories/no-params`)
   const data: ResponseGetAll<IProductCategory[]> = await response.json()
   let productCategoryName = "Unknown"
 
@@ -489,9 +499,7 @@ export async function getProductCategoryName(product_category_id: number) {
 }
 
 export async function getManufacturerName(manufacturer_id: number) {
-  const response = await fetch(
-    `https://byebyesick-staging.irfancen.com/v1/manufacturers/no-params`,
-  )
+  const response = await fetch(`${BASE_URL}/v1/manufacturers/no-params`)
   const data: ResponseGetAll<IManufacturer[]> = await response.json()
   let manufacturersName = "Unknown"
 
@@ -583,5 +591,87 @@ export const useCartList = () => {
     cartisLoading: isLoading,
     carterror: error,
     cartMutate: mutate,
+  }
+}
+
+export async function updateManufacturers(
+  mode: "add" | "edit",
+  payload: ManufacturersInput,
+  id?: number,
+): Promise<Response> {
+  try {
+    const formData = new FormData()
+    formData.append("name", payload.name)
+
+    if (payload.image instanceof Blob || payload.image instanceof File) {
+      formData.append("image", payload.image, "image.png")
+    }
+
+    const url = new URL(
+      `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        accept: "application/json",
+      },
+      body: formData,
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to update a manufacturer")
+    }
+
+    if (mode === "edit") {
+      mutate(url)
+    }
+
+    return {
+      success: true,
+      message: `Manufacturers ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function deleteManufacturers(id: number): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/manufacturers/${id}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a manufacturer")
+    }
+
+    return {
+      success: true,
+      message: "Manufacturers deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
   }
 }

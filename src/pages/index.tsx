@@ -18,33 +18,27 @@ import { ProductCard } from "@/features/products/components/products-card"
 
 export const getStaticProps: GetStaticProps = async () => {
   try {
-    const [response1, response2] = await Promise.all([
-      fetch(
-        `https://byebyesick-staging.irfancen.com/v1/drug-classifications/no-params`,
-      ),
-      fetch(`https://byebyesick-staging.irfancen.com/v1/products`),
-    ])
+    const url = new URL(
+      "/v1/drug-classifications/no-params",
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
 
-    if (!response1.ok || !response2.ok) {
-      throw new Error(
-        `HTTP error! status: ${response1.status} or ${response2.status}`,
-      )
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    const [data1, data2] = await Promise.all([
-      response1.json(),
-      response2.json(),
-    ])
+    const data = await response.json()
 
-    if (!data1 || !data2) {
+    if (!data) {
       return {
         notFound: true,
       }
     }
 
-    return { props: { data1, data2 } }
+    return { props: { data } }
   } catch (error) {
-    console.error("Error fetching data: ", error)
     let errorMessage = "An error occurred"
     if (error instanceof Error) {
       errorMessage = error.message
@@ -55,35 +49,42 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 export default function HomePage({
-  data1,
-  data2,
+  data,
   error,
 }: {
-  data1: ApiResponse<IDrugClassification[]>
-  data2: ResponseGetAll<IProduct[]>
+  data: ResponseGetAll<IDrugClassification[]>
   error: string | undefined
 }) {
   const [latitude, setLatitude] = React.useState<number | null>(null)
   const [longitude, setLongitude] = React.useState<number | null>(null)
+  const [locationError, setLocationError] = React.useState<string | null>(null)
 
   React.useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLatitude(position.coords.latitude)
-      setLongitude(position.coords.longitude)
-    })
-  }, [])
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude)
+          setLongitude(position.coords.longitude)
+          setLocationError(null)
+        },
+        (err) => {
+          setLocationError(err.message)
+        },
+      )
+    } else {
+      setLocationError("Geolocation is not supported by this browser.")
+    }
+  }, [latitude, longitude])
+
+  const dbUrl = process.env.NEXT_PUBLIC_DB_URL
 
   const url =
     latitude && longitude
-      ? `https://byebyesick-staging.irfancen.com/v1/products?latitude=${latitude}&longitude=${longitude}`
+      ? `${dbUrl}/v1/products?latitude=${latitude}&longitude=${longitude}`
       : null
 
-  const {
-    data: fix,
-    isLoading,
-    error: fixError,
-  } = useSWR<ResponseGetAll<IProduct[]>>(url)
-  if (fixError) return <div>Error: {error}</div>
+  const { data: around, isLoading } = useSWR<ResponseGetAll<IProduct[]>>(url)
+  if (error) return <div>Error: {error}</div>
   if (isLoading) return <div>Loading...</div>
 
   return (
@@ -99,13 +100,13 @@ export default function HomePage({
         </div>
       )}
       <div>
-        {data1.data.current_page_total_items == 0 ? (
+        {data.data.current_page_total_items == 0 ? (
           <div>
             <p>No Product Yet</p>
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {data1.data.items.map((cat) => (
+            {data.data.items.map((cat) => (
               <div key={cat.id}>
                 <CategoryCard category={cat.name} icon={<Tablets />} />
               </div>
@@ -123,38 +124,30 @@ export default function HomePage({
         <div className="mt-5 text-2xl font-semibold">
           <h2>Around You</h2>
         </div>
-        {/* {fix?.data.current_page_total_items == 0 ? (
-          <div>
-            <p>No Product Yet</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 mt-5 mb-3 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {fix?.data.items.map((cat) => (
-              <div key={cat.id}>
-                <ProductCard product={cat} />
-              </div>
-            ))}
-          </div>
-        )} */}
 
-        {isLoading && (
+        {around?.data.total_items === 0 && (
           <div>
-            <p>Loading...</p>
+            <p>There are no products around you</p>
           </div>
         )}
-        {fix?.data.current_page_total_items == 0 ? (
+
+        {locationError && (
           <div>
-            <p>No Product Yet</p>
-          </div>
-        ) : (
-          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {fix?.data.items.map((cat) => (
-              <div key={cat.id}>
-                <ProductCard product={cat} />
-              </div>
-            ))}
+            <p>{locationError}</p>
           </div>
         )}
+
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {around?.data.items.map((cat) => (
+            <div key={cat.id}>
+              <ProductCard
+                product={{
+                  data: cat,
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </>
     </div>
   )

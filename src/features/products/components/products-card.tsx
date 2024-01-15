@@ -9,7 +9,7 @@ import { mutate } from "swr"
 import type { CartInputs } from "@/types"
 import type { IProduct } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
-import { cn, formatPrice } from "@/lib/utils"
+import { cn, handleFailedRequest } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -90,7 +90,8 @@ export function ProductCard({
                 await addToCartt({ product_id: product.id, quantity: 1 })
                 cartMutate()
               } catch (error) {
-                console.error(error)
+                const Error = error as unknown as Response
+                handleFailedRequest(Error)
               }
             }}
             disabled={isLoading}

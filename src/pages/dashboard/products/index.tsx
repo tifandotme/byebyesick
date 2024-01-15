@@ -2,55 +2,41 @@ import React from "react"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 
-import type { ApiResponse, IProduct } from "@/types/api"
-import { Button } from "@/components/ui/button"
+import type { IProduct, ResponseGetAll } from "@/types/api"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { ProductTable } from "@/features/admin/table/product-table"
 import ProductLayout from "@/features/products/components/layout"
 
-export const useProductData = () => {
-  const { data, isLoading, mutate, error } =
-    useSWR<ApiResponse<IProduct[]>>(`/v1/products`)
-
-  return {
-    data,
-    isLoading,
-    mutate,
-    error,
-  }
-}
-
 export default function ProductTablePage() {
   const router = useRouter()
 
-  const { data, isLoading, mutate, error } = useProductData()
+  const { page, per_page, search, sort } = router.query
+
+  const { data, isLoading, mutate } = useSWR<ResponseGetAll<IProduct[]>>(() => {
+    const params = new URLSearchParams()
+    if (per_page) params.set("per_page", per_page)
+    if (search) params.set("search", search)
+    if (page) params.set("page", page)
+    if (sort) params.set("sort_by", sort.split(".")[0] as string)
+    if (sort) params.set("sort", sort.split(".")[1] as string)
+
+    return `/v1/products?${params.toString()}`
+  })
 
   return (
     <>
       <div className="space-y-6 overflow-auto">
-        {isLoading && <DataTableSkeleton columnCount={5} />}
-        {error && (
-          <div className="grid h-screen place-content-center px-4">
-            <div className="text-center">
-              <h1 className="text-9xl font-black text-gray-200">500</h1>
-
-              <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Uh-oh!
-              </p>
-
-              <p className="mt-4 text-gray-500">
-                We have a server problem, please try again later.
-              </p>
-
-              <Button className="mt-6" onClick={() => router.reload()}>
-                Refresh
-              </Button>
-            </div>
-          </div>
+        {isLoading && !data && (
+          <DataTableSkeleton columnCount={5} filterableFieldCount={0} />
         )}
-        {!isLoading && data && (
-          <ProductTable data={data?.data.items} mutate={mutate} />
+
+        {data && (
+          <ProductTable
+            data={data.data.items}
+            mutate={mutate}
+            pageCount={data?.data.total_pages}
+          />
         )}
       </div>
     </>
