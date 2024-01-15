@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
@@ -43,7 +45,8 @@ export default function ManufacturersForm({
     },
   })
 
-  const onSubmit = async (data: ProductCategoriesInputs) => {
+  const onSubmit = async (data: ManufacturersInput) => {
+    console.table(data)
     const { success, message } = await updateManufacturers(
       mode,
       data,
@@ -76,7 +79,7 @@ export default function ManufacturersForm({
                     <div className="flex gap-2">
                       <FormControl>
                         <>
-                          <Input
+                          {/* <Input
                             className="hidden"
                             id="imageUpload"
                             type="file"
@@ -89,6 +92,24 @@ export default function ManufacturersForm({
 
                               field.onChange(URL.createObjectURL(file))
                               // convert to string
+                            }}
+                            accept="image/*"
+                            ref={field.ref}
+                            disabled={field.disabled}
+                          /> */}
+
+                          <Input
+                            className="hidden"
+                            id="imageUpload"
+                            type="file"
+                            onChange={(e) => {
+                              const files = e.target.files
+                              if (!files) return
+
+                              const file = files[0]
+                              if (!file) return
+
+                              field.onChange(file)
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -108,15 +129,19 @@ export default function ManufacturersForm({
                           </label>
                         </>
                       </FormControl>
+
                       {mode === "add" &&
                         form.getFieldState("image").isDirty && (
-                          <img src={field.value} alt={"Image preview"} />
+                          <img
+                            src={URL.createObjectURL(field.value)}
+                            alt={"Image preview"}
+                          />
                         )}
                       {mode === "edit" && initialProductData && (
                         <img
                           src={
                             form.getFieldState("image").isDirty
-                              ? field.value
+                              ? URL.createObjectURL(field.value)
                               : initialProductData.data.image
                           }
                           alt={initialProductData.data.name}

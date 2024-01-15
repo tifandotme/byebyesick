@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 import type { IManufacturer } from "@/types/api"
@@ -31,10 +32,14 @@ export function ManufacturersCard({
           <div
             className="h-full rounded-t-md border-b"
             style={getRandomPatternStyle(String(manufacturer.id))}
-          />
-          {/* <div>
-            <img src="" alt="" />
-          </div> */}
+          >
+            <Image
+              src={manufacturer.image!}
+              fill
+              alt={""}
+              className="text h-full w-full object-cover"
+            />
+          </div>
         </AspectRatio>
         <CardHeader className="space-y-2">
           <CardTitle className="line-clamp-1 text-base">

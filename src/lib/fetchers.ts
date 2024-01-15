@@ -601,29 +601,21 @@ export async function updateManufacturers(
   try {
     const formData = new FormData()
     formData.append("name", payload.name)
-    formData.append(
-      "image",
-      await fetch(payload.image).then((res) => res.blob()),
-      "image.png",
-    )
-    // formData.append(
-    //   "image",
-    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
-    //     type: "png",
-    //   }),
-    // )
 
-    console.log("formData")
+    if (payload.image instanceof Blob || payload.image instanceof File) {
+      formData.append("image", payload.image, "image.png")
+    }
 
     const url = new URL(
       `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`,
       process.env.NEXT_PUBLIC_DB_URL,
     )
+
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
-      // headers: {
-      //   accept: "application/json",
-      // },
+      headers: {
+        accept: "application/json",
+      },
       body: formData,
     }
 

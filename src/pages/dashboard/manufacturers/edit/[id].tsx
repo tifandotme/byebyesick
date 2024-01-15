@@ -30,6 +30,7 @@ export const getServerSideProps: GetServerSideProps<{
 export default function EditManufacturersPage({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  console.log(data)
   return (
     <>
       <Card>

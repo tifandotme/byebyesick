@@ -11,7 +11,5 @@ export const manufacturersSchema = z.object({
       message:
         "Category Name can only contain alphanumeric characters and spaces",
     }),
-  image: z.any().refine((image) => image.length > 0, {
-    message: "Image is required",
-  }),
+  image: z.any().optional(),
 })
