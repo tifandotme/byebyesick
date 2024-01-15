@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type { PharmacyInputs } from "@/types"
 import type { usersRoleIds } from "@/config"
 import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
@@ -186,4 +187,54 @@ export interface IProduct {
   updated_at: string
   minimum_price: string
   maximum_price: string
+}
+
+export type AddressI = Omit<
+  PharmacyInputs,
+  | "operationalDays"
+  | "closesAt"
+  | "opensAt"
+  | "pharmacistPhone"
+  | "pharmacistName"
+  | "pharmacistLicense"
+  | "operational_hours_open"
+  | "operational_hours_close"
+>
+
+export interface IProfileUser {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  date_of_birth: string
+}
+
+export interface IProfileDoctor {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: string
+  consultation_fee: string
+  is_online: boolean
+}
+
+export interface AddressIForm {
+  id: string
+  name: string
+  address: string
+  sub_district: string
+  district: string
+  city_id: number
+  province_id: number
+  postal_code: string
+  latitude: string
+  longitude: string
+  status: number
 }

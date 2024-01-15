@@ -13,6 +13,7 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
+  AddressIForm,
   ICart,
   IDrugClassification,
   IManufacturer,
@@ -445,13 +446,10 @@ export async function deleteProductCategory(id: number): Promise<Response> {
     const options: RequestInit = {
       method: "DELETE",
     }
-
     const res = await fetch(url, options)
-
     if (!res.ok) {
       throw new Error("Failed to delete a product category")
     }
-
     return {
       success: true,
       message: "Product category deleted",
@@ -473,13 +471,11 @@ export async function getDrugClassificationName(
   const response = await fetch(`${BASE_URL}/v1/drug-classifications/no-params`)
   const data: ResponseGetAll<IDrugClassification[]> = await response.json()
   let classificationName = "Unknown"
-
   data.data.items.forEach((item: IDrugClassification) => {
     if (item.id === drug_classification_id) {
       classificationName = item.name
     }
   })
-
   return classificationName
 }
 
@@ -590,6 +586,19 @@ export const useCartList = () => {
     cartisLoading: isLoading,
     carterror: error,
     cartMutate: mutate,
+  }
+}
+
+export const useAdressList = () => {
+  const { data, isLoading, error, mutate } = useSWR<
+    ResponseGetAll<AddressIForm[]>
+  >("/v1/profile/addresses")
+
+  return {
+    addressList: data,
+    addressIsLoading: isLoading,
+    addressError: error,
+    addressMutate: mutate,
   }
 }
 

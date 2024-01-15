@@ -18,7 +18,7 @@ function MainNavbar() {
   const { data: session, status } = useSession()
   const router = useRouter()
   return (
-    <header className="border-b-2 border-b-apple-300 bg-background">
+    <header className="border-b-2 border-b-primary bg-background">
       <div className="container py-2">
         <div className="flex items-center justify-between sm:gap-4">
           <Link href={"/"} className="flex items-center">
@@ -33,7 +33,7 @@ function MainNavbar() {
             {status === "authenticated" ? (
               <>
                 <button type="button">
-                  <ShoppingCart className="h-7 w-7 text-primary" />
+                  <ShoppingCart className="h-6 w-6 text-primary" />
                 </button>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -51,17 +51,19 @@ function MainNavbar() {
                         }`}
                         className="h-10 w-10 rounded-full object-cover"
                       />
-                      <p className="ms-2 hidden text-left text-xs sm:block">
-                        <strong className="block font-medium">
-                          {session?.user.email}
-                        </strong>
-                      </p>
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>
+                      <div className="font-light">{session?.user.email}</div>
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href={`/profile/${session.user.user_id}`}>
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       className="cursor-pointer text-destructive"
                       onClick={() => {
