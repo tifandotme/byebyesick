@@ -5,7 +5,7 @@ import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
 import { addToCart, deleteCart, useCartList } from "@/lib/fetchers"
-import { catchError } from "@/lib/utils"
+import { handleFailedRequest } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -16,6 +16,7 @@ interface UpdateCartProps {
 export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const [isLoading, setIsLoading] = React.useState(false)
   const { cartMutate } = useCartList()
+
   const [quantity, setQuantity] = React.useState(cartLineItem.quantity)
 
   const addToCartt = async (data: CartInputs) => {
@@ -91,7 +92,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
             const { success } = await deleteCart(product_ids)
             cartMutate()
 
-            if (!success) catchError
+            if (!success) handleFailedRequest
             setIsLoading(false)
           }
 

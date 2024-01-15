@@ -5,8 +5,8 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { ApiResponse, IProduct } from "@/types/api"
-import { deleteProducts } from "@/lib/fetchers"
+import type { IProduct, ResponseGetAll } from "@/types/api"
+import { deletePost } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,12 +30,13 @@ import {
 
 interface ProductsTableProps<TData = IProduct[]> {
   data: TData
-  mutate: KeyedMutator<ApiResponse<TData>>
+  mutate: KeyedMutator<ResponseGetAll<TData>>
+  pageCount: number
 }
 
-export function ProductTable({ data, mutate }: ProductsTableProps) {
-  const product = data.map((m) => ({
-    id: m.id,
+export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
+  const product = data.map((m, index) => ({
+    id: index + 1,
     name: m.name,
     generic_name: m.generic_name,
   }))
@@ -153,12 +154,8 @@ export function ProductTable({ data, mutate }: ProductsTableProps) {
     <DataTable
       columns={columns}
       data={product}
-      searchableColumns={[
-        {
-          id: "name",
-          title: "Name",
-        },
-      ]}
+      pageCount={pageCount}
+      includeSearch={true}
     />
   )
 }

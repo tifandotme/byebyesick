@@ -2,12 +2,9 @@ import React from "react"
 import Link from "next/link"
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { ShoppingCart } from "lucide-react"
-import { useSession } from "next-auth/react"
-import useSWR from "swr"
 
-import type { ICart, ResponseGetAll } from "@/types/api"
 import { useCartList } from "@/lib/fetchers"
-import { cn, formatPrice } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {

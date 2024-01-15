@@ -446,9 +446,8 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
-                              setPreview("image")
-
-                              form.setValue("image", files[0])
+                              field.onChange(URL.createObjectURL(file))
+                              // convert to string
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -496,9 +495,9 @@ export default function ProductForm({
             <div className="flex gap-4">
               <Button
                 type="submit"
-                onClick={() => {
-                  onSubmit(form.getValues())
-                }}
+                // onClick={() => {
+                //   onSubmit(form.getValues())
+                // }}
                 disabled={form.formState.isSubmitting}
                 className="w-fit"
               >

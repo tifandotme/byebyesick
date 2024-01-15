@@ -1,6 +1,7 @@
 import type { z } from "zod"
 
 import type { usersRoleIds } from "@/config"
+import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 
@@ -29,8 +30,8 @@ export type Pharmacy = {
   address: string
   sub_district: string
   district: string
-  city: number
-  province: number
+  city_id: number
+  province_id: number
   postal_code: string
   latitude: string
   longitude: string
@@ -122,6 +123,12 @@ export type ProductsCategoriesSchema = {
   } & z.infer<typeof productCategoriesSchema>
 }
 
+export type ManufacturersSchema = {
+  data: {
+    id: number
+  } & z.infer<typeof manufacturersSchema>
+}
+
 // FOR REAL BACKEND USES
 
 export interface ApiResponse<T> {
@@ -142,6 +149,7 @@ export interface IDrugClassification {
 
 export interface IManufacturer {
   id: number
+  image?: string
   name: string
 }
 export interface IProductCategory {

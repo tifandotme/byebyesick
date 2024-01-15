@@ -2,56 +2,41 @@ import React from "react"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 
-import type { ApiResponse, IProductCategory } from "@/types/api"
-import { Button } from "@/components/ui/button"
+import type { IProductCategory, ResponseGetAll } from "@/types/api"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { ProductCategoriesTable } from "@/features/admin/table/product-categories-table"
 import ProductCategoriesLayout from "@/features/productcategories/components/layout"
 
-export const useProductData = () => {
-  const { data, isLoading, mutate, error } = useSWR<
-    ApiResponse<IProductCategory[]>
-  >(`/v1/product-categories`)
-
-  return {
-    data,
-    isLoading,
-    mutate,
-    error,
-  }
-}
-
 export default function ProductCategoriesTablePage() {
   const router = useRouter()
 
-  const { data, isLoading, mutate, error } = useProductData()
+  // const { data, isLoading, mutate } = useProductData({})
+  const { page, per_page, search, sort } = router.query
+
+  const { data, isLoading, mutate } = useSWR<
+    ResponseGetAll<IProductCategory[]>
+  >(() => {
+    const params = new URLSearchParams()
+    if (per_page) params.set("limit", per_page)
+    if (page) params.set("page", page)
+    if (search) params.set("search", search)
+    if (sort) params.set("sort_by", sort.split(".")[0] as string)
+    if (sort) params.set("sort", sort.split(".")[1] as string)
+
+    return `/v1/product-categories?${params.toString()}`
+  })
 
   return (
     <>
       <div className="space-y-6 overflow-auto">
         {isLoading && <DataTableSkeleton columnCount={5} />}
-        {error && (
-          <div className="grid h-screen place-content-center px-4">
-            <div className="text-center">
-              <h1 className="text-9xl font-black text-gray-200">500</h1>
-
-              <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Uh-oh!
-              </p>
-
-              <p className="mt-4 text-gray-500">
-                We have a server problem, please try again later.
-              </p>
-
-              <Button className="mt-6" onClick={() => router.reload()}>
-                Refresh
-              </Button>
-            </div>
-          </div>
-        )}
-        {!isLoading && data && (
-          <ProductCategoriesTable data={data?.data.items} mutate={mutate} />
+        {data && (
+          <ProductCategoriesTable
+            data={data.data.items}
+            mutate={mutate}
+            pageCount={data?.data.total_pages}
+          />
         )}
       </div>
     </>
