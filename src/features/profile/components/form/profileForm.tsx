@@ -60,11 +60,13 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
         throw new Error(result.statusText)
       }
       const userData: ResponseById<IProfileUser> = await result.json()
+
       await update({
         ...session,
         user: {
           ...session?.user,
           ...userData.data,
+          image: userData.data.profile_photo,
         },
       })
       toast.success("Success Update Profile", { duration: 2000 })
@@ -118,7 +120,7 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
             <FormItem>
               <FormLabel>Date Of Birth</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="date" {...field} min="1945-01-01" />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -217,3 +217,17 @@ export interface IProfileDoctor {
   consultation_fee: string
   is_online: boolean
 }
+
+export interface AddressIForm {
+  id: string
+  name: string
+  address: string
+  sub_district: string
+  district: string
+  city_id: number
+  province_id: number
+  postal_code: string
+  latitude: string
+  longitude: string
+  status: number
+}

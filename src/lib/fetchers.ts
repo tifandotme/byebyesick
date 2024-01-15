@@ -12,6 +12,7 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
+  AddressIForm,
   ICart,
   IDrugClassification,
   IManufacturer,
@@ -586,5 +587,18 @@ export const useCartList = () => {
     cartisLoading: isLoading,
     carterror: error,
     cartMutate: mutate,
+  }
+}
+
+export const useAdressList = () => {
+  const { data, isLoading, error, mutate } = useSWR<
+    ResponseGetAll<AddressIForm[]>
+  >("/v1/profile/addresses")
+
+  return {
+    addressList: data,
+    addressIsLoading: isLoading,
+    addressError: error,
+    addressMutate: mutate,
   }
 }
