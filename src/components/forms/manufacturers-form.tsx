@@ -78,25 +78,6 @@ export default function ManufacturersForm({
                     <div className="flex gap-2">
                       <FormControl>
                         <>
-                          {/* <Input
-                            className="hidden"
-                            id="imageUpload"
-                            type="file"
-                            onChange={(e) => {
-                              const files = e.target.files
-                              if (!files) return
-
-                              const file = files[0]
-                              if (!file) return
-
-                              field.onChange(URL.createObjectURL(file))
-                              // convert to string
-                            }}
-                            accept="image/*"
-                            ref={field.ref}
-                            disabled={field.disabled}
-                          /> */}
-
                           <Input
                             className="hidden"
                             id="imageUpload"
