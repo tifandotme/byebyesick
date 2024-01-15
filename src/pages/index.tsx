@@ -34,7 +34,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
     return { props: { data } }
   } catch (error) {
-    console.error("Error fetching data: ", error)
     let errorMessage = "An error occurred"
     if (error instanceof Error) {
       errorMessage = error.message
