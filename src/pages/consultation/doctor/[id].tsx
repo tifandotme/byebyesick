@@ -4,7 +4,7 @@ import { LoaderIcon } from "lucide-react"
 
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
 import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 
@@ -51,6 +51,7 @@ function DoctorDetail() {
               <Button
                 aria-label="Add to cart"
                 size="sm"
+                onClick={() => setIsLoading(true)}
                 className="h-8 w-full rounded-sm"
                 disabled={isLoading}
               >

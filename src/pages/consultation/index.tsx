@@ -1,7 +1,7 @@
 import React from "react"
 import Head from "next/head"
 
-import MainLayout from "@/components/layout/mainLayout"
+import MainLayout from "@/components/layout/main-layout"
 import DoctorCategory from "@/features/consultation/component/doctorCategory/doctorCategory"
 import DoctorRecomendation from "@/features/consultation/component/doctorRecomendation/doctorRecomendation"
 
