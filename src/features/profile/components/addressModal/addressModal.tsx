@@ -32,7 +32,7 @@ function AddressModal({
       >
         {trigger}
       </Button>
-      <AlertDialogContent className="h-1/2 w-5/6 overflow-auto">
+      <AlertDialogContent className="h-1/2 w-5/6 max-w-3xl overflow-auto">
         <AlertDialogHeader className="flex flex-row items-center justify-between">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <Button
