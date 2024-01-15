@@ -1,7 +1,28 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { useRouter } from "next/router"
+import { toast } from "sonner"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { deleteManufacturers } from "@/lib/fetchers"
+import { removeLastSegment } from "@/lib/utils"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import ManufacturersForm from "@/components/forms/manufacturers-form"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import ManufacturerLayout from "@/features/manufacturers/layout"
@@ -30,7 +51,8 @@ export const getServerSideProps: GetServerSideProps<{
 export default function EditManufacturersPage({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(data)
+  const router = useRouter()
+
   return (
     <>
       <Card>
@@ -40,6 +62,57 @@ export default function EditManufacturersPage({
         <CardContent>
           <ManufacturersForm mode="edit" initialProductData={data} />
         </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl text-destructive">
+            Delete Manufacturer
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          Deleting this manufacturer will also delete all data associated with
+          it.
+        </CardContent>
+        <CardFooter>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button type="button" variant="destructive" className="w-fit">
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="!bg-destructive !text-destructive-foreground"
+                  onClick={() => {
+                    const handleDeletion = async () => {
+                      const { success, message } = await deleteManufacturers(
+                        Number(data.data.id),
+                      )
+                      if (!success) throw new Error(message)
+
+                      router.push("/dashboard/manufacturers")
+
+                      return message
+                    }
+
+                    toast.promise(handleDeletion(), {
+                      loading: "Deleting manufacturer...",
+                      success: (message) => message,
+                      error: (err) => err.message,
+                    })
+                  }}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardFooter>
       </Card>
     </>
   )
