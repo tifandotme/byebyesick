@@ -46,7 +46,6 @@ export default function ManufacturersForm({
   })
 
   const onSubmit = async (data: ManufacturersInput) => {
-    console.table(data)
     const { success, message } = await updateManufacturers(
       mode,
       data,

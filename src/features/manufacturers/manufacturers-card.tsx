@@ -4,12 +4,7 @@ import Link from "next/link"
 import type { IManufacturer } from "@/types/api"
 import { getRandomPatternStyle } from "@/lib/generate-pattern"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ManufacturersCardProps {
   manufacturer: IManufacturer
@@ -33,12 +28,14 @@ export function ManufacturersCard({
             className="h-full rounded-t-md border-b"
             style={getRandomPatternStyle(String(manufacturer.id))}
           >
-            <Image
-              src={manufacturer.image!}
-              fill
-              alt={""}
-              className="text h-full w-full object-cover"
-            />
+            {manufacturer.image && (
+              <Image
+                src={manufacturer.image}
+                fill
+                alt={manufacturer.name}
+                className="text h-full w-full object-cover"
+              />
+            )}
           </div>
         </AspectRatio>
         <CardHeader className="space-y-2">

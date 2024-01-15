@@ -18,7 +18,7 @@ export const dashboardConfig: DashboardConfig = {
       icon: "ProductCategory",
     },
     {
-      title: "Products Manufacturers",
+      title: "Manufacturers",
       href: "/dashboard/manufacturers",
       icon: "Gear",
     },

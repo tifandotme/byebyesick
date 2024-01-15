@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import ManufacturerLayout from "@/features/manufacturers/layout"
 import { ManufacturersCard } from "@/features/manufacturers/manufacturers-card"
-import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
 import { PharmacyCardSkeleton } from "@/features/pharmacies/components/pharmacy-card-skeleton"
 
 export default function ManufacturersPage() {
