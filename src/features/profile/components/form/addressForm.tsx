@@ -1,10 +1,20 @@
-import React from "react"
+import React, { useEffect } from "react"
 import dynamic from "next/dynamic"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Crosshair2Icon } from "@radix-ui/react-icons"
+import type { LatLngLiteral } from "leaflet"
+import {
+  useForm,
+  type SubmitHandler,
+  type UseFormReturn,
+} from "react-hook-form"
+import { toast } from "sonner"
 
-import type { AddressFormSchemaType } from "@/types"
-import type { AddressI } from "@/types/api"
+import type { AddressFormSchemaType, Response } from "@/types"
+import type { AddressI, AddressIForm } from "@/types/api"
+import type { Location } from "@/types/gmaps"
+import { useAdressList } from "@/lib/fetchers"
+import { useStore } from "@/lib/stores/pharmacies"
 import { addressSchema } from "@/lib/validations/address"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
@@ -20,11 +30,34 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { CityCombobox } from "@/features/pharmacies/components/comboboxes/city"
 import { ProvinceCombobox } from "@/features/pharmacies/components/comboboxes/province"
+import type { Geocode } from "@/pages/api/geocode"
 
-function AddressForm({ initialData }: { initialData?: AddressI }) {
+import { postAddress } from "../../api/postAddress"
+import { putAddress } from "../../api/putAddress"
+
+function AddressForm({
+  initialData,
+  setIsOpen,
+}: {
+  initialData?: AddressIForm
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  const [point, setPoint] = React.useState<Location>()
+  const { addressMutate } = useAdressList()
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        const { latitude, longitude } = coords
+        setPoint({ lat: latitude, lng: longitude })
+      })
+    }
+  }, [])
+
   const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
     ssr: false,
   })
+
   const form = useForm<AddressFormSchemaType>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
@@ -32,16 +65,74 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
       address: initialData?.address ?? "",
       subDistrict: initialData?.sub_district ?? "",
       district: initialData?.district ?? "",
-      city: initialData?.city ?? "",
-      province: initialData?.province ?? "",
+      cityId: initialData?.city_id ?? 0,
+      provinceId: initialData?.province_id ?? 0,
       postalCode: initialData?.postal_code ?? "",
-      latitude: Number(initialData?.latitude ?? -6.175422),
-      longitude: Number(initialData?.longitude ?? 106.82732),
+      latitude: initialData?.latitude ?? "",
+      longitude: initialData?.longitude ?? "",
     },
   })
+
+  const onSubmit: SubmitHandler<AddressFormSchemaType> = async (data) => {
+    try {
+      if (initialData) {
+        const result = await putAddress(
+          {
+            address: data.address,
+            city_id: data.cityId,
+            postal_code: data.postalCode,
+            province_id: data.provinceId,
+            sub_district: data.subDistrict,
+            district: data.district,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            name: data.name,
+          },
+          initialData.id,
+        )
+        if (!result?.ok) {
+          throw new Error(result.statusText)
+        }
+        toast.success("Success edit address", { duration: 2000 })
+      } else {
+        const result = await postAddress({
+          address: data.address,
+          city_id: data.cityId,
+          postal_code: data.postalCode,
+          province_id: data.provinceId,
+          sub_district: data.subDistrict,
+          district: data.district,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          name: data.name,
+        })
+        if (!result?.ok) {
+          throw new Error(result.statusText)
+        }
+        toast.success("Success add new address", { duration: 2000 })
+      }
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    } finally {
+      addressMutate()
+      setIsOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    if (point && !initialData) {
+      form.setValue("longitude", point?.lng.toString())
+      form.setValue("latitude", point?.lat.toString())
+    }
+  }, [point, form, initialData])
+
   return (
     <Form {...form}>
-      <form className="grid w-full gap-5">
+      <form
+        className="grid w-full gap-5 p-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -101,24 +192,28 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
         <div className="flex flex-col items-start gap-6 sm:flex-row">
           <FormField
             control={form.control}
-            name="province"
+            name="provinceId"
             render={({ field }) => (
               <ProvinceCombobox
                 label="Province"
-                value={field.value}
-                onValueChange={(value) => form.setValue("province", value)}
+                value={field.value.toString()}
+                onValueChange={(value) =>
+                  form.setValue("provinceId", parseInt(value))
+                }
               />
             )}
           />
           <FormField
             control={form.control}
-            name="city"
+            name="cityId"
             render={({ field }) => (
               <CityCombobox
-                provinceId={form.watch("province")}
+                provinceId={form.watch("provinceId")}
                 label="City"
-                value={field.value}
-                onValueChange={(value) => form.setValue("city", value)}
+                value={field.value.toString()}
+                onValueChange={(value) =>
+                  form.setValue("cityId", parseInt(value))
+                }
               />
             )}
           />
@@ -150,6 +245,7 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
                   <Input
                     type="number"
                     {...field}
+                    defaultValue={point?.lat}
                     onChange={(e) => field.onChange(+e.target.value)}
                   />
                 </FormControl>
@@ -176,34 +272,106 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
           />
         </div>
 
-        <FormItem>
-          <FormLabel>Map Preview</FormLabel>
+        <FormItem className="mb-3">
+          <FormLabel>Geolocation</FormLabel>
+          <PinpointButton
+            form={form}
+            onPinpoint={(coords) => {
+              form.setValue("latitude", Number(coords.lat).toString())
+              form.setValue("longitude", Number(coords.lng).toString())
+            }}
+          />
+
+          <AspectRatio ratio={16 / 9} className="z-0 lg:m-0">
+            <LeafletMap
+              coords={{
+                lat: Number(form.watch("latitude")),
+                lng: Number(form.watch("longitude")),
+              }}
+              onCoordsChange={(coords) => {
+                form.setValue("latitude", Number(coords.lat).toString())
+                form.setValue("longitude", Number(coords.lng).toString())
+              }}
+              zoom={14}
+            />
+          </AspectRatio>
           <FormMessage className="text-muted-foreground">
             Marker is draggable. To center view on marker, click anywhere on the
             map.
           </FormMessage>
-          <AspectRatio ratio={16 / 9} className="z-0 -mx-6 lg:m-0">
-            <LeafletMap
-              coords={{
-                lat: form.getValues("latitude"),
-                lng: form.getValues("longitude"),
-              }}
-              onCoordsChange={(coords) => {
-                form.setValue("latitude", coords.lat)
-                form.setValue("longitude", coords.lng)
-              }}
-              zoom={14}
-              className="mb-2"
-            />
-          </AspectRatio>
         </FormItem>
+
         <div className="flex">
-          <Button type="button" variant={"default"}>
+          <Button type="submit" variant={"default"} size={`sm`}>
             Submit
           </Button>
         </div>
       </form>
     </Form>
+  )
+}
+
+interface PinpointButtonProps {
+  form: UseFormReturn<AddressI, any, undefined>
+  onPinpoint: (coords: LatLngLiteral) => void
+}
+
+function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
+  const cities = useStore((state) => state.cities)
+  const provinces = useStore((state) => state.provinces)
+
+  const onClick = async () => {
+    const city = cities?.find(
+      (city) => city.city_id === form.getValues("cityId"),
+    )?.city_name
+    const province = provinces?.find(
+      (province) => province.province_id === form.getValues("provinceId"),
+    )?.province
+
+    const addressArr = [
+      ...form.getValues(["address", "district", "subDistrict"]),
+      city,
+      province,
+    ]
+
+    if (addressArr.some((v) => !v)) {
+      toast.error(
+        "Please fill out address, district, sub-district, city, and province first",
+      )
+      return
+    }
+
+    const address = addressArr.filter((value) => value).join(", ")
+
+    const handlePinpoint = async () => {
+      const res = await fetch(`/api/geocode?address=${address}`)
+
+      const data: Response<Geocode[]> = await res.json()
+      if (!data.success) throw new Error("Failed to pinpoint location")
+
+      const coords = data.data?.[0]?.location
+      if (!coords) throw new Error("Could not find location from address")
+
+      onPinpoint(coords)
+    }
+
+    toast.promise(handlePinpoint(), {
+      loading: "Pinpointing...",
+      success: "Location pinpointed",
+      error: (err) => err.message,
+    })
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={onClick}
+    >
+      <Crosshair2Icon className="mr-2 h-3.5 w-3.5" />
+      Pinpoint By Address
+    </Button>
   )
 }
 

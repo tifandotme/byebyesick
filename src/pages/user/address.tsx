@@ -1,28 +1,17 @@
 import React from "react"
+import Head from "next/head"
 import { PlusIcon } from "lucide-react"
+import { toast } from "sonner"
 
-import type { AddressI } from "@/types/api"
-import { Button } from "@/components/ui/button"
-import MainLayout from "@/components/layout/mainLayout"
+import { useAdressList } from "@/lib/fetchers"
+import MainLayout from "@/components/layout/main-layout"
 import AddressModal from "@/features/profile/components/addressModal/addressModal"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
 import UserAddressList from "@/features/profile/components/userAddressList/userAddressList"
 
 function AddressPage() {
-  const addressList: AddressI[] = [
-    {
-      id: 1,
-      name: "Alamat Utama",
-      address: "Jalan ABC, No 9, Jakarta Selatan",
-      city: "Jakarta Selatan",
-      district: "Mampang Prapatan",
-      latitude: "-6",
-      longitude: "10",
-      province: "DKI Jakarta",
-      postal_code: "83232",
-      sub_district: "Mampang",
-    },
-  ]
+  const { addressList, addressError, addressIsLoading } = useAdressList()
+
   return (
     <ProfileLayout
       title="My Address"
@@ -31,18 +20,22 @@ function AddressPage() {
         <AddressModal
           title="New Address"
           trigger={
-            <Button type="button" variant={"ghost"} className="flex gap-1">
-              {" "}
-              <span>
-                <PlusIcon />
-              </span>
+            <div className="flex items-center justify-center gap-1 text-xs md:text-base">
+              <PlusIcon className="h-5 w-5" />
               New Address
-            </Button>
+            </div>
           }
         />
       }
     >
-      <UserAddressList addresses={addressList} />
+      <Head>
+        <title>ByeByeSick | Address</title>
+      </Head>
+      {addressError && toast.error("Error fetching address")}
+      <UserAddressList
+        addresses={addressList?.data.items}
+        isLoading={addressIsLoading}
+      />
     </ProfileLayout>
   )
 }

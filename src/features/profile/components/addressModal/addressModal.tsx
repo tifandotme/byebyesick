@@ -1,16 +1,14 @@
-import React from "react"
+import React, { useState } from "react"
 import { XIcon } from "lucide-react"
 
-import type { AddressI } from "@/types/api"
+import type { AddressIForm } from "@/types/api"
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import AddressForm from "@/features/profile/components/form/addressForm"
 
 function AddressModal({
@@ -20,21 +18,35 @@ function AddressModal({
 }: {
   trigger: React.ReactNode
   title: string
-  address?: AddressI
+  address?: AddressIForm
 }) {
+  const [open, setIsOpen] = useState<boolean>(false)
   return (
-    <AlertDialog>
-      <AlertDialogTrigger className="flex items-center gap-2">
+    <AlertDialog open={open}>
+      <Button
+        variant={"ghost"}
+        size={"sm"}
+        onClick={() => {
+          setIsOpen(true)
+        }}
+      >
         {trigger}
-      </AlertDialogTrigger>
-      <AlertDialogContent className="h-1/2 overflow-auto">
-        <AlertDialogHeader className="flex flex-row justify-between">
+      </Button>
+      <AlertDialogContent className="h-1/2 w-5/6 max-w-3xl overflow-auto">
+        <AlertDialogHeader className="flex flex-row items-center justify-between">
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogCancel className="border-0 p-0">
+          <Button
+            variant={"ghost"}
+            className="hover:bg-transparent"
+            size={"sm"}
+            onClick={() => {
+              setIsOpen(false)
+            }}
+          >
             <XIcon className="p-0" />
-          </AlertDialogCancel>
+          </Button>
         </AlertDialogHeader>
-        <AddressForm initialData={address} />
+        <AddressForm initialData={address} setIsOpen={setIsOpen} />
       </AlertDialogContent>
     </AlertDialog>
   )
