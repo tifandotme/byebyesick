@@ -32,7 +32,10 @@ function ProfileLayout({
         <CardHeader className="flex flex-col items-center">
           <img
             alt="Man"
-            src={`https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png`}
+            src={
+              session?.user.image ??
+              "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
+            }
             className="h-24 w-24 rounded-full object-cover"
           />
           <CardTitle>{session?.user.name}</CardTitle>

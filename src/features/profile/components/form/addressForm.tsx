@@ -3,12 +3,17 @@ import dynamic from "next/dynamic"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Crosshair2Icon } from "@radix-ui/react-icons"
 import type { LatLngLiteral } from "leaflet"
-import { useForm, type UseFormReturn } from "react-hook-form"
+import {
+  useForm,
+  type SubmitHandler,
+  type UseFormReturn,
+} from "react-hook-form"
 import { toast } from "sonner"
 
 import type { AddressFormSchemaType, Response } from "@/types"
-import type { AddressI } from "@/types/api"
+import type { AddressI, AddressIForm } from "@/types/api"
 import type { Location } from "@/types/gmaps"
+import { useAdressList } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
 import { addressSchema } from "@/lib/validations/address"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
@@ -27,14 +32,24 @@ import { CityCombobox } from "@/features/pharmacies/components/comboboxes/city"
 import { ProvinceCombobox } from "@/features/pharmacies/components/comboboxes/province"
 import type { Geocode } from "@/pages/api/geocode"
 
-function AddressForm({ initialData }: { initialData?: AddressI }) {
+import { postAddress } from "../../api/postAddress"
+import { putAddress } from "../../api/putAddress"
+
+function AddressForm({
+  initialData,
+  setIsOpen,
+}: {
+  initialData?: AddressIForm
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [point, setPoint] = React.useState<Location>()
+  const { addressMutate } = useAdressList()
+
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(({ coords }) => {
         const { latitude, longitude } = coords
         setPoint({ lat: latitude, lng: longitude })
-        console.log(latitude, longitude)
       })
     }
   }, [])
@@ -42,20 +57,68 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
   const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
     ssr: false,
   })
+
   const form = useForm<AddressFormSchemaType>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
       name: initialData?.name ?? "",
       address: initialData?.address ?? "",
-      subDistrict: initialData?.subDistrict ?? "",
+      subDistrict: initialData?.sub_district ?? "",
       district: initialData?.district ?? "",
-      cityId: initialData?.cityId ?? 0,
-      provinceId: initialData?.provinceId ?? 0,
-      postalCode: initialData?.postalCode ?? "",
+      cityId: initialData?.city_id ?? 0,
+      provinceId: initialData?.province_id ?? 0,
+      postalCode: initialData?.postal_code ?? "",
       latitude: initialData?.latitude ?? "",
       longitude: initialData?.longitude ?? "",
     },
   })
+
+  const onSubmit: SubmitHandler<AddressFormSchemaType> = async (data) => {
+    try {
+      if (initialData) {
+        const result = await putAddress(
+          {
+            address: data.address,
+            city_id: data.cityId,
+            postal_code: data.postalCode,
+            province_id: data.provinceId,
+            sub_district: data.subDistrict,
+            district: data.district,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            name: data.name,
+          },
+          initialData.id,
+        )
+        if (!result?.ok) {
+          throw new Error(result.statusText)
+        }
+        toast.success("Success edit address", { duration: 2000 })
+      } else {
+        const result = await postAddress({
+          address: data.address,
+          city_id: data.cityId,
+          postal_code: data.postalCode,
+          province_id: data.provinceId,
+          sub_district: data.subDistrict,
+          district: data.district,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          name: data.name,
+        })
+        if (!result?.ok) {
+          throw new Error(result.statusText)
+        }
+        toast.success("Success add new address", { duration: 2000 })
+      }
+    } catch (error) {
+      const err = error as Error
+      toast.error(err.message, { duration: 2000 })
+    } finally {
+      addressMutate()
+      setIsOpen(false)
+    }
+  }
 
   useEffect(() => {
     if (point && !initialData) {
@@ -66,7 +129,10 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
 
   return (
     <Form {...form}>
-      <form className="grid w-full gap-5 p-2">
+      <form
+        className="grid w-full gap-5 p-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="name"
@@ -236,7 +302,7 @@ function AddressForm({ initialData }: { initialData?: AddressI }) {
         </FormItem>
 
         <div className="flex">
-          <Button type="button" variant={"default"} size={`sm`}>
+          <Button type="submit" variant={"default"} size={`sm`}>
             Submit
           </Button>
         </div>

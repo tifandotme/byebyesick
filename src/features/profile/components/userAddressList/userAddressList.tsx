@@ -1,14 +1,27 @@
 import React from "react"
 
-import type { AddressI } from "@/types/api"
+import type { AddressIForm } from "@/types/api"
 import UserAddress from "@/features/profile/components/userAddress/userAddress"
 
-function UserAddressList({ addresses }: { addresses: AddressI[] }) {
-  return addresses.map((address) => (
-    <div key={address.name}>
-      <UserAddress {...address} />
-    </div>
-  ))
+import AddressSkeleton from "../userAddress/addressSkeleton"
+
+function UserAddressList({
+  addresses,
+  isLoading,
+}: {
+  addresses: AddressIForm[] | undefined
+  isLoading: boolean
+}) {
+  return isLoading ? (
+    <AddressSkeleton />
+  ) : (
+    addresses &&
+      addresses.map((address) => (
+        <div key={address.name}>
+          <UserAddress {...address} />
+        </div>
+      ))
+  )
 }
 
 export default UserAddressList

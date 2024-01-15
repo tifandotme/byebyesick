@@ -1,27 +1,17 @@
 import React from "react"
 import Head from "next/head"
 import { PlusIcon } from "lucide-react"
+import { toast } from "sonner"
 
-import type { AddressI } from "@/types/api"
+import { useAdressList } from "@/lib/fetchers"
 import MainLayout from "@/components/layout/main-layout"
 import AddressModal from "@/features/profile/components/addressModal/addressModal"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
 import UserAddressList from "@/features/profile/components/userAddressList/userAddressList"
 
 function AddressPage() {
-  const addressList: AddressI[] = [
-    {
-      name: "Alamat Utama",
-      address: "Jalan ABC, No 9, Jakarta Selatan",
-      district: "Mampang Prapatan",
-      latitude: "-6",
-      longitude: "10",
-      postalCode: "83232",
-      subDistrict: "Mampang",
-      cityId: 1,
-      provinceId: 1,
-    },
-  ]
+  const { addressList, addressError, addressIsLoading } = useAdressList()
+
   return (
     <ProfileLayout
       title="My Address"
@@ -41,7 +31,11 @@ function AddressPage() {
       <Head>
         <title>ByeByeSick | Address</title>
       </Head>
-      <UserAddressList addresses={addressList} />
+      {addressError && toast.error("Error fetching address")}
+      <UserAddressList
+        addresses={addressList?.data.items}
+        isLoading={addressIsLoading}
+      />
     </ProfileLayout>
   )
 }
