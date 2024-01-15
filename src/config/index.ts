@@ -1,8 +1,10 @@
-import type { DashboardConfig, SiteConfig } from "@/types"
+import type { DashboardConfig } from "@/types"
 
-export const siteConfig: SiteConfig = {
-  name: "ByeByeSick",
-  description: "Where great ideas begin.",
+export type SiteConfig = typeof siteConfig
+
+export const siteConfig = {
+  name: "byebyesick",
+  description: "Next-gen healthcare",
 }
 
 export const dashboardConfig: DashboardConfig = {

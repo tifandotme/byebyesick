@@ -14,6 +14,8 @@ import { Toaster } from "@/components/ui/sonner"
 import "@/styles/globals.css"
 import "leaflet/dist/leaflet.css"
 
+import { fonts } from "@/lib/fonts"
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
 
@@ -24,24 +26,17 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <style jsx global>
+          {`
+          <!-- https://github.com/shadcn-ui/ui/issues/138 -->
+          :root {
+            --font-sans: ${fonts[0].variable};
+            --font-mono: ${fonts[1].variable};
+            --font-display: ${fonts[2].variable};
+          }
+        `}
+        </style>
       </Head>
 
       <SessionProvider session={pageProps.session}>
