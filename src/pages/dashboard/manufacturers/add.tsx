@@ -2,7 +2,6 @@ import React from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ManufacturersForm from "@/components/forms/manufacturers-form"
-import ProductForm from "@/components/forms/products-forms"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import ManufacturerLayout from "@/features/manufacturers/layout"
 
