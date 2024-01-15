@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { HomeIcon, MoreVerticalIcon } from "lucide-react"
 import { toast } from "sonner"
 
