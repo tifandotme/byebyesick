@@ -3,6 +3,7 @@ import useSWR, { mutate } from "swr"
 
 import type {
   CartInputs,
+  ManufacturersInput,
   PharmacyInputs,
   PharmacyProductInputs,
   ProductCategoriesInputs,
@@ -320,8 +321,6 @@ export async function updatePost(
       payload.product_category_id.toString(),
     )
 
-    console.log(formData.get("image"))
-
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
       process.env.NEXT_PUBLIC_DB_URL,
@@ -591,5 +590,95 @@ export const useCartList = () => {
     cartisLoading: isLoading,
     carterror: error,
     cartMutate: mutate,
+  }
+}
+
+export async function updateManufacturers(
+  mode: "add" | "edit",
+  payload: ManufacturersInput,
+  id?: number,
+): Promise<Response> {
+  try {
+    const formData = new FormData()
+    formData.append("name", payload.name)
+    formData.append(
+      "image",
+      await fetch(payload.image).then((res) => res.blob()),
+      "image.png",
+    )
+    // formData.append(
+    //   "image",
+    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
+    //     type: "png",
+    //   }),
+    // )
+
+    console.log("formData")
+
+    const url = new URL(
+      `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      // headers: {
+      //   accept: "application/json",
+      // },
+      body: formData,
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to update a manufacturer")
+    }
+
+    if (mode === "edit") {
+      mutate(url)
+    }
+
+    return {
+      success: true,
+      message: `Manufacturers ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function deleteManufacturers(id: number): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/manufacturers/${id}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a manufacturer")
+    }
+
+    return {
+      success: true,
+      message: "Manufacturers deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
   }
 }
