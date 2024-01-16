@@ -38,6 +38,7 @@ type PaginationLinkProps = {
 } & Pick<ButtonProps, "size"> &
   React.ComponentProps<"a">
 
+// pagination.tsx
 const PaginationLink = ({
   className,
   isActive,

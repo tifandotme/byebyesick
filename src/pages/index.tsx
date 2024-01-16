@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
-import { useAddressById } from "@/lib/fetchers"
+import { useAddressMain } from "@/lib/fetchers"
 import { Button } from "@/components/ui/button"
 import MainLayout from "@/components/layout/main-layout"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
@@ -78,7 +78,7 @@ export default function HomePage({
     }
   }, [latitude, longitude])
 
-  const { addressData } = useAddressById(session?.user?.user_id ?? 0)
+  const { addressData } = useAddressMain()
 
   const url =
     latitude && longitude
@@ -89,7 +89,7 @@ export default function HomePage({
     useSWR<ResponseGetAll<IProduct[]>>(url)
 
   const { data: productByAddress } = useSWR<ResponseGetAll<IProduct[]>>(
-    `${dbUrl}/v1/products?latitude=${addressData?.latitude}&longitude=${addressData?.longitude}`,
+    `${dbUrl}/v1/products?latitude=${addressData?.data.latitude}&longitude=${addressData?.data.longitude}`,
   )
 
   if (loadingAround) return <div>Loading...</div>
@@ -156,7 +156,7 @@ export default function HomePage({
           ))}
         </div>
         <div className="mt-5 flex justify-between text-2xl font-semibold">
-          <h2>Around {addressData?.subDistrict}</h2>
+          <h2>Around {addressData?.data.subDistrict}</h2>
           <Link href="/products/around-your-district">
             <Button variant={"link"}>
               <p></p>See All <ArrowRight className="ml-2 size-4" />
@@ -165,7 +165,7 @@ export default function HomePage({
         </div>
         {productByAddress?.data.total_items === 0 && (
           <div>
-            <p>There are no products around {addressData?.subDistrict}</p>
+            <p>There are no products around {addressData?.data.subDistrict}</p>
           </div>
         )}
         <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

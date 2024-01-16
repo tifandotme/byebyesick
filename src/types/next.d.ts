@@ -14,12 +14,15 @@ declare module "querystring" {
     productId?: string
     pharmacyId?: string
 
-    // data table query
+    limit?: string
+
     page?: string
     per_page?: string
     search?: string
     sort?: string
     start_date?: string
     end_date?: string
+    latitude: string
+    longitude: string
   }
 }
