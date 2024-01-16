@@ -52,6 +52,13 @@ export const SortByConfig = [
   { value: "desc", label: "Descending" },
 ]
 
+export const DrugClassConfig = [
+  { value: "1", label: "Obat Bebas" },
+  { value: "2", label: "Obat Keras" },
+  { value: "3", label: "Obat Bebas Terbatas" },
+  { value: "4", label: "Non Obat" },
+]
+
 export const usersRoleIds = {
   1: "admin",
   2: "pharmacyAdmin",
