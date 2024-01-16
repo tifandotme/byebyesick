@@ -1,6 +1,5 @@
 import React from "react"
-import Link from "next/link"
-import { AvatarFallback } from "@radix-ui/react-avatar"
+import { useRouter } from "next/router"
 
 import type { doctorI } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
@@ -10,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -23,7 +21,9 @@ function DoctorCard({
   starting_year,
   is_online,
   consultation_fee,
+  id,
 }: doctorI) {
+  const { push } = useRouter()
   return (
     <Card>
       <CardHeader>
@@ -61,7 +61,14 @@ function DoctorCard({
         </div>
       </CardContent>
       <CardFooter className="flex gap-3">
-        <Button variant="outline" size={"sm"} type="button">
+        <Button
+          variant="outline"
+          size={"sm"}
+          type="button"
+          onClick={() => {
+            push("/consultation/doctor/" + id)
+          }}
+        >
           View Profile
         </Button>
         <Button variant="default" size={"sm"} type="button">
