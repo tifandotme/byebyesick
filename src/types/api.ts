@@ -231,3 +231,9 @@ export interface AddressIForm {
   longitude: string
   status: number
 }
+
+export type Specialization = {
+  id: number
+  name: string
+  image: string
+}

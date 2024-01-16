@@ -3,16 +3,15 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 import { getSession } from "next-auth/react"
 
-import type { IProfileUser, ResponseById } from "@/types/api"
+import type { IProfileDoctor, IProfileUser, ResponseById } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import { getDoctorProfile } from "@/features/profile/api/getDoctorProfile"
-import { getUserProfile } from "@/features/profile/api/getUserProfile"
-import ProfileForm from "@/features/profile/components/form/profileForm"
+import DoctorProfileForm from "@/features/profile/components/form/doctorProfileForm"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
 import ResetPassword from "@/features/profile/components/resetPassword/resetPassword"
 
 export const getServerSideProps: GetServerSideProps<{
-  userProfile: ResponseById<IProfileUser>
+  userProfile: ResponseById<IProfileDoctor>
 }> = async (context) => {
   const session = await getSession(context)
   if (session) {
@@ -38,7 +37,7 @@ function DoctorProfilePage(
         <Head>
           <title>ByeByeSick | Doctor Profile</title>
         </Head>
-        <ProfileForm userProfile={props.userProfile.data} />
+        <DoctorProfileForm userProfile={props.userProfile.data} />
         <ResetPassword {...props.userProfile.data} />
       </ProfileLayout>
     </div>
