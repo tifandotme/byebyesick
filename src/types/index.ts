@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type { addressSchema } from "@/lib/validations/address"
 import type cartSchema from "@/lib/validations/cart-schema"
 import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type {
@@ -67,6 +68,7 @@ export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
 
 export type ManufacturersInput = z.infer<typeof manufacturersSchema>
 
+export type AddressFormSchemaType = z.infer<typeof addressSchema>
 export type CartInputs = z.infer<typeof cartSchema>
 
 export type ResetPasswordEmailSchemeType = z.infer<
