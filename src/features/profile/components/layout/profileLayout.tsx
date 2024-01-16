@@ -33,7 +33,7 @@ function ProfileLayout({
           <img
             alt="Man"
             src={
-              session?.user.image ??
+              session?.user.image ||
               "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
             }
             className="h-24 w-24 rounded-full object-cover"

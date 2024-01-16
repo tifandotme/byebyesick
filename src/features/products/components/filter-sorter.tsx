@@ -15,7 +15,7 @@ interface SortByDropdownProps {
   filter: string
   title: string
   buttonOpener: string
-  setFilter: React.Dispatch<React.SetStateAction<string>>
+  setFilter: React.Dispatch<React.SetStateAction<string | any>>
   options: { value: string; label: string }[]
 }
 

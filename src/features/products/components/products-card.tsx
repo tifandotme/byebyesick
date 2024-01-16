@@ -51,7 +51,7 @@ export function ProductCard({
       {...props}
     >
       <Link aria-label={product.name} href={`/products/${product.id}`}>
-        <CardHeader className="border-b p-0">
+        <CardHeader className="">
           <AspectRatio ratio={4 / 3}>
             {product.image?.length ? (
               <Image
@@ -71,7 +71,9 @@ export function ProductCard({
       </Link>
       <Link href={`/products/${product.id}`} tabIndex={-1}>
         <CardContent className="space-y-1.5 p-4">
-          <CardTitle className="mt-2 line-clamp-1 ">{product.name}</CardTitle>
+          <CardTitle className="mt-2 line-clamp-1 text-xl">
+            {product.name}
+          </CardTitle>
           <CardDescription className="line-clamp-1">
             {formatPrice(product.minimum_price)} -{" "}
             {formatPrice(product.maximum_price)}
