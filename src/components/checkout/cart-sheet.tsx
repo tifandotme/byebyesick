@@ -1,7 +1,7 @@
 import React from "react"
 import Link from "next/link"
 import { Separator } from "@radix-ui/react-dropdown-menu"
-import { ShoppingCart } from "lucide-react"
+import { Loader2, ShoppingCart } from "lucide-react"
 
 import { useCartList } from "@/lib/fetchers"
 import { cn } from "@/lib/utils"
@@ -19,6 +19,7 @@ import { CartLineItems } from "@/components/checkout/cart-items"
 
 export default function CartSheet() {
   const { cartdata } = useCartList()
+  if (!cartdata) return <Loader2 />
   const itemCount = cartdata?.data?.items.length ?? 0
 
   return (
@@ -30,7 +31,7 @@ export default function CartSheet() {
           size="icon"
           className="relative"
         >
-          {itemCount! > 0 && (
+          {itemCount > 0 && (
             <Badge
               variant="secondary"
               className="absolute -right-2 -top-2 h-6 w-6 justify-center rounded-full p-2.5"
@@ -43,33 +44,20 @@ export default function CartSheet() {
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
         <SheetHeader className="space-y-2.5 pr-6">
-          <SheetTitle>Cart {itemCount! > 0 && `(${itemCount})`}</SheetTitle>
+          <SheetTitle>Cart {itemCount > 0 && `(${itemCount})`}</SheetTitle>
 
           <Separator />
         </SheetHeader>
-        {itemCount! > 0 ? (
+        {itemCount > 0 ? (
           <>
             <CartLineItems
-              items={cartdata!}
+              items={cartdata}
               className="flex-1"
               isCheckable={false}
             />
             <div className="space-y-4 pr-6">
               <Separator />
-              <div className="space-y-1.5 text-sm">
-                <div className="flex">
-                  <span className="flex-1">Shipping</span>
-                  <span>Free</span>
-                </div>
-                <div className="flex">
-                  <span className="flex-1">Taxes</span>
-                  <span>Calculated at checkout</span>
-                </div>
-                <div className="flex">
-                  <span className="flex-1">Total</span>
-                  {/* <span>{formatPrice(cartTotal.toFixed(2))}</span> */}
-                </div>
-              </div>
+
               <SheetFooter>
                 <SheetTrigger asChild>
                   <Link
