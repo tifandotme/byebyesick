@@ -9,7 +9,7 @@ import { mutate } from "swr"
 import type { CartInputs } from "@/types"
 import type { IProduct } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
-import { cn, handleFailedRequest } from "@/lib/utils"
+import { cn, formatPrice, handleFailedRequest } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -28,7 +28,6 @@ interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function ProductCard({
   product,
-
   className,
   ...props
 }: ProductCardProps) {

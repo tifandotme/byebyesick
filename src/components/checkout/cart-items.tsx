@@ -26,12 +26,7 @@ export function CartLineItems({
   className,
   ...props
 }: CartLineItemsProps) {
-  // const Comp = isScrollable ? ScrollArea : Slot
-
-  // const [checked, setChecked] = React.useState(false)
-
   return (
-    // <Comp className="h-full">
     <div
       className={cn(
         "flex w-full flex-col gap-5",
@@ -103,7 +98,8 @@ export function CartLineItems({
                   {formatPrice(item.product.maximum_price)}
                 </span>
                 <span className="line-clamp-1 text-xs text-muted-foreground">
-                  {formatPrice(item.product.maximum_price)} each
+                  {formatPrice(Number(item.product.minimum_price))} -{" "}
+                  {formatPrice(Number(item.product.maximum_price))}
                 </span>
               </div>
             )}
@@ -112,6 +108,5 @@ export function CartLineItems({
         </div>
       ))}
     </div>
-    // </Comp>
   )
 }

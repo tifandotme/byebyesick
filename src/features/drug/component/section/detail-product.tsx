@@ -11,6 +11,7 @@ import {
   getManufacturerName,
   getProductCategoryName,
 } from "@/lib/fetchers"
+import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PlaceholderImage } from "@/components/image-placeholer"
 import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
@@ -67,16 +68,17 @@ function DetailProduct(data: IProduct) {
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-semibold">{data.name}</h1>
               <h2 className="text-xl font-medium text-muted-foreground">
-                Rp. 50.000/<span>{data.selling_unit}</span>
+                {formatPrice(data.minimum_price)} -{" "}
+                {formatPrice(data.maximum_price)}/
+                <span>{data.selling_unit}</span>
               </h2>
               <h3 className="text-sm font-normal text-muted-foreground">
                 {data.generic_name}
               </h3>
               <h4 className="flex gap-2 text-sm">
                 <span className="flex items-center justify-center truncate">
-                  <MapPin className="h-4 w-4" />
+                  {data.unit_in_pack}/{data.drug_form}
                 </span>
-                {data.unit_in_pack}
               </h4>
             </div>
             <div>
