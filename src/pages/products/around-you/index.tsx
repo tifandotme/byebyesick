@@ -1,8 +1,7 @@
 import React from "react"
-import useSWR from "swr"
 
-import type { IProduct, ResponseGetAll } from "@/types/api"
-import { DrugClassConfig, SortByConfig, SortConfig } from "@/config"
+import type { IProduct } from "@/types/api"
+import { classif, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
 import { useProductData } from "@/lib/fetchers"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Button } from "@/components/ui/button"
@@ -11,8 +10,6 @@ import MainLayout from "@/components/layout/main-layout"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
-
-import type { classif } from "../around-your-district"
 
 export default function SeeAllAroundYou() {
   const [latitude, setLatitude] = React.useState<number | null>(null)
@@ -43,9 +40,7 @@ export default function SeeAllAroundYou() {
     }
   }, [latitude, longitude])
 
-  const { data, error, isLoading, mutate, resetFilters } = useProductData<
-    IProduct[]
-  >(
+  const { data, error, isLoading, resetFilters } = useProductData<IProduct[]>(
     {
       drug_class: drugClass,
       search: debouncedSearch,
@@ -54,6 +49,14 @@ export default function SeeAllAroundYou() {
     },
     `/v1/products?latitude=${latitude}&longitude=${longitude}`,
   )
+
+  const handleResetFilter = () => {
+    resetFilters()
+    setSearch("")
+    setSort("date")
+    setDrugClass(undefined)
+    setSortBy("desc")
+  }
 
   if (isLoading) return <div>Loading...</div>
 
@@ -67,13 +70,66 @@ export default function SeeAllAroundYou() {
           <p>There are no products around you</p>
         </div>
       )}
+      {error && (
+        <div>
+          <p>An error occured please try again</p>
+        </div>
+      )}
 
       {locationError && (
         <div>
           <p>{locationError}</p>
         </div>
       )}
-      <div className="mt-5 flex w-full max-w-6xl items-center space-x-2">
+
+      {!error && (
+        <>
+          <div className="mt-5 flex w-full max-w-6xl items-center space-x-2">
+            <Input
+              type="text"
+              placeholder="Search products here..."
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button>Search</Button>
+            <DropdownFilter
+              filter={sortBy}
+              setFilter={setSortBy}
+              options={SortConfig}
+              title="Sort"
+              buttonOpener="Sort"
+            />
+            <DropdownFilter
+              filter={sort}
+              setFilter={setSort}
+              options={SortByConfig}
+              title="Sort By"
+              buttonOpener="Sort By"
+            />
+
+            <DropdownFilter
+              filter={drugClass!}
+              setFilter={setDrugClass}
+              options={DrugClassConfig}
+              title="Drug Classification"
+              buttonOpener="Drug Classification"
+            />
+            <Button onClick={handleResetFilter}>Reset Filter</Button>
+          </div>
+
+          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {data?.data.items.map((cat) => (
+              <div key={cat.id}>
+                <ProductCard product={cat} />
+              </div>
+            ))}
+          </div>
+          <PaginationComponent
+            page={data?.data.current_page!}
+            setCurrentPage={setCurrentPage}
+          />
+        </>
+      )}
+      {/* <div className="flex items-center w-full max-w-6xl mt-5 space-x-2">
         <Input
           type="text"
           placeholder="Search products here..."
@@ -102,9 +158,10 @@ export default function SeeAllAroundYou() {
           title="Drug Classification"
           buttonOpener="Drug Classification"
         />
+        <Button onClick={handleResetFilter}>Reset Filter</Button>
       </div>
 
-      <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 mt-5 mb-3 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data?.data.items.map((cat) => (
           <div key={cat.id}>
             <ProductCard product={cat} />
@@ -114,7 +171,7 @@ export default function SeeAllAroundYou() {
       <PaginationComponent
         page={data?.data.current_page!}
         setCurrentPage={setCurrentPage}
-      />
+      /> */}
     </>
   )
 }

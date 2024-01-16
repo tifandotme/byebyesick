@@ -59,6 +59,20 @@ export const DrugClassConfig = [
   { value: "4", label: "Non Obat" },
 ]
 
+export const classif = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
+export const categories = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
 export const usersRoleIds = {
   1: "admin",
   2: "pharmacyAdmin",

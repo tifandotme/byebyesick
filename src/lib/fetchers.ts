@@ -15,6 +15,7 @@ import type {
 import type {
   AddressI,
   AddressIForm,
+  AddressResponse,
   ICart,
   IDrugClassification,
   IManufacturer,
@@ -255,7 +256,10 @@ interface ProductsFilter {
   page?: number
 }
 
-export const useProductData = <T>(filters: ProductsFilter, baseUrl: string) => {
+export const useProductData = <T>(
+  filters: ProductsFilter,
+  baseUrl: string | null,
+) => {
   const { drug_class, search, limit, sort, sort_by, page } = filters
 
   let url = `${baseUrl}`
@@ -602,9 +606,22 @@ export const useAdressList = () => {
   }
 }
 
-export const useAddressById = (id: number) => {
-  const { data, isLoading, error, mutate } = useSWR<AddressI>(
-    `/v1/profile/addresses/${id}`,
+// export const useAddressById = (id: number) => {
+//   const { data, isLoading, error, mutate } = useSWR<AddressI>(
+//     `/v1/profile/addresses/${id}`,
+//   )
+
+//   return {
+//     addressData: data,
+//     addressIsLoading: isLoading,
+//     addressError: error,
+//     addressMutate: mutate,
+//   }
+// }
+
+export const useAddressMain = () => {
+  const { data, isLoading, error, mutate } = useSWR<AddressResponse<AddressI>>(
+    `/v1/profile/addresses/main`,
   )
 
   return {

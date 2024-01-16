@@ -3,7 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useRouter } from "next/router"
 
 import type { IProduct } from "@/types/api"
-import { SortByConfig, SortConfig } from "@/config"
+import { categories, SortByConfig, SortConfig } from "@/config"
 import { useProductData } from "@/lib/fetchers"
 import { unslugify } from "@/lib/utils"
 import { useDebounce } from "@/hooks/use-debounce"
@@ -15,12 +15,6 @@ import DropdownFilter from "@/features/products/components/filter-sorter"
 import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
 
-export const categories = {
-  "obat-bebas": 1,
-  "obat-keras": 2,
-  "obat-bebas-terbatas": 3,
-  "non-obat": 4,
-}
 export const getServerSideProps: GetServerSideProps<{
   category: keyof typeof categories
 }> = async (context) => {

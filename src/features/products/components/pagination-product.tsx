@@ -4,7 +4,6 @@ import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
-  PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
@@ -22,28 +21,21 @@ export default function PaginationComponent({
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            className="cursor-pointer"
-            onClick={() => {
-              setCurrentPage(page - 1)
-            }}
-          />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink isActive>{page}</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext
-            className="cursor-pointer"
-            onClick={() => {
-              setCurrentPage(page + 1)
-            }}
-          />
-        </PaginationItem>
+        <PaginationPrevious
+          className="cursor-pointer"
+          onClick={() => {
+            setCurrentPage(page - 1)
+          }}
+        />
+        <PaginationLink isActive>{page}</PaginationLink>
+        <PaginationEllipsis />
+
+        <PaginationNext
+          className="cursor-pointer"
+          onClick={() => {
+            setCurrentPage(page + 1)
+          }}
+        />
       </PaginationContent>
     </Pagination>
   )
