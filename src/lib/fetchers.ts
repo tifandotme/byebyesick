@@ -14,6 +14,7 @@ import type {
 } from "@/types"
 import type {
   AddressIForm,
+  doctorI,
   ICart,
   IDrugClassification,
   IManufacturer,
@@ -681,5 +682,20 @@ export async function deleteManufacturers(id: number): Promise<Response> {
           ? err.message
           : "Something went wrong please try again",
     }
+  }
+}
+
+export const useDoctorList = (search?: string) => {
+  let url = "/v1/users/doctor"
+  if (search) url += `?search=${search}`
+  console.log(url)
+  const { data, isLoading, error, mutate } =
+    useSWR<ResponseGetAll<doctorI[]>>(url)
+
+  return {
+    doctorList: data,
+    doctorIsLoading: isLoading,
+    doctorError: error,
+    doctorMutate: mutate,
   }
 }

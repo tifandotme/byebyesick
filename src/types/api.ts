@@ -238,3 +238,23 @@ export interface AddressIForm {
   longitude: string
   status: number
 }
+
+export interface doctorI {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: string
+  consultation_fee: string
+  is_online: boolean
+}
+
+export interface Specialization {
+  id: number
+  name: string
+  image: string
+}
