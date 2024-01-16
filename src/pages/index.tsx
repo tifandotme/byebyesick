@@ -135,11 +135,7 @@ export default function HomePage({
         <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {around?.data.items.map((cat) => (
             <div key={cat.id}>
-              <ProductCard
-                product={{
-                  data: cat,
-                }}
-              />
+              <ProductCard product={cat} />
             </div>
           ))}
         </div>

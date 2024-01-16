@@ -7,9 +7,9 @@ import { toast } from "sonner"
 import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
-import type { ProductsSchema } from "@/types/api"
+import type { IProduct } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
-import { cn, handleFailedRequest } from "@/lib/utils"
+import { cn, formatPrice, handleFailedRequest } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -23,15 +23,11 @@ import {
 import { PlaceholderImage } from "@/components/image-placeholer"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  product: ProductsSchema
-  isAddedToCart?: boolean
-  onSwitch?: () => Promise<void>
+  product: IProduct
 }
 
 export function ProductCard({
   product,
-  isAddedToCart = false,
-  onSwitch,
   className,
   ...props
 }: ProductCardProps) {
@@ -54,19 +50,16 @@ export function ProductCard({
       className={cn("h-full w-full overflow-hidden rounded-sm", className)}
       {...props}
     >
-      <Link
-        aria-label={product.data.name}
-        href={`/products/${product.data.id}`}
-      >
+      <Link aria-label={product.name} href={`/products/${product.id}`}>
         <CardHeader className="border-b p-0">
           <AspectRatio ratio={4 / 3}>
-            {product.data.image?.length ? (
+            {product.image?.length ? (
               <Image
-                src={product.data.image ?? "/images/product-placeholder.webp"}
+                src={product.image ?? "/images/product-placeholder.webp"}
                 loading="lazy"
                 className="object-cover"
                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-                alt={product.data.image ?? product.data.name}
+                alt={product.image ?? product.name}
                 fill
               />
             ) : (
@@ -74,15 +67,14 @@ export function ProductCard({
             )}
           </AspectRatio>
         </CardHeader>
-        <span className="sr-only">{product.data.name}</span>
+        <span className="sr-only">{product.name}</span>
       </Link>
-      <Link href={`/products/${product.data.id}`} tabIndex={-1}>
+      <Link href={`/products/${product.id}`} tabIndex={-1}>
         <CardContent className="space-y-1.5 p-4">
-          <CardTitle className="mt-2 line-clamp-1 ">
-            {product.data.name}
-          </CardTitle>
+          <CardTitle className="mt-2 line-clamp-1 ">{product.name}</CardTitle>
           <CardDescription className="line-clamp-1">
-            {/* {formatPrice(product.data.price)} */}
+            {formatPrice(product.minimum_price)} -{" "}
+            {formatPrice(product.maximum_price)}
           </CardDescription>
         </CardContent>
       </Link>
@@ -94,7 +86,7 @@ export function ProductCard({
             className="h-8 w-full rounded-sm"
             onClick={async () => {
               try {
-                await addToCartt({ product_id: product.data.id, quantity: 1 })
+                await addToCartt({ product_id: product.id, quantity: 1 })
                 cartMutate()
               } catch (error) {
                 const Error = error as unknown as Response
@@ -107,7 +99,7 @@ export function ProductCard({
             Add to cart
           </Button>
           <Link
-            href={`/products/${product.data.id}`}
+            href={`/products/${product.id}`}
             title="Preview"
             className={cn(
               buttonVariants({
