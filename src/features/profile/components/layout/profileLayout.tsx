@@ -33,7 +33,7 @@ function ProfileLayout({
           <img
             alt="Man"
             src={
-              session?.user.image ??
+              session?.user.image ||
               "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
             }
             className="h-24 w-24 rounded-full object-cover"
@@ -62,25 +62,27 @@ function ProfileLayout({
                 <span>Profile</span>
               </span>
             </Link>
-            <Link
-              href={"/user/address"}
-              className={`${
-                pathname === "/user/address"
-                  ? "bg-secondary text-secondary-foreground"
-                  : "text-primary"
-              } rounded-md py-2 hover:bg-muted hover:text-foreground`}
-            >
-              <span
-                className={
-                  "group flex w-full flex-row items-end gap-4 rounded-md border border-transparent px-2 py-1"
-                }
+            {session?.user.user_role_id === 4 && (
+              <Link
+                href={"/user/address"}
+                className={`${
+                  pathname === "/user/address"
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-primary"
+                } rounded-md py-2 hover:bg-muted hover:text-foreground`}
               >
-                <span>
-                  <MapPinIcon />
+                <span
+                  className={
+                    "group flex w-full flex-row items-end gap-4 rounded-md border border-transparent px-2 py-1"
+                  }
+                >
+                  <span>
+                    <MapPinIcon />
+                  </span>
+                  <span>Address</span>
                 </span>
-                <span>Address</span>
-              </span>
-            </Link>
+              </Link>
+            )}
           </div>
         </CardContent>
       </Card>
