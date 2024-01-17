@@ -3,7 +3,7 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
-import { ArrowRight, Loader2, Tablets } from "lucide-react"
+import { ArrowRight, Loader2, MapIcon, MapPin, Tablets } from "lucide-react"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
@@ -55,6 +55,8 @@ export default function HomePage({
   error: string | undefined
 }) {
   const { addressData, addressIsLoading } = useAddressMain()
+
+  console.log(addressData, "foo")
 
   const { location, locationError } = useGeolocation()
 
@@ -131,8 +133,8 @@ export default function HomePage({
 
         {loadingAround && (
           <div className="">
-            <Loader2 className="animate-spin" /> searching products around
-            you....
+            <Loader2 className="animate-spin" />
+            searching products around you....
           </div>
         )}
 
@@ -157,7 +159,7 @@ export default function HomePage({
           </div>
         )}
 
-        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {around?.data.items.slice(0, 6).map((cat) => (
             <div key={cat.id} className="flex justify-center">
               <ProductCard product={cat} />
@@ -166,7 +168,9 @@ export default function HomePage({
         </div>
 
         <div className="mt-5 flex justify-between text-2xl font-semibold">
-          <h2>Around {addressData?.data.sub_district}</h2>
+          <h2 className="mt-5 flex  items-center">
+            <MapPin className="mr-2" /> Around {addressData?.data.sub_district}
+          </h2>
           <Link href="/products/around-your-district">
             <Button variant={"link"}>
               See All <ArrowRight className="ml-2 size-4" />
@@ -178,7 +182,7 @@ export default function HomePage({
             <p>There are no products around {addressData?.data.sub_district}</p>
           </div>
         )}
-        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {productByAddress?.data.items.slice(0, 6).map((cat) => (
             <div key={cat.id}>
               <ProductCard product={cat} />

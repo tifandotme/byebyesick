@@ -4,12 +4,12 @@ import { Loader2 } from "lucide-react"
 import type { IProduct } from "@/types/api"
 import { classif, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
 import { useAddressMain, useProductData } from "@/lib/fetchers"
+import { getRandomPatternStyle } from "@/lib/generate-pattern"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import MainLayout from "@/components/layout/main-layout"
 import DropdownFilter from "@/features/products/components/filter-sorter"
-import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
 
 export default function SeeAllAroundYourDistrict() {
@@ -126,12 +126,12 @@ export default function SeeAllAroundYourDistrict() {
               filter={drugClass!}
               setFilter={setDrugClass}
               options={DrugClassConfig}
-              title="Drug Classification"
-              buttonOpener="Drug Classification"
+              title=" Type"
+              buttonOpener=" Type"
             />
 
             <Button
-              className="rounded-full border-dashed border-red-300  text-xs text-red-600"
+              className="rounded-full border-dashed border-red-300  text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
               variant={"outline"}
               size={"sm"}
               onClick={handleResetFilters}
@@ -140,7 +140,7 @@ export default function SeeAllAroundYourDistrict() {
             </Button>
           </div>
 
-          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mb-3 mt-5 grid grid-cols-2 gap-4  md:grid-cols-3 lg:grid-cols-5">
             {data?.data.items.map((cat) => (
               <div key={cat.id}>
                 <ProductCard product={cat} />

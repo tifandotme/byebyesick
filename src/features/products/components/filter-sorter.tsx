@@ -32,7 +32,7 @@ const DropdownFilter: React.FC<SortByDropdownProps> = ({
       <Button
         variant="outline"
         size={"sm"}
-        className="rounded-full border-dashed border-green-300 text-xs text-green-600"
+        className="rounded-full border-dashed border-green-300 text-xs text-green-600  hover:bg-green-50 "
       >
         {buttonOpener} <ChevronDown className="ml-1 h-4 w-4" />
       </Button>
