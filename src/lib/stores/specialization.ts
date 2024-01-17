@@ -24,7 +24,7 @@ export const useStore = create<State & Actions>()(
       {
         name: "specializationFormState",
         partialize: (state) => ({
-          provinces: state.specialization,
+          specialization: state.specialization,
         }),
         onRehydrateStorage: () => (state) => {
           if (state) {

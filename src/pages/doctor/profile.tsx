@@ -3,7 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 import { getSession } from "next-auth/react"
 
-import type { IProfileDoctor, IProfileUser, ResponseById } from "@/types/api"
+import type { IProfileDoctor, ResponseById } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import { getDoctorProfile } from "@/features/profile/api/getDoctorProfile"
 import DoctorProfileForm from "@/features/profile/components/form/doctorProfileForm"
