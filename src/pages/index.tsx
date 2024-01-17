@@ -3,13 +3,12 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
-import { useRouter } from "next/router"
-import { ArrowRight, Tablets } from "lucide-react"
-import { useSession } from "next-auth/react"
+import { ArrowRight, Loader2, Tablets } from "lucide-react"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
 import { useAddressMain } from "@/lib/fetchers"
+import useGeolocation from "@/hooks/use-geolocation"
 import { Button } from "@/components/ui/button"
 import MainLayout from "@/components/layout/main-layout"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
@@ -55,44 +54,38 @@ export default function HomePage({
   data: ResponseGetAll<IDrugClassification[]>
   error: string | undefined
 }) {
-  const { data: session } = useSession()
-  const dbUrl = process.env.NEXT_PUBLIC_DB_URL
+  const { addressData, addressIsLoading } = useAddressMain()
 
-  const [latitude, setLatitude] = React.useState<number | null>(null)
-  const [longitude, setLongitude] = React.useState<number | null>(null)
-  const [locationError, setLocationError] = React.useState<string | null>(null)
-  React.useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude)
-          setLongitude(position.coords.longitude)
-          setLocationError(null)
-        },
-        (err) => {
-          setLocationError(err.message)
-        },
-      )
-    } else {
-      setLocationError("Geolocation is not supported by this browser.")
-    }
-  }, [latitude, longitude])
+  const { location, locationError } = useGeolocation()
 
-  const { addressData } = useAddressMain()
-
-  const url =
-    latitude && longitude
-      ? `${dbUrl}/v1/products?latitude=${latitude}&longitude=${longitude}`
-      : null
-
-  const { data: around, isLoading: loadingAround } =
-    useSWR<ResponseGetAll<IProduct[]>>(url)
-
-  const { data: productByAddress } = useSWR<ResponseGetAll<IProduct[]>>(
-    `${dbUrl}/v1/products?latitude=${addressData?.data.latitude}&longitude=${addressData?.data.longitude}`,
+  const {
+    data: around,
+    isLoading: loadingAround,
+    error: aroundError,
+  } = useSWR<ResponseGetAll<IProduct[]>>(
+    location
+      ? `/v1/products?latitude=${String(location.latitude)}&longitude=${String(
+          location.longitude,
+        )}`
+      : null,
   )
 
-  if (loadingAround) return <div>Loading...</div>
+  const { data: productByAddress, error: productbyAddressError } = useSWR<
+    ResponseGetAll<IProduct[]>
+  >(
+    addressData
+      ? `/v1/products?latitude=${addressData.data.latitude}&longitude=${addressData.data.longitude}&`
+      : null,
+  )
+
+  if (addressIsLoading)
+    return (
+      <div className="mt-8 flex items-center justify-center">
+        <Loader2 className="animate-spin" /> searching products around you....
+      </div>
+    )
+
+  console.log(addressData)
 
   return (
     <div>
@@ -136,8 +129,24 @@ export default function HomePage({
           </Link>
         </div>
 
+        {loadingAround && (
+          <div className="">
+            <Loader2 className="animate-spin" /> searching products around
+            you....
+          </div>
+        )}
+
+        {aroundError && (
+          <div>
+            {/* PUT ILLUSTRATION HERE */}
+            <p>Sorry, an error occured. Please try to refresh this page</p>
+          </div>
+        )}
+
         {around?.data.total_items === 0 && (
           <div>
+            {/* PUT ILLUSTRATION HERE */}
+
             <p>There are no products around you</p>
           </div>
         )}
@@ -149,27 +158,28 @@ export default function HomePage({
         )}
 
         <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {around?.data.items.map((cat) => (
-            <div key={cat.id}>
+          {around?.data.items.slice(0, 6).map((cat) => (
+            <div key={cat.id} className="flex justify-center">
               <ProductCard product={cat} />
             </div>
           ))}
         </div>
+
         <div className="mt-5 flex justify-between text-2xl font-semibold">
-          <h2>Around {addressData?.data.subDistrict}</h2>
+          <h2>Around {addressData?.data.sub_district}</h2>
           <Link href="/products/around-your-district">
             <Button variant={"link"}>
-              <p></p>See All <ArrowRight className="ml-2 size-4" />
+              See All <ArrowRight className="ml-2 size-4" />
             </Button>
           </Link>
         </div>
         {productByAddress?.data.total_items === 0 && (
           <div>
-            <p>There are no products around {addressData?.data.subDistrict}</p>
+            <p>There are no products around {addressData?.data.sub_district}</p>
           </div>
         )}
         <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {productByAddress?.data.items.map((cat) => (
+          {productByAddress?.data.items.slice(0, 6).map((cat) => (
             <div key={cat.id}>
               <ProductCard product={cat} />
             </div>

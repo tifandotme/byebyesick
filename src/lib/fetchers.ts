@@ -264,8 +264,8 @@ export const useProductData = <T>(
 
   let url = `${baseUrl}`
   if (search) url += `&search=${search}&`
-  if (limit) url += `&limit=${limit}&`
-  if (sort_by) url += `&sort_by=${sort_by}&sort=${sort}&`
+  if (limit) url += `limit=${limit}&`
+  if (sort_by) url += `sort_by=${sort_by}&sort=${sort}&`
   if (drug_class) url += `drug_class=${drug_class}&`
   if (page) url += `&page=${page}`
 
@@ -301,13 +301,6 @@ export async function updatePost(
     formData.append("length", payload.length.toString())
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
-
-    // formData.append(
-    //   "image",
-    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
-    //     type: "png",
-    //   }),
-    // )
 
     formData.append(
       "image",
@@ -606,23 +599,10 @@ export const useAdressList = () => {
   }
 }
 
-// export const useAddressById = (id: number) => {
-//   const { data, isLoading, error, mutate } = useSWR<AddressI>(
-//     `/v1/profile/addresses/${id}`,
-//   )
-
-//   return {
-//     addressData: data,
-//     addressIsLoading: isLoading,
-//     addressError: error,
-//     addressMutate: mutate,
-//   }
-// }
-
 export const useAddressMain = () => {
-  const { data, isLoading, error, mutate } = useSWR<AddressResponse<AddressI>>(
-    `/v1/profile/addresses/main`,
-  )
+  const { data, isLoading, error, mutate } = useSWR<
+    AddressResponse<AddressIForm>
+  >(`/v1/profile/addresses/main`, { keepPreviousData: true })
 
   return {
     addressData: data,

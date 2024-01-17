@@ -15,7 +15,7 @@ declare module "querystring" {
     pharmacyId?: string
 
     limit?: string
-
+    drug_class?: string
     page?: string
     per_page?: string
     search?: string

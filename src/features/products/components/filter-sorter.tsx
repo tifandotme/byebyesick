@@ -1,4 +1,5 @@
 import React from "react"
+import { ChevronDown, ChevronRightIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,7 +29,13 @@ const DropdownFilter: React.FC<SortByDropdownProps> = ({
 }) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="outline">{buttonOpener}</Button>
+      <Button
+        variant="outline"
+        size={"sm"}
+        className="rounded-full border-dashed border-green-300 text-xs text-green-600"
+      >
+        {buttonOpener} <ChevronDown className="ml-1 h-4 w-4" />
+      </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent className="w-56">
       <DropdownMenuLabel>{title}</DropdownMenuLabel>

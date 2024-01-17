@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import React from "react"
 import Head from "next/head"
 import { jwtDecode } from "jwt-decode"
@@ -83,12 +85,20 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
   // disable all SWR requests when unauthenticated
   const middleware: Middleware = (useSWRNext) => {
     return (key, fetcher, config) => {
+      let returnedKey: string | null = typeof key === "function" ? key() : key
+
+      if (returnedKey !== null) {
+        const pathname = (returnedKey.match(/[^?#]*/) ?? "")[0]
+        if (
+          !pathname.includes("/v1/products") &&
+          status === "unauthenticated"
+        ) {
+          returnedKey = null
+        }
+      }
+
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useSWRNext(
-        status === "authenticated" ? key : null,
-        fetcher,
-        config,
-      )
+      return useSWRNext(returnedKey, fetcher, config)
     }
   }
 
