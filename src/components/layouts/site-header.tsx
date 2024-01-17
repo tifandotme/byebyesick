@@ -51,8 +51,6 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center justify-end space-x-4">
-          {/* <SearchCommandMenu /> */}
-
           <nav className="flex items-center space-x-2">
             {status === "loading" && (
               <Skeleton className="h-8 w-8 rounded-full" />

@@ -80,25 +80,13 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
         },
       })
     }
-  }, [session])
+  }, [session?.user.token])
 
   // disable all SWR requests when unauthenticated
   const middleware: Middleware = (useSWRNext) => {
     return (key, fetcher, config) => {
-      let returnedKey: string | null = typeof key === "function" ? key() : key
-
-      if (returnedKey !== null) {
-        const pathname = (returnedKey.match(/[^?#]*/) ?? "")[0]
-        if (
-          !pathname.includes("/v1/products") &&
-          status === "unauthenticated"
-        ) {
-          returnedKey = null
-        }
-      }
-
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useSWRNext(returnedKey, fetcher, config)
+      return useSWRNext(status !== "loading" ? key : null, fetcher, config)
     }
   }
 

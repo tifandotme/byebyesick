@@ -602,7 +602,7 @@ export const useAdressList = () => {
 export const useAddressMain = () => {
   const { data, isLoading, error, mutate } = useSWR<
     AddressResponse<AddressIForm>
-  >(`/v1/profile/addresses/main`, { keepPreviousData: true })
+  >(`/v1/profile/addresses/main`)
 
   return {
     addressData: data,
