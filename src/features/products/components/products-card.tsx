@@ -1,7 +1,6 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { EyeOpenIcon } from "@radix-ui/react-icons"
 import { LoaderIcon } from "lucide-react"
 import { toast } from "sonner"
 import { mutate } from "swr"
@@ -11,7 +10,7 @@ import type { IProduct } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
 import { cn, formatPrice, handleFailedRequest } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -100,20 +99,6 @@ export function ProductCard({
             {isLoading && <LoaderIcon className="" />}
             Add to cart
           </Button>
-          <Link
-            href={`/products/${product.id}`}
-            title="Preview"
-            className={cn(
-              buttonVariants({
-                variant: "secondary",
-                size: "icon",
-                className: "h-8 w-8 shrink-0",
-              }),
-            )}
-          >
-            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
-            <span className="sr-only">Preview</span>
-          </Link>
         </div>
       </CardFooter>
     </Card>
