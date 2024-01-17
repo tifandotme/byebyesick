@@ -13,7 +13,7 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
             return (
               <CategoryCard
                 key={cat.name}
-                link="/consultation/categories"
+                link="/doctors/categories"
                 category={cat.name}
                 background={
                   cat.image ||

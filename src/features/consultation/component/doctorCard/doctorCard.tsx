@@ -31,14 +31,14 @@ function DoctorCard({
           <Badge variant={is_online ? "success" : "destructive"}>
             {is_online ? "Online" : "Offline"}
           </Badge>
-          <CardTitle className="text-sm capitalize md:text-2xl">
+          <CardTitle className="text-sm capitalize md:text-xl lg:text-2xl">
             {name}
           </CardTitle>
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-6">
-          <Avatar className="h-24 w-24">
+          <Avatar className="size-24">
             <AvatarImage
               alt="Dr. Jane Doe"
               src={
@@ -66,7 +66,7 @@ function DoctorCard({
           size={"sm"}
           type="button"
           onClick={() => {
-            push("/consultation/doctor/" + id)
+            push("/doctors/detail/" + id)
           }}
         >
           View Profile
