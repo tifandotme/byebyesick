@@ -12,9 +12,9 @@ function DoctorDetail() {
   const [isLoading, setIsLoading] = React.useState(false)
 
   return (
-    <div className="flex flex-col gap-16 md:flex-row">
+    <div className="flex flex-col gap-16 py-6 md:flex-row">
       <div className="relative h-60 flex-auto">
-        <AspectRatio ratio={1} className="mx-auto h-60 w-60">
+        <AspectRatio ratio={1} className="mx-auto size-60">
           <Image
             src={"/Enervon.jpg"}
             loading="lazy"
