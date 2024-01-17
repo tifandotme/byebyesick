@@ -21,7 +21,7 @@ function AddressPage() {
           title="New Address"
           trigger={
             <div className="flex items-center justify-center gap-1 text-xs md:text-base">
-              <PlusIcon className="h-5 w-5" />
+              <PlusIcon className="size-5" />
               New Address
             </div>
           }

@@ -220,7 +220,7 @@ export interface IProfileDoctor {
   profile_photo: string
   starting_year: number
   doctor_certificate: string
-  doctor_specialization: string
+  doctor_specialization: Specialization
   consultation_fee: string
   is_online: boolean
 }
@@ -237,4 +237,10 @@ export interface AddressIForm {
   latitude: string
   longitude: string
   status: number
+}
+
+export type Specialization = {
+  id: number
+  name: string
+  image: string
 }
