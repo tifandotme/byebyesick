@@ -1,20 +1,11 @@
 import React from "react"
-import Link from "next/link"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
 
 import type { StockMutationReport } from "@/types/api"
-import { toSentenceCase } from "@/lib/utils"
+import { cn, formatDate, toSentenceCase } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 interface PharmacyJournalTableProps {
   data: StockMutationReport[]
@@ -33,6 +24,7 @@ export function PharmacyJournalTable({
     genericName: mutation.pharmacy_product.product.generic_name,
     manufacturer: mutation.pharmacy_product.product.manufacturer.name,
     amount: mutation.stock,
+    date: mutation.mutation_date,
   }))
 
   type Data = (typeof data)[number]
@@ -43,7 +35,8 @@ export function PharmacyJournalTable({
         accessorKey: "name",
         enableHiding: false,
         enableSorting: false,
-        maxSize: 200,
+        minSize: 150,
+        maxSize: 150,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
         ),
@@ -51,6 +44,8 @@ export function PharmacyJournalTable({
       {
         accessorKey: "genericName",
         enableSorting: false,
+        minSize: 150,
+        maxSize: 150,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Generic Name" />
         ),
@@ -58,6 +53,7 @@ export function PharmacyJournalTable({
       {
         accessorKey: "manufacturer",
         enableSorting: false,
+        maxSize: 190,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Manufacturer" />
         ),
@@ -69,48 +65,44 @@ export function PharmacyJournalTable({
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Amount" />
         ),
-        // cell: ({ cell }) => {
-        //   const status = cell.getValue() as Data["manufacturer"]
-
-        //   return <Badge variant="outline">{toSentenceCase(status)}</Badge>
-        // },
       },
       {
         accessorKey: "type",
         enableHiding: false,
         enableSorting: false,
-        maxSize: 174,
-        minSize: 174,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Type" />
         ),
         cell: ({ cell }) => {
           const type = cell.getValue() as Data["type"]
 
-          return <Badge variant="outline">{toSentenceCase(type)}</Badge>
+          return (
+            <Badge
+              variant="secondary"
+              className={cn(
+                "cursor-default",
+                type === "addition"
+                  ? "bg-green-200 hover:bg-green-200/70 dark:bg-green-950 hover:dark:bg-green-950/70"
+                  : "bg-red-200 hover:bg-red-200/70 dark:bg-red-950 hover:dark:bg-red-950/70",
+              )}
+            >
+              {toSentenceCase(type)}
+            </Badge>
+          )
         },
       },
       {
-        id: "actions",
-        // TODO add actions?
-        cell: () => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-              >
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link href="#">Edit</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        accessorKey: "date",
+        enableHiding: false,
+        enableSorting: false,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Date" />
         ),
+        cell: ({ cell }) => {
+          const date = cell.getValue() as Data["date"]
+
+          return <span>{formatDate(date, true)}</span>
+        },
       },
     ],
     [],

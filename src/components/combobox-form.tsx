@@ -53,7 +53,7 @@ export function ComboboxFormItem({
               variant="outline"
               role="combobox"
               className={cn(
-                "w-full justify-between !border-input font-normal hover:!bg-muted hover:!text-foreground",
+                "w-full justify-between rounded-md !border-input px-3 font-medium hover:!bg-muted hover:!text-foreground",
                 !value && "!text-muted-foreground",
               )}
               disabled={isLoading}
@@ -61,7 +61,7 @@ export function ComboboxFormItem({
               {value !== "0" && data
                 ? data.find((entry) => entry.value === value)?.label
                 : `Select ${label}`}
-              <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
             </Button>
           </FormControl>
         </PopoverTrigger>
@@ -81,7 +81,7 @@ export function ComboboxFormItem({
                 >
                   <CheckIcon
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 size-4",
                       entry.value === value ? "opacity-100" : "opacity-0",
                     )}
                   />

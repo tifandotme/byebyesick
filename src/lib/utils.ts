@@ -27,7 +27,7 @@ export function formatPrice(price: number | string) {
 }
 
 export function formatDate(date: string | Date, showTime?: boolean) {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
     ...(showTime && { timeStyle: "short" }),
   }).format(new Date(date))
