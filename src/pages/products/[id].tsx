@@ -9,7 +9,6 @@ import Head from "next/head"
 import type { IProduct, ResponseById, ResponseGetAll } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import DetailProduct from "@/features/drug/component/section/detail-product"
-import OtherProduct from "@/features/drug/component/section/other-product"
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const url = new URL("/v1/products", process.env.NEXT_PUBLIC_DB_URL)
@@ -59,7 +58,6 @@ function DetailProductPage({
       </Head>
       <div className="flex flex-col gap-10">
         <DetailProduct {...product.data} />
-        {/* <OtherProduct /> */}
       </div>
     </>
   )

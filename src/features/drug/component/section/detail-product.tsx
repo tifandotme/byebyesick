@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { LoaderIcon, MapPin } from "lucide-react"
+import { LoaderIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import type { CartInputs } from "@/types"
@@ -14,7 +14,6 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PlaceholderImage } from "@/components/image-placeholer"
-import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
 import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 
 function DetailProduct(data: IProduct) {
@@ -90,22 +89,22 @@ function DetailProduct(data: IProduct) {
             {isLoading && <LoaderIcon className="" />}
           </Button>
         </form>
-        <div className="grid gap-4 md:gap-10">
+        <div className="grid gap-4 ">
           <h2 className="text-2xl font-bold">Description</h2>
           <p>{data.description}</p>
         </div>
-        <div className="grid gap-4 md:gap-10">
+        <div className="grid gap-4 ">
           <h2 className="text-2xl font-bold">Composition</h2>
           <p>{data.content}</p>
         </div>
-        <div className="grid gap-4 md:gap-10">
-          <h2 className="text-2xl font-bold">Packaging</h2>
-          <div className="flex">
-            <p>{data.drug_form}</p>
-            <p>{data.unit_in_pack}</p>
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Details</h2>
+          <div className="flex w-full gap-10">
+            <InfoBlock title="Drug Form">{data.drug_form}</InfoBlock>
+            <InfoBlock title="Unit in Pack">{data.unit_in_pack}</InfoBlock>
           </div>
         </div>
-        <div className="grid gap-4 md:gap-10">
+        <div className="grid gap-4 ">
           <h2 className="text-2xl font-bold">Information</h2>
           <div className="flex w-full gap-10">
             <InfoBlock title="Classification">
@@ -116,18 +115,14 @@ function DetailProduct(data: IProduct) {
           </div>
         </div>
 
-        <div className="grid gap-4 md:gap-10">
+        <div className="grid gap-4 ">
           <h2 className="text-2xl font-bold">Details</h2>
           <div className="flex w-full gap-10">
-            <InfoBlock title="Weight">{data.weight}</InfoBlock>
-            <InfoBlock title="Width">{data.width} </InfoBlock>
-            <InfoBlock title="Length">{data.length}</InfoBlock>
-            <InfoBlock title="Height">{data.height}</InfoBlock>
+            <InfoBlock title="Weight">{data.weight} gr</InfoBlock>
+            <InfoBlock title="Width">{data.width} cm </InfoBlock>
+            <InfoBlock title="Length">{data.length} cm </InfoBlock>
+            <InfoBlock title="Height">{data.height} ml</InfoBlock>
           </div>
-        </div>
-        <div className="grid gap-4 md:gap-10">
-          <h2 className="text-2xl font-bold">Frequently Asked Questions</h2>
-          <p>Common questions and answers about the drug goes here.</p>
         </div>
       </div>
     </div>
