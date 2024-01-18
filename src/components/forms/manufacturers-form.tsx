@@ -1,19 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React from "react"
-import Image from "next/image"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, UploadCloudIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import type { ManufacturersInput, ProductCategoriesInputs } from "@/types"
-import type { ManufacturersSchema, ProductsCategoriesSchema } from "@/types/api"
-import { updateManufacturers, updateProductCategory } from "@/lib/fetchers"
+import type { ManufacturersInput } from "@/types"
+import type { ManufacturersSchema } from "@/types/api"
+import { updateManufacturers } from "@/lib/fetchers"
 import { toSentenceCase } from "@/lib/utils"
 import { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
-import { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -102,7 +100,7 @@ export default function ManufacturersForm({
                               asChild
                             >
                               <div>
-                                <UploadCloudIcon className="mr-1.5 h-3.5 w-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
+                                <UploadCloudIcon className="mr-1.5 size-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
                                 Upload
                               </div>
                             </Button>
@@ -160,7 +158,7 @@ export default function ManufacturersForm({
                 className="w-fit"
               >
                 {form.formState.isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 size-4 animate-spin" />
                 )}
                 {toSentenceCase(mode)} Manufacturers
               </Button>
