@@ -112,3 +112,11 @@ export const calculateYear = (year: number) => {
   if (output > 1) return output + " years"
   else return output + " year"
 }
+
+export async function copyTextToClipboard(text: string) {
+  if ("clipboard" in navigator) {
+    return await navigator.clipboard.writeText(text)
+  } else {
+    return document.execCommand("copy", true, text)
+  }
+}
