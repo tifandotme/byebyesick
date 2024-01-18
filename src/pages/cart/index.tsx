@@ -1,8 +1,12 @@
 import React, { type ReactElement } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { MapPin } from "lucide-react"
+import useSWR from "swr"
 
-import { useCartList } from "@/lib/fetchers"
+import type { AddressIForm, ResponseGetAll } from "@/types/api"
+import { useAddressMain, useCartList } from "@/lib/fetchers"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,6 +16,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CartLineItems } from "@/components/checkout/cart-items"
 import MainLayout from "@/components/layout/main-layout"
@@ -35,6 +48,9 @@ export default function CartPage() {
     router.push(`/checkout?ids=${encodeURIComponent(idsString)}`)
   }
 
+  // const {addressError, addressMutate, addressIsLoading, addressList} = useAdressList()
+  const { addressData } = useAddressMain()
+
   if (cartisLoading) {
     return <Skeleton />
   }
@@ -50,6 +66,14 @@ export default function CartPage() {
 
         <div className="space-y-2 md:flex md:space-x-2">
           <div className="w-full md:w-3/4">
+            <ChangeAddressCard
+              address={addressData?.data.address || ""}
+              name={addressData?.data.name || ""}
+              status={addressData?.data.status || 0}
+              sub_district={addressData?.data.sub_district || ""}
+              district={addressData?.data.district || ""}
+              postal_code={addressData?.data.postal_code || ""}
+            />
             <CartLineItems
               items={cartdata}
               className="mt-5"
@@ -59,8 +83,8 @@ export default function CartPage() {
             />
           </div>
 
-          <div>
-            <Card className="w-auto">
+          <div className="">
+            <Card className="mt-1 w-auto">
               <CardHeader>
                 <CardTitle className="text-xl">Payment Summary</CardTitle>
                 <CardDescription className="text-sm">
@@ -71,7 +95,6 @@ export default function CartPage() {
                 <div>
                   <p>
                     <span>Total Items: </span>
-
                     <span>
                       {checkedItems && Object.keys(checkedItems).length}
                     </span>
@@ -79,9 +102,6 @@ export default function CartPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                {/* <Link href={`/checkout/${cartdata.data.items}`}>
-                  <Button className="w-full">Beli</Button>
-                </Link> */}
                 <Button onClick={handleCheckout} className="w-full">
                   Beli
                 </Button>
@@ -95,4 +115,57 @@ export default function CartPage() {
 }
 CartPage.getLayout = function getLayout(page: ReactElement) {
   return <MainLayout>{page}</MainLayout>
+}
+
+interface ChangeAddressCardProps {
+  name: string
+  status: number
+  address: string
+  sub_district: string
+  district: string
+  postal_code: string
+}
+
+export function ChangeAddressCard({
+  address,
+  sub_district,
+  status,
+  postal_code,
+  name,
+  district,
+}: ChangeAddressCardProps) {
+  return (
+    <div>
+      <Card className="mt-3 w-full ">
+        <CardHeader>
+          <CardTitle className="text-sm text-muted-foreground md:text-xl">
+            Shipping Address
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div>
+            <div className="flex space-x-1 ">
+              <MapPin className="mr-2 " /> {name} •{" "}
+              {status == 1 ? (
+                <Badge variant="default">Main Address</Badge>
+              ) : (
+                <div></div>
+              )}
+            </div>
+            <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
+              {address}
+            </p>
+            <p className="truncate text-sm md:mt-0 md:text-base">
+              {sub_district}, {district}, {postal_code}
+            </p>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button variant={"outline"} size={"sm"}>
+            Change Address
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
+  )
 }

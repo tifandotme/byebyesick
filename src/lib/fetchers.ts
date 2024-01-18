@@ -14,6 +14,7 @@ import type {
 } from "@/types"
 import type {
   AddressIForm,
+  AddressResponse,
   ICart,
   IDrugClassification,
   IManufacturer,
@@ -597,6 +598,19 @@ export const useAdressList = () => {
 
   return {
     addressList: data,
+    addressIsLoading: isLoading,
+    addressError: error,
+    addressMutate: mutate,
+  }
+}
+
+export const useAddressMain = () => {
+  const { data, isLoading, error, mutate } = useSWR<
+    AddressResponse<AddressIForm>
+  >(`/v1/profile/addresses/main`)
+
+  return {
+    addressData: data,
     addressIsLoading: isLoading,
     addressError: error,
     addressMutate: mutate,
