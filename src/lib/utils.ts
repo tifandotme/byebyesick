@@ -106,3 +106,9 @@ export function getBase64(w: number, h: number) {
 
   return isBrowser() ? Buffer.from(svg).toString("base64") : window.btoa(svg)
 }
+
+export const calculateYear = (year: number) => {
+  const output = new Date().getFullYear() - year
+  if (output > 1) return output + " years"
+  else return output + " year"
+}

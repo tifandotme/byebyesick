@@ -8,7 +8,11 @@ export default async function middleware(req: NextRequestWithAuth) {
   const { pathname } = req.nextUrl
   const token = await getToken({ req, secret })
   const adminPath = "/dashboard"
+  const doctorPath = "/doctor"
+
   const protectedPath = pathname.startsWith(adminPath)
+  const doctorProtectedPath = pathname.startsWith(doctorPath)
+
   const isAuthenticated = !!token
 
   if (pathname.startsWith("/auth") && isAuthenticated) {
@@ -32,11 +36,13 @@ export default async function middleware(req: NextRequestWithAuth) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }
-  } else {
+  } else if (doctorProtectedPath) {
     if (!isAuthenticated) {
-      return NextResponse.next()
+      const url = new URL(`/auth/login`, req.url)
+      url.searchParams.set("callbackUrl", encodeURI(req.url))
+      return NextResponse.redirect(url)
     }
-    if (token.user_role_id !== 3 && token.user_role_id !== 4) {
+    if (token.user_role_id !== 3) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }
