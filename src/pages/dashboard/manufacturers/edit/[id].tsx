@@ -4,7 +4,6 @@ import { toast } from "sonner"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
 import { deleteManufacturers } from "@/lib/fetchers"
-import { removeLastSegment } from "@/lib/utils"
 import {
   AlertDialog,
   AlertDialogAction,
