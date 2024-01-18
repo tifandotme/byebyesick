@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { CopyIcon } from "lucide-react"
+import { CopyIcon, FileText } from "lucide-react"
 import { toast } from "sonner"
 
 import { copyTextToClipboard, formatPrice } from "@/lib/utils"
@@ -73,19 +73,21 @@ function TransactionConfirmationPage() {
           <Separator />
         </CardHeader>
         <div className="flex flex-col items-center justify-center gap-6">
-          <Image
-            alt="Payment Proof"
-            className="size-64 rounded-md border object-cover p-5"
-            src={
-              image ||
-              "https://cdn1.iconfinder.com/data/icons/business-and-finance-outline-19/64/business-and-finance-outline-19-10-512.png"
-            }
-            style={{
-              aspectRatio: "200/200",
-              objectFit: "cover",
-            }}
-            width="200"
-          />
+          {image ? (
+            <Image
+              alt="Payment Proof"
+              className="size-64 rounded-md border object-cover p-5"
+              src={image}
+              style={{
+                aspectRatio: "200/200",
+                objectFit: "cover",
+              }}
+              width="200"
+              height={200}
+            />
+          ) : (
+            <FileText className="size-64" />
+          )}
           <Label className="cursor-pointer text-blue-500" htmlFor="file">
             Upload Payment Proof
           </Label>
