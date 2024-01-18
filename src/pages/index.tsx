@@ -123,7 +123,9 @@ export default function HomePage({
       )}
       <>
         <div className="mt-5 flex justify-between text-2xl font-semibold">
-          <h2>Around You</h2>
+          <h2 className="mt-5 flex items-center">
+            <MapPin className="mr-2" /> Around You
+          </h2>
           <Link href="/products/around-you">
             <Button variant={"link"}>
               See All <ArrowRight className="ml-2 size-4" />
@@ -168,7 +170,7 @@ export default function HomePage({
         </div>
 
         <div className="mt-5 flex justify-between text-2xl font-semibold">
-          <h2 className="mt-5 flex  items-center">
+          <h2 className="mt-5 flex items-center">
             <MapPin className="mr-2" /> Around {addressData?.data.sub_district}
           </h2>
           <Link href="/products/around-your-district">

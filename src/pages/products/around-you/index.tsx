@@ -8,6 +8,8 @@ import useGeolocation from "@/hooks/use-geolocation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import MainLayout from "@/components/layout/main-layout"
+import { SiteHeader } from "@/components/layouts/site-header"
+import MainNavbar from "@/components/navbar/navbar"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import { ProductCard } from "@/features/products/components/products-card"
 
@@ -41,8 +43,9 @@ export default function SeeAllAroundYou() {
 
   return (
     <>
+      <MainNavbar />
       <div className="w-full bg-[#f0fdf4]">
-        <div className="container  flex max-w-6xl justify-between ">
+        <div className="container flex max-w-6xl justify-between ">
           <div className="mb-9 mt-8 md:mt-auto ">
             <h2 className="text-3xl font-semibold md:text-5xl">Around You</h2>
             <p className="text-sm text-muted-foreground">
@@ -86,11 +89,11 @@ export default function SeeAllAroundYou() {
               type="text"
               placeholder="Search products here..."
               onChange={(e) => setSearch(e.target.value)}
-              className=" mt-4 "
+              className="mt-4 "
             />
           </div>
 
-          <div className="container  mr-auto mt-2 flex max-w-6xl space-x-2">
+          <div className="container mr-auto mt-2 flex max-w-6xl space-x-2">
             <DropdownFilter
               filter={sortBy}
               setFilter={setSortBy}
@@ -115,7 +118,7 @@ export default function SeeAllAroundYou() {
             />
 
             <Button
-              className="rounded-full border-dashed border-red-300  text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
+              className="rounded-full border-dashed border-red-300 text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
               variant={"outline"}
               size={"sm"}
               onClick={handleResetFilter}
@@ -125,7 +128,7 @@ export default function SeeAllAroundYou() {
           </div>
 
           <div className="container max-w-6xl">
-            <div className="mb-3 mt-5 grid grid-cols-2 gap-4  md:grid-cols-3 lg:grid-cols-5">
+            <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
               {data?.data.items.map((cat) => (
                 <div key={cat.id}>
                   <ProductCard product={cat} />
