@@ -1,5 +1,6 @@
 import React from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import Head from "next/head"
 
 import type { ResponseGetAll, Specialization } from "@/types/api"
 import { useDoctorList } from "@/lib/fetchers"
@@ -39,6 +40,9 @@ function DoctorsByCategoryPage({
 
   return (
     <div className="flex h-full min-h-full flex-auto gap-10">
+      <Head>
+        <title>ByeByeSick | {category[0]?.name}</title>
+      </Head>
       <div className="w-full">
         {doctorIsLoading ? (
           <>loading</>
