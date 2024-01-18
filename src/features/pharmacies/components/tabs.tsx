@@ -21,11 +21,17 @@ export function PharmaciesTabs() {
           additionalHrefs: [
             `/dashboard/pharmacies/${pharmacyId}/products/add`,
             `/dashboard/pharmacies/${pharmacyId}/products/${productId}/edit`,
+            `/dashboard/pharmacies/${pharmacyId}/products/incoming`,
+            `/dashboard/pharmacies/${pharmacyId}/products/outgoing`,
           ],
         },
         {
           title: "Journal",
           href: `/dashboard/pharmacies/${pharmacyId}/journal`,
+        },
+        {
+          title: "Analytics",
+          href: `/dashboard/pharmacies/${pharmacyId}/analytics`,
         },
       ]}
     />
