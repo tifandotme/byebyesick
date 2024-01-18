@@ -1,7 +1,9 @@
+import React from "react"
 import Head from "next/head"
 
 import { siteConfig } from "@/config"
-import { SiteHeader } from "@/components/layouts/site-header"
+import { HomeHeader } from "@/components/layouts/home-header"
+import { SiteFooter } from "@/components/layouts/site-footer"
 
 export function HomeLayout({ children }: React.PropsWithChildren) {
   return (
@@ -11,9 +13,11 @@ export function HomeLayout({ children }: React.PropsWithChildren) {
       </Head>
 
       <div className="relative flex min-h-screen flex-col">
-        <SiteHeader />
+        <HomeHeader />
 
         <main className="flex-1">{children}</main>
+
+        <SiteFooter />
       </div>
     </>
   )
