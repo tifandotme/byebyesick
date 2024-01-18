@@ -1,9 +1,8 @@
 import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ChevronRightIcon } from "@radix-ui/react-icons"
 
-import { dashboardConfig, siteConfig } from "@/config"
+import { siteConfig } from "@/config"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Icons } from "@/components/icons"
@@ -39,57 +38,55 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
 export function Sidebar() {
   const pathname = useRouter().pathname
 
-  const role = "pharmacyAdmin"
+  // TODO remove when ready
+  // const { data: session } = useSession()
+  // const role = session ? usersRoleIds[session.user.user_role_id] : null
 
   return (
     <div className="flex w-full flex-col gap-2 p-1">
-      {dashboardConfig.sidebarNav.map((item) => {
-        const Icon = item.icon ? Icons[item.icon] : ChevronRightIcon
-
+      {siteConfig.dashboardNav.all.map((item) => {
+        const Icon = Icons[item.icon]
         return (
           <Link key={item.title} href={item.href}>
             <span
               className={cn(
                 "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:bg-muted hover:text-foreground",
-
                 pathname.includes(item.href)
                   ? "bg-muted font-medium text-foreground"
                   : "text-muted-foreground",
               )}
             >
-              <Icon className="mr-2 h-4 w-4" />
+              <Icon className="mr-2 size-4" />
               <span>{item.title}</span>
             </span>
           </Link>
         )
       })}
-      {role === "pharmacyAdmin" && (
-        <>
-          <h3 className="mt-5 select-none text-xs uppercase tracking-wide text-muted-foreground">
-            Admin Panel
-          </h3>
-          {dashboardConfig.sidebarNavAdmin.map((item) => {
-            const Icon = item.icon ? Icons[item.icon] : ChevronRightIcon
+      <h3 className="mt-5 select-none text-xs uppercase tracking-wide text-muted-foreground">
+        Admin Panel
+      </h3>
+      {siteConfig.dashboardNav.byRole
+        // TODO: uncomment when ready
+        // .filter((item) => item.role === role)
+        .map((item) => {
+          const Icon = Icons[item.icon]
+          return (
+            <Link aria-label={item.title} key={item.title} href={item.href}>
+              <span
+                className={cn(
+                  "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:bg-muted hover:text-foreground",
 
-            return (
-              <Link aria-label={item.title} key={item.title} href={item.href}>
-                <span
-                  className={cn(
-                    "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:bg-muted hover:text-foreground",
-
-                    pathname.includes(item.href)
-                      ? "bg-muted font-medium text-foreground"
-                      : "text-muted-foreground",
-                  )}
-                >
-                  <Icon className="mr-2 h-4 w-4" />
-                  <span>{item.title}</span>
-                </span>
-              </Link>
-            )
-          })}
-        </>
-      )}
+                  pathname.includes(item.href)
+                    ? "bg-muted font-medium text-foreground"
+                    : "text-muted-foreground",
+                )}
+              >
+                <Icon className="mr-2 size-4" />
+                <span>{item.title}</span>
+              </span>
+            </Link>
+          )
+        })}
     </div>
   )
 }

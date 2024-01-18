@@ -2,10 +2,13 @@ import React from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { ArrowRightIcon } from "@radix-ui/react-icons"
 import useSWR from "swr"
 
 import type { PharmacyProduct, ResponseGetAll } from "@/types/api"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
@@ -52,10 +55,29 @@ export default function PharmacyProductsPage({
 
   return (
     <div className="space-y-6 overflow-auto">
+      <div className="flex flex-col gap-4">
+        <h3 className="text-2xl font-bold leading-10 tracking-tight">
+          Stock Transfer
+        </h3>
+
+        <div className="flex flex-col gap-2 lg:flex-row">
+          <RequestCard
+            title="Outgoing Request"
+            description={`You have 3 pending outgoing request(s) to other pharmacies`}
+            href={`/dashboard/pharmacies/${pharmacyId}/products/outgoing`}
+          />
+          <RequestCard
+            title="Incoming Request"
+            description="You have 2 pending incoming request(s) from other pharmacies"
+            href={`/dashboard/pharmacies/${pharmacyId}/products/incoming`}
+          />
+        </div>
+      </div>
+
       <div className="flex flex-col gap-4 xs:flex-row xs:items-center xs:justify-between">
-        <h2 className="text-2xl font-bold leading-10 tracking-tight">
+        <h3 className="text-2xl font-bold leading-10 tracking-tight">
           Products
-        </h2>
+        </h3>
         <Button size="sm" className="w-fit" asChild>
           <Link href={`/dashboard/pharmacies/${pharmacyId}/products/add`}>
             Add product
@@ -64,7 +86,7 @@ export default function PharmacyProductsPage({
       </div>
 
       {isLoading && !data && (
-        <DataTableSkeleton columnCount={5} filterableFieldCount={0} />
+        <DataTableSkeleton columnCount={7} filterableFieldCount={0} />
       )}
       {data && (
         <PharmacyProductsTable
@@ -74,6 +96,33 @@ export default function PharmacyProductsPage({
         />
       )}
     </div>
+  )
+}
+
+interface RequestCardProps {
+  title: string
+  description: string
+  href: string
+}
+
+function RequestCard({ title, description, href }: RequestCardProps) {
+  return (
+    <Card className="flex w-full flex-col items-start justify-between gap-4 p-5 xs:flex-row xs:items-center xs:gap-2">
+      <div className="flex h-full flex-col justify-around">
+        <h3 className="text-lg font-bold">{title}</h3>
+        <span className="text-sm text-muted-foreground">{description}</span>
+      </div>
+      <Link
+        href={href}
+        className={cn(
+          buttonVariants({ variant: "secondary", size: "sm" }),
+          "group",
+        )}
+      >
+        View All
+        <ArrowRightIcon className="ml-1 size-4 transition-transform group-hover:translate-x-0.5" />
+      </Link>
+    </Card>
   )
 }
 
