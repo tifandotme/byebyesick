@@ -188,7 +188,6 @@ export interface IProduct {
   minimum_price: string
   maximum_price: string
 }
-
 export type AddressI = Omit<
   PharmacyInputs,
   | "operationalDays"
@@ -220,7 +219,7 @@ export interface IProfileDoctor {
   profile_photo: string
   starting_year: number
   doctor_certificate: string
-  doctor_specialization: Specialization
+  doctor_specialization: string
   consultation_fee: string
   is_online: boolean
 }
@@ -237,10 +236,4 @@ export interface AddressIForm {
   latitude: string
   longitude: string
   status: number
-}
-
-export type Specialization = {
-  id: number
-  name: string
-  image: string
 }
