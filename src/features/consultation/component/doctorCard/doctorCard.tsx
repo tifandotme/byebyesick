@@ -52,7 +52,7 @@ function DoctorCard({
               {formatPrice(consultation_fee)}
             </div>
             <div className="text-muted-foreground">
-              Specialization: {doctor_specialization}
+              Specialization: {doctor_specialization.name}
             </div>
             <div>
               Experience: {new Date().getFullYear() - starting_year} years
