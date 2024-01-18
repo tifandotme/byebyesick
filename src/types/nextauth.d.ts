@@ -1,5 +1,8 @@
-import NextAuth, { DefaultSession } from "next-auth"
-import { DefaultJWT, JWT } from "next-auth/jwt"
+import { DefaultSession } from "next-auth"
+
+import "next-auth/jwt"
+
+import type { usersRoleIds } from "@/config"
 
 declare module "next-auth" {
   interface User {
@@ -15,7 +18,7 @@ declare module "next-auth" {
     user: {
       email: string
       name: string
-      user_role_id: number
+      user_role_id: keyof typeof usersRoleIds
       image: string
       user_id: number
       token: string
@@ -27,7 +30,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     email: string
     name: string
-    user_role_id: number
+    user_role_id: keyof typeof usersRoleIds
     image: string
     user_id: number
     token: string

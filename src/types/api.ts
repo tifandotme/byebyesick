@@ -62,6 +62,15 @@ export type PharmacyProduct = {
 
 export type PharmacyProductById = Omit<PharmacyProduct, "product">
 
+// GET /v1/pharmacy-products/:id/request
+
+export type PharmacyProductRequest = Omit<
+  PharmacyProduct,
+  "is_active" | "product"
+> & {
+  pharmacy: Pharmacy
+}
+
 // GET /v1/users/:id
 
 export type User = {
@@ -86,6 +95,7 @@ export type StockMutationReport = {
   product_stock_mutation_type: {
     name: string
   }
+  mutation_date: string
 }
 
 // /v1/address-area Response
@@ -107,6 +117,44 @@ export type City = {
   province_id: number
   city_id: number
   city_name: string
+}
+
+// GET /v1/stock-mutations/requests/out
+
+export type Request = {
+  id: number
+  pharmacy_product_origin_id: number
+  pharmacy_product_dest_id: number
+  stock: number
+  product_stock_mutation_request_status_id: 1 | 2 | 3
+  product_stock_mutation_request_status: {
+    name: string
+  }
+  request_date: string
+}
+
+export type OutgoingRequest = Request & {
+  pharmacy_product_origin: {
+    pharmacy: Pick<Pharmacy, "name">
+    product: Pick<IProduct, "name" | "generic_name" | "content"> & {
+      manufacturer_id: number
+      manufacturer: Omit<IManufacturer, "id">
+    }
+  }
+}
+
+// GET /v1/stock-mutations/requests/in
+
+export type IncomingRequest = Request & {
+  pharmacy_product_dest: {
+    pharmacy: {
+      name: string
+    }
+    product: Pick<IProduct, "name" | "generic_name" | "content"> & {
+      manufacturer_id: number
+      manufacturer: Omit<IManufacturer, "id">
+    }
+  }
 }
 
 // FOR SCHEMAS
@@ -143,6 +191,7 @@ export interface IDrugClassification {
 export interface IManufacturer {
   id: number
   name: string
+  image: string
 }
 export interface IProductCategory {
   id: number
