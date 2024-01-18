@@ -127,13 +127,13 @@ export function DataTable<TData, TValue>({
 
   React.useEffect(() => {
     for (const column of filterableColumnFilters) {
-      if (typeof column.value === "object" && Array.isArray(column.value)) {
+      if (typeof column.value === "string") {
         router.replace(
           {
             pathname,
             query: createQueryString({
               page: 1,
-              [column.id]: column.value.join("."),
+              [column.id]: column.value,
             }),
           },
           undefined,
@@ -259,7 +259,7 @@ export function DataTable<TData, TValue>({
                     return (
                       <TableCell
                         key={cell.id}
-                        className="truncate whitespace-nowrap"
+                        className="h-[65px] truncate whitespace-nowrap"
                         style={{ maxWidth, minWidth }}
                       >
                         {maxWidth ? (
