@@ -200,7 +200,6 @@ export interface IManufacturer {
   id: number
   image?: string
   name: string
-  image: string
 }
 export interface IProductCategory {
   id: number

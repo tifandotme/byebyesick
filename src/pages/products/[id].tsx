@@ -11,7 +11,7 @@ import MainLayout from "@/components/layout/main-layout"
 import DetailProduct from "@/features/drug/component/section/detail-product"
 import OtherProduct from "@/features/drug/component/section/other-product"
 
-export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
+export const BASE_URL = process.env.DB_URL as string
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const url = BASE_URL + "/v1/products"

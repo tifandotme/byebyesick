@@ -15,7 +15,7 @@ export const getStaticProps: GetStaticProps = async () => {
   try {
     const url = new URL(
       "/v1/drug-classifications/no-params",
-      process.env.NEXT_PUBLIC_DB_URL,
+      process.env.DB_URL,
     )
 
     const response = await fetch(url)
