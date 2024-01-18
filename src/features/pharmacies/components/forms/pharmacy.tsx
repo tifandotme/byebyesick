@@ -285,9 +285,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                               }}
                             />
                           </FormControl>
-                          <FormLabel className="font-normal">
-                            {toSentenceCase(item)}
-                          </FormLabel>
+                          <FormLabel>{toSentenceCase(item)}</FormLabel>
                         </FormItem>
                       )
                     }}
@@ -456,7 +454,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
             className="w-fit"
           >
             {form.formState.isSubmitting && (
-              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.Spinner className="mr-2 size-4 animate-spin" />
             )}
             {toSentenceCase(mode)} pharmacy
           </Button>
@@ -524,7 +522,7 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
       className="w-full"
       onClick={onClick}
     >
-      <Crosshair2Icon className="mr-2 h-3.5 w-3.5" />
+      <Crosshair2Icon className="mr-2 size-3.5" />
       Pinpoint By Address
     </Button>
   )

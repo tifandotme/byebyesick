@@ -5,7 +5,6 @@ import { mutate } from "swr"
 
 import type { CartInputs } from "@/types"
 import { addToCart, deleteCart, useCartList } from "@/lib/fetchers"
-import { handleFailedRequest } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -60,11 +59,11 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-r-none"
+          className="size-8 rounded-r-none"
           onClick={handleIncrement}
           disabled={isLoading}
         >
-          <MinusIcon className="h-3 w-3" aria-hidden="true" />
+          <MinusIcon className="size-3" aria-hidden="true" />
           <span className="sr-only">Remove one item</span>
         </Button>
         <Input
@@ -80,24 +79,24 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-l-none"
+          className="size-8 rounded-l-none"
           onClick={handleDecrement}
         >
-          <PlusIcon className="h-3 w-3" aria-hidden="true" />
+          <PlusIcon className="size-3" aria-hidden="true" />
           <span className="sr-only">Add one item</span>
         </Button>
       </div>
       <Button
         variant="outline"
         size="icon"
-        className="h-8 w-8"
+        className="size-8"
         onClick={() => {
           setIsLoading(true)
           const handleDeleteCartItem = async () => {
             const { success } = await deleteCart(product_ids)
             cartMutate()
 
-            if (!success) handleFailedRequest
+            if (!success) throw new Error()
             setIsLoading(false)
           }
 
@@ -109,7 +108,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
         }}
         disabled={isLoading}
       >
-        <TrashIcon className="h-3 w-3" aria-hidden="true" />
+        <TrashIcon className="size-3" aria-hidden="true" />
         <span className="sr-only">Delete item</span>
       </Button>
     </div>
