@@ -68,7 +68,7 @@ function MainNavbar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard/account" className="cursor-pointer">
+                    <Link href="/user/profile" className="cursor-pointer">
                       <Icons.Avatar className="mr-2 h-4 w-4" />
                       Account
                     </Link>
