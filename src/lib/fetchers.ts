@@ -9,12 +9,14 @@ import type {
   ProductInputs,
   Response,
   StockMutationInputs,
+  StockMutationRequestInputs,
   UserInputs,
 } from "@/types"
 import type {
   ICart,
   IDrugClassification,
   IManufacturer,
+  IncomingRequest,
   IProduct,
   IProductCategory,
   Pharmacy,
@@ -207,6 +209,70 @@ export async function addStockMutation(
   }
 }
 
+export async function requestStockMutation(
+  payload: StockMutationRequestInputs & {
+    pharmacy_product_dest_id: number
+  },
+): Promise<Response> {
+  try {
+    const { stock, ...data } = payload
+
+    const endpoint = "/v1/stock-mutations/requests"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        stock: Number(stock),
+      } satisfies Record<keyof typeof payload, number>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is sent",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateStockMutationRequestStatus(
+  payload: Pick<IncomingRequest, "product_stock_mutation_request_status_id">,
+  id: number,
+): Promise<Response> {
+  try {
+    const endpoint = `/v1/stock-mutations/requests${id}`
+    const options: RequestInit = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
 export async function updatePharmacyProduct(
   mode: "add" | "edit",
   payload: PharmacyProductInputs & Pick<PharmacyProduct, "pharmacy_id">,
@@ -284,9 +350,6 @@ export async function updatePost(
   id?: number,
 ): Promise<Response> {
   try {
-    const image = await fetch(payload.image).then((res) => res.blob())
-
-    const extension = image.type.split("/")[1]
     const formData = new FormData()
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
@@ -298,13 +361,6 @@ export async function updatePost(
     formData.append("length", payload.length.toString())
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
-
-    // formData.append(
-    //   "image",
-    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
-    //     type: "png",
-    //   }),
-    // )
 
     formData.append(
       "image",
