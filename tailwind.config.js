@@ -16,6 +16,11 @@ const config = {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ["var(--font-sans)", ...fontFamily.sans],
+      mono: ["var(--font-mono)", ...fontFamily.mono],
+      display: ["var(--font-display)", ...fontFamily.sans],
+    },
     extend: {
       screens: {
         xs: "480px",
@@ -68,11 +73,6 @@ const config = {
           900: "hsl(112, 55%, 20%)",
           950: "hsl(112, 73%, 10%)",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", ...fontFamily.sans],
-        serif: ["Lora", ...fontFamily.serif],
-        mono: ["JetBrains Mono", ...fontFamily.mono],
       },
       borderRadius: {
         lg: "var(--radius)",

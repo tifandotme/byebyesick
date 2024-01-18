@@ -10,6 +10,7 @@ import type {
   ProductInputs,
   Response,
   StockMutationInputs,
+  StockMutationRequestInputs,
   UserInputs,
 } from "@/types"
 import type {
@@ -18,6 +19,7 @@ import type {
   ICart,
   IDrugClassification,
   IManufacturer,
+  IncomingRequest,
   IProduct,
   IProductCategory,
   Pharmacy,
@@ -210,6 +212,70 @@ export async function addStockMutation(
   }
 }
 
+export async function requestStockMutation(
+  payload: StockMutationRequestInputs & {
+    pharmacy_product_dest_id: number
+  },
+): Promise<Response> {
+  try {
+    const { stock, ...data } = payload
+
+    const endpoint = "/v1/stock-mutations/requests"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        stock: Number(stock),
+      } satisfies Record<keyof typeof payload, number>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is sent",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateStockMutationRequestStatus(
+  payload: Pick<IncomingRequest, "product_stock_mutation_request_status_id">,
+  id: number,
+): Promise<Response> {
+  try {
+    const endpoint = `/v1/stock-mutations/requests${id}`
+    const options: RequestInit = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
 export async function updatePharmacyProduct(
   mode: "add" | "edit",
   payload: PharmacyProductInputs & Pick<PharmacyProduct, "pharmacy_id">,
@@ -323,6 +389,8 @@ export async function updateProducts(
       "product_category_id",
       payload.product_category_id.toString(),
     )
+
+    console.log(formData.get("image"))
 
     const url = new URL(
       `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,

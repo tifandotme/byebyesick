@@ -18,7 +18,7 @@ export const useStore = create<State & Actions>()(
   devtools(
     persist(
       (set) => ({
-        isHydrating: true,
+        isHydrating: true as boolean,
         provinces: null,
         cities: null,
 
