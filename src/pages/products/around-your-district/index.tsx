@@ -9,6 +9,7 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import MainLayout from "@/components/layout/main-layout"
+import MainNavbar from "@/components/navbar/navbar"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import { ProductCard } from "@/features/products/components/products-card"
 
@@ -68,26 +69,32 @@ export default function SeeAllAroundYourDistrict() {
 
   return (
     <>
-      <div className="container flex justify-between bg-[#f0fdf4]">
-        <div className="mb-7 mt-8 md:mt-auto ">
-          <h2 className="text-3xl font-semibold md:text-5xl">
-            Around {addressData.data.sub_district}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Get drugs around {addressData.data.sub_district} now
-          </p>
-        </div>
+      <MainNavbar />
+      <div>
+        <div className="w-full bg-[#f0fdf4]">
+          <div className="container flex max-w-6xl justify-between ">
+            <div className="mb-9 mt-8 md:mt-auto ">
+              <h2 className="text-3xl font-semibold md:text-5xl">
+                Around {addressData.data.sub_district}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Get drugs around {addressData.data.sub_district} location now
+              </p>
+            </div>
 
-        <div className="mt-auto">
-          <img
-            src="/images/around-me.svg"
-            alt=""
-            width="300px"
-            height="300px"
-            className="hidden scale-125 transform object-fill md:block"
-          />
+            <div className="mt-auto">
+              <img
+                src="/images/around-me.svg"
+                alt=""
+                width="300px"
+                height="300px"
+                className="hidden scale-125 transform object-fill md:block"
+              />
+            </div>
+          </div>
         </div>
       </div>
+
       {data?.data.total_items === 0 && (
         <div>
           <p>There are no products around you</p>
@@ -100,13 +107,16 @@ export default function SeeAllAroundYourDistrict() {
 
       {!error && (
         <>
-          <Input
-            type="text"
-            placeholder="Search products here..."
-            onChange={(e) => setSearch(e.target.value)}
-            className="mt-4"
-          />
-          <div className="mr-auto  mt-2 flex space-x-2">
+          <div className="container max-w-6xl">
+            <Input
+              type="text"
+              placeholder="Search products here..."
+              onChange={(e) => setSearch(e.target.value)}
+              className="mt-4"
+            />
+          </div>
+
+          <div className="container mr-auto mt-2 flex max-w-6xl space-x-2">
             <DropdownFilter
               filter={sortBy}
               setFilter={setSortBy}
@@ -131,7 +141,7 @@ export default function SeeAllAroundYourDistrict() {
             />
 
             <Button
-              className="rounded-full border-dashed border-red-300  text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
+              className="rounded-full border-dashed border-red-300 text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
               variant={"outline"}
               size={"sm"}
               onClick={handleResetFilters}
@@ -140,21 +150,17 @@ export default function SeeAllAroundYourDistrict() {
             </Button>
           </div>
 
-          <div className="mb-3 mt-5 grid grid-cols-2 gap-4  md:grid-cols-3 lg:grid-cols-5">
-            {data?.data.items.map((cat) => (
-              <div key={cat.id}>
-                <ProductCard product={cat} />
-              </div>
-            ))}
+          <div className="container max-w-6xl">
+            <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+              {data?.data.items.map((cat) => (
+                <div key={cat.id}>
+                  <ProductCard product={cat} />
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}
     </>
   )
-}
-
-SeeAllAroundYourDistrict.getLayout = function getLayout(
-  page: React.ReactElement,
-) {
-  return <MainLayout>{page}</MainLayout>
 }
