@@ -16,7 +16,7 @@
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4.8% 95.9%;
+    --secondary: 240 4.8% 93%;
     --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
@@ -34,7 +34,7 @@
 
     --radius: 0.5rem;
 
-    --gradient-color-1: #ffffff;
+    --gradient-color-1: #dedede;
     --gradient-color-2: #009673;
     --gradient-color-3: #8aed08;
     --gradient-color-4: #04e27f;
@@ -69,7 +69,7 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
 
-    --gradient-color-1: #09090b;
+    --gradient-color-1: #212121;
     --gradient-color-2: #69b803;
     --gradient-color-3: #007157;
     --gradient-color-4: #029b56;
@@ -82,7 +82,7 @@
   }
 
   body {
-    @apply min-h-screen bg-background font-sans text-[105%] text-foreground antialiased;
+    @apply min-h-screen bg-background font-sans text-[105%] font-medium text-foreground antialiased;
 
     /* always show scrollbar */
     @apply overflow-y-scroll;
