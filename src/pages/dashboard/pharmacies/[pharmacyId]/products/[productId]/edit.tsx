@@ -8,7 +8,6 @@ import { removeLastSegment } from "@/lib/utils"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -58,7 +57,6 @@ export default function EditPharmacyProductPage({
         <Card>
           <CardHeader className="space-y-1 p-4 sm:p-6">
             <CardTitle className="text-2xl">Edit product</CardTitle>
-            <CardDescription>Edit a product in your pharmacy</CardDescription>
           </CardHeader>
           <CardContent className="p-4 !pt-0 sm:p-6">
             <PharmacyProductForm mode="edit" initialData={data.data} />

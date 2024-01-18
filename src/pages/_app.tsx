@@ -8,6 +8,7 @@ import { SWRConfig, type Middleware } from "swr"
 import type { AppPropsWithLayout } from "@/types/next"
 import type { userJWT } from "@/types/user"
 import { fetcher } from "@/lib/fetchers"
+import { fonts } from "@/lib/fonts"
 import { useStore } from "@/lib/stores/pharmacies"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -24,24 +25,17 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <style jsx global>
+          {`
+          <!-- https://github.com/shadcn-ui/ui/issues/138 -->
+          :root {
+            --font-sans: ${fonts[0].variable};
+            --font-mono: ${fonts[1].variable};
+            --font-display: ${fonts[2].variable};
+          }
+        `}
+        </style>
       </Head>
 
       <SessionProvider session={pageProps.session}>
@@ -78,17 +72,12 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
         },
       })
     }
-  }, [session])
+  }, [session?.user.token])
 
-  // disable all SWR requests when unauthenticated
   const middleware: Middleware = (useSWRNext) => {
     return (key, fetcher, config) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useSWRNext(
-        status === "authenticated" ? key : null,
-        fetcher,
-        config,
-      )
+      return useSWRNext(status !== "loading" ? key : null, fetcher, config)
     }
   }
 

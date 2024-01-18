@@ -1,26 +1,65 @@
 import React from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ChevronRightIcon, ViewVerticalIcon } from "@radix-ui/react-icons"
+import { ViewVerticalIcon } from "@radix-ui/react-icons"
 
-import { dashboardConfig, siteConfig } from "@/config"
+import type { MainNavItem, SidebarNavItem } from "@/types"
 import { cn } from "@/lib/utils"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Icons } from "@/components/icons"
+import { SiteLogo } from "@/components/site-logo"
 
-export function MobileNav() {
+interface MobileNavProps {
+  mainNavItems?: MainNavItem[]
+  sidebarNavItems: SidebarNavItem[]
+  className?: string
+}
+
+export function MobileNav({
+  mainNavItems,
+  sidebarNavItems,
+  className,
+}: MobileNavProps) {
+  const router = useRouter()
+  const pathname = router.asPath.split("?")[0]
+
   const [open, setOpen] = React.useState(false)
+
+  const items: MainNavItem[] = React.useMemo(() => {
+    const accordionItems = (mainNavItems ?? []).filter((item) => item.items)
+    const links = (mainNavItems ?? []).filter((item) => !item.items)
+
+    return [
+      {
+        title: "Manage",
+        items: sidebarNavItems,
+      },
+      ...accordionItems,
+      {
+        title: "Links",
+        items: links,
+      },
+    ]
+  }, [mainNavItems, sidebarNavItems])
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="mr-2 flex px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          className={cn(
+            "mr-2 flex px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden",
+            className,
+          )}
         >
-          <ViewVerticalIcon className="h-6 w-6" aria-hidden="true" />
+          <ViewVerticalIcon className="size-6" aria-hidden="true" />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pl-1 pr-0">
@@ -30,13 +69,47 @@ export function MobileNav() {
             className="flex items-center"
             onClick={() => setOpen(false)}
           >
-            <Icons.Logo className="mr-2 h-4 w-4" />
-            <span className="font-bold">{siteConfig.name}</span>
+            <SiteLogo />
           </Link>
         </div>
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
           <div className="pl-1 pr-7">
-            <Sidebar />
+            <Accordion
+              type="multiple"
+              defaultValue={items.map((item) => item.title)}
+              className="w-full"
+            >
+              {items?.map((item, idx) => (
+                <AccordionItem value={item.title} key={idx}>
+                  <AccordionTrigger className="text-sm font-bold capitalize">
+                    {item.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col space-y-2">
+                      {item.items?.map((subItem, index) =>
+                        subItem.href ? (
+                          <MobileLink
+                            key={index}
+                            href={String(subItem.href)}
+                            pathname={pathname}
+                            setOpen={setOpen}
+                          >
+                            {subItem.title}
+                          </MobileLink>
+                        ) : (
+                          <div
+                            key={index}
+                            className="text-foreground/70 transition-colors"
+                          >
+                            {item.title}
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </ScrollArea>
       </SheetContent>
@@ -44,31 +117,23 @@ export function MobileNav() {
   )
 }
 
-export function Sidebar() {
-  const pathname = useRouter().pathname
+interface MobileLinkProps extends React.PropsWithChildren {
+  href: string
+  pathname?: string
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
+function MobileLink({ children, href, pathname, setOpen }: MobileLinkProps) {
   return (
-    <div className="mt-3 flex w-full flex-col gap-2 p-1">
-      {dashboardConfig.sidebarNav.map((item) => {
-        const Icon = item.icon ? Icons[item.icon] : ChevronRightIcon
-
-        return (
-          <Link key={item.title} href={item.href}>
-            <span
-              className={cn(
-                "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:bg-muted hover:text-foreground",
-
-                pathname.includes(item.href)
-                  ? "bg-muted font-medium text-foreground"
-                  : "text-muted-foreground",
-              )}
-            >
-              <Icon className="mr-2 h-4 w-4" />
-              <span>{item.title}</span>
-            </span>
-          </Link>
-        )
-      })}
-    </div>
+    <Link
+      href={href}
+      className={cn(
+        "text-foreground/70 transition-colors hover:text-foreground",
+        pathname?.includes(href) && "font-semibold text-foreground",
+      )}
+      onClick={() => setOpen(false)}
+    >
+      {children}
+    </Link>
   )
 }

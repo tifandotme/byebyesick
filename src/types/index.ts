@@ -1,5 +1,6 @@
 import type { z } from "zod"
 
+import type { usersRoleIds } from "@/config"
 import type { addressSchema } from "@/lib/validations/address"
 import type cartSchema from "@/lib/validations/cart-schema"
 import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
@@ -13,46 +14,62 @@ import type {
   newPasswordScheme,
   resetPasswordEmailScheme,
 } from "@/lib/validations/reset-password"
-import type { stockMutationSchema } from "@/lib/validations/stock-mutation"
+import type {
+  stockMutationRequestSchema,
+  stockMutationSchema,
+} from "@/lib/validations/stock-mutation"
 import type { userSchema } from "@/lib/validations/user"
 import type { Icons } from "@/components/icons"
 
+/**
+ * Used in custom fetchers and API routes
+ */
 export type Response<TData = unknown> = {
   success: boolean
   message?: string
   data?: TData
 }
 
-export interface Option {
+export type Option = {
   label: string
   value: string
 }
 
-export interface DataTableSearchableColumn<TData> {
+export interface DataTableFilterableColumn<TData> {
   id: keyof TData
   title: string
-}
-
-export interface DataTableFilterableColumn<TData>
-  extends DataTableSearchableColumn<TData> {
   options: Option[]
 }
 
-export type SiteConfig = {
-  name: string
-  description: string
-}
-
-export type NavItem = {
+export interface FooterItem {
   title: string
-  href: string
-  icon?: keyof typeof Icons
+  items: {
+    title: string
+    href: string
+    external?: boolean
+  }[]
 }
 
-export type DashboardConfig = {
-  sidebarNav: NavItem[]
-  sidebarNavAdmin: NavItem[]
+export interface NavItem {
+  title: string
+  href?: string
+  icon?: keyof typeof Icons
+  description?: string
 }
+
+export type NavItemRequired = Required<Omit<NavItem, "description">>
+
+export interface NavItemRequiredWithRole extends NavItemRequired {
+  role: (typeof usersRoleIds)[keyof typeof usersRoleIds]
+}
+
+export interface NavItemWithOptionalChildren extends NavItem {
+  items?: NavItemWithOptionalChildren[]
+}
+
+export type MainNavItem = NavItemWithOptionalChildren
+
+export type SidebarNavItem = NavItemRequiredWithRole
 
 export type PharmacyInputs = z.infer<typeof pharmacySchema>
 
@@ -64,11 +81,16 @@ export type ProductInputs = z.infer<typeof productSchema>
 
 export type StockMutationInputs = z.infer<typeof stockMutationSchema>
 
+export type StockMutationRequestInputs = z.infer<
+  typeof stockMutationRequestSchema
+>
+
 export type ProductCategoriesInputs = z.infer<typeof productCategoriesSchema>
 
 export type ManufacturersInput = z.infer<typeof manufacturersSchema>
 
 export type AddressFormSchemaType = z.infer<typeof addressSchema>
+
 export type CartInputs = z.infer<typeof cartSchema>
 
 export type ResetPasswordEmailSchemeType = z.infer<

@@ -47,7 +47,7 @@ export function ProductCard({
   }
   return (
     <Card
-      className={cn("h-full w-full overflow-hidden rounded-sm", className)}
+      className={cn("size-full overflow-hidden rounded-sm", className)}
       {...props}
     >
       <Link aria-label={product.name} href={`/products/${product.id}`}>
@@ -109,7 +109,7 @@ export function ProductCard({
               }),
             )}
           >
-            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
+            <EyeOpenIcon className="size-4" aria-hidden="true" />
             <span className="sr-only">Preview</span>
           </Link>
         </div>

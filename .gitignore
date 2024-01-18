@@ -27,9 +27,6 @@ yarn-error.log*
 .env*.local
 .env
 
-.vscode/
-.idea/
-
 # vercel
 .vercel
 

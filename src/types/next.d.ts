@@ -13,13 +13,8 @@ declare module "querystring" {
   interface ParsedUrlQuery extends NodeJS.Dict<string | string[]> {
     productId?: string
     pharmacyId?: string
+    consultationId?: string
 
-    // data table query
-    page?: string
-    per_page?: string
-    search?: string
-    sort?: string
-    start_date?: string
-    end_date?: string
+    [key: string]: string | undefined
   }
 }
