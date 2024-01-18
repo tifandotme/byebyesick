@@ -53,9 +53,9 @@ export default function PharmacyJournalPage({
   return (
     <div className="space-y-6 overflow-auto">
       <div className="flex flex-col gap-4 xs:flex-row xs:items-center xs:justify-between">
-        <h2 className="text-2xl font-bold leading-10 tracking-tight">
+        <h3 className="text-2xl font-bold leading-10 tracking-tight">
           Journal
-        </h2>
+        </h3>
         <RangeDatePicker />
       </div>
 
