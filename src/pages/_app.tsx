@@ -8,13 +8,12 @@ import { SWRConfig, type Middleware } from "swr"
 import type { AppPropsWithLayout } from "@/types/next"
 import type { userJWT } from "@/types/user"
 import { fetcher } from "@/lib/fetchers"
+import { fonts } from "@/lib/fonts"
 import { useStore } from "@/lib/stores/pharmacies"
 import { Toaster } from "@/components/ui/sonner"
 
 import "@/styles/globals.css"
 import "leaflet/dist/leaflet.css"
-
-import { fonts } from "@/lib/fonts"
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
@@ -73,17 +72,12 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
         },
       })
     }
-  }, [session])
+  }, [session?.user.token])
 
-  // disable all SWR requests when unauthenticated
   const middleware: Middleware = (useSWRNext) => {
     return (key, fetcher, config) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      return useSWRNext(
-        status === "authenticated" ? key : null,
-        fetcher,
-        config,
-      )
+      return useSWRNext(status !== "loading" ? key : null, fetcher, config)
     }
   }
 
