@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react"
 import type { IProfileDoctor, ResponseById } from "@/types/api"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import DoctorProfileSection from "@/features/doctor/components/doctor-profile/doctor-profile"
 import { getDoctorProfile } from "@/features/profile/api/getDoctorProfile"
 
