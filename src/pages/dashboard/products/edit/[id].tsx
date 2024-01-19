@@ -1,4 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { getSession } from "next-auth/react"
 
 import type { ProductsSchema } from "@/types/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,10 +10,17 @@ import ProductLayout from "@/features/products/components/layout"
 export const getServerSideProps: GetServerSideProps<{
   data: ProductsSchema
 }> = async (context) => {
-  const id = context.query.id as string
-  const url = process.env.NEXT_PUBLIC_DB_URL + `/v1/products/${id}`
+  const session = await getSession(context)
 
-  const res = await fetch(url)
+  const id = context.query.id as string
+  const url = process.env.NEXT_PUBLIC_DB_URL + `/v1/products/${id}/admin`
+
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.user.token}`,
+    },
+  })
   const data = await res.json()
 
   if (!data) {
