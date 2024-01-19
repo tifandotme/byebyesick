@@ -5,12 +5,15 @@ import MainLayout from "@/components/layout/main-layout"
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const address = router.query.address
 
   const ids =
     typeof router.query.ids === "string"
       ? decodeURIComponent(router.query.ids).split(",")
       : []
   console.log(ids)
+  console.log(address)
+
   return (
     <>
       <div>Checkout Page</div>
