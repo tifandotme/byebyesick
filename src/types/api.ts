@@ -312,6 +312,11 @@ export interface IOrder {
   order_details: IOrderDetail[]
 }
 
+export type ITransactionConfirmation = {
+  total_payment: string
+  transaction_status_id: number
+}
+
 export interface IOrderDetail {
   name: string
   generic_name: string
