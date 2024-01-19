@@ -5,7 +5,6 @@ import { ImageIcon } from "lucide-react"
 import type { ICart, ResponseGetAll } from "@/types/api"
 import { cn, formatPrice } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Separator } from "@/components/ui/separator"
 import { UpdateCart } from "@/components/checkout/update-cart-items"
 
 interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -27,22 +26,10 @@ export function CartLineItems({
   ...props
 }: CartLineItemsProps) {
   return (
-    <div
-      className={cn(
-        "flex w-full flex-col gap-5",
-        isScrollable && "pr-6",
-        className,
-      )}
-      {...props}
-    >
+    <div className={cn("  w-full space-y-5", className)} {...props}>
       {items.data.items.map((item, index) => (
         <div key={index} className="space-y-3">
-          <div
-            className={cn(
-              "flex items-start justify-between gap-4",
-              isCheckable && "flex-col xs:flex-row",
-            )}
-          >
+          <div className={cn("flex  justify-between ")}>
             <div className="flex items-center space-x-4">
               {isCheckable && (
                 <Checkbox
@@ -53,7 +40,7 @@ export function CartLineItems({
                   className="shrink-0"
                 />
               )}
-              <div className="relative aspect-square h-16 w-16 min-w-fit overflow-hidden rounded">
+              <div className="relative aspect-square size-16 min-w-fit overflow-hidden rounded">
                 {item?.product.image?.length ? (
                   <Image
                     src={
@@ -68,7 +55,7 @@ export function CartLineItems({
                 ) : (
                   <div className="flex h-full items-center justify-center bg-secondary">
                     <ImageIcon
-                      className="h-4 w-4 text-muted-foreground"
+                      className="size-4 text-muted-foreground"
                       aria-hidden="true"
                     />
                   </div>
@@ -76,22 +63,21 @@ export function CartLineItems({
               </div>
 
               <div className="flex flex-col space-y-1 self-start">
-                <span className="line-clamp-1 text-sm font-medium">
+                <span className="line-clamp-1 font-medium">
                   {item.product.name}
                 </span>
-                {isCheckable ? (
-                  <span className="line-clamp-1 text-xs text-muted-foreground">
-                    {formatPrice(Number(item.product.maximum_price))}
-                  </span>
-                ) : (
-                  <span className="line-clamp-1 text-xs text-muted-foreground">
-                    Qty {item.quantity}
-                  </span>
-                )}
               </div>
             </div>
             {isCheckable ? (
-              <UpdateCart cartLineItem={item} />
+              <>
+                <div>
+                  <span className="text-md mb-2 line-clamp-1 font-bold">
+                    {formatPrice(Number(item.product.minimum_price))} -{" "}
+                    {formatPrice(Number(item.product.maximum_price))}
+                  </span>
+                  <UpdateCart cartLineItem={item} />
+                </div>
+              </>
             ) : (
               <div className="flex flex-col space-y-1 font-medium">
                 <span className="ml-auto line-clamp-1 text-sm">
@@ -104,7 +90,6 @@ export function CartLineItems({
               </div>
             )}
           </div>
-          <Separator />
         </div>
       ))}
     </div>

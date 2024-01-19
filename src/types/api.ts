@@ -200,7 +200,6 @@ export interface IManufacturer {
   id: number
   image?: string
   name: string
-  image: string
 }
 export interface IProductCategory {
   id: number
@@ -285,4 +284,12 @@ export interface AddressIForm {
   latitude: string
   longitude: string
   status: number
+}
+
+export interface ICheckout {
+  id: number
+  user_id: number
+  quantity: number
+  product: IProduct & IManufacturer & IDrugClassification & IProductCategory
+  pharmacy_product: Omit<PharmacyProduct, "product">
 }

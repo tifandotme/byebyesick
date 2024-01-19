@@ -1,11 +1,6 @@
 import React, { type ReactElement } from "react"
 import { useRouter } from "next/router"
-import {
-  CheckCheckIcon,
-  CheckCircle,
-  CheckCircle2Icon,
-  MapPin,
-} from "lucide-react"
+import { CheckCircle2Icon, MapPin } from "lucide-react"
 
 import { useAddressMain, useAdressList, useCartList } from "@/lib/fetchers"
 import { useAddressStore } from "@/lib/stores/address"
@@ -47,14 +42,6 @@ export default function CartPage() {
     setCheckedItems((prevState) => ({ ...prevState, [itemId]: isChecked }))
   }
 
-  const handleCheckout = () => {
-    const checkedIds = Object.keys(checkedItems).filter(
-      (id) => checkedItems[id],
-    )
-    const idsString = checkedIds.join(",")
-    router.push(`/checkout?ids=${encodeURIComponent(idsString)}`)
-  }
-
   const { addressError, addressMutate, addressIsLoading, addressList } =
     useAdressList()
   const { addressData } = useAddressMain()
@@ -70,14 +57,25 @@ export default function CartPage() {
   const selectedAddressData = selectedAddress
     ? addressList?.data.items.find((address) => address.id === selectedAddress)
     : addressData?.data
+  const totalCheckedItems = Object.values(checkedItems).filter(Boolean).length
 
+  const handleCheckout = () => {
+    const checkedIds = Object.keys(checkedItems).filter(
+      (id) => checkedItems[id],
+    )
+    const idsString = checkedIds.join(",")
+    const selectedAddressId = selectedAddress?.toString() ?? ""
+    router.push(
+      `/checkout?ids=${encodeURIComponent(idsString)}&address=${encodeURIComponent(selectedAddressId)}`,
+    )
+  }
   return (
     <>
       <div>
         <h1 className="mt-9 text-2xl font-semibold capitalize ">Cart Page</h1>
 
         <div className="space-y-2 md:flex md:space-x-2">
-          <div className="w-full md:w-3/4">
+          <div className="w-full md:w-3/4 ">
             <Card className="mt-3 w-full ">
               <CardHeader>
                 <CardTitle className="text-sm text-muted-foreground md:text-xl">
@@ -89,14 +87,9 @@ export default function CartPage() {
                   <div className="flex space-x-1 ">
                     <MapPin className="mr-2 " />
                     {selectedAddressData?.name}
-                    {selectedAddressData?.status == 1 ? (
-                      <Badge variant="default">Main Address</Badge>
-                    ) : (
-                      <div></div>
-                    )}
                   </div>
                   <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
-                    {selectedAddressData?.address}{" "}
+                    {selectedAddressData?.address}
                   </p>
                   <p className="truncate text-sm md:mt-0 md:text-base">
                     {selectedAddressData?.sub_district},{" "}
@@ -124,7 +117,14 @@ export default function CartPage() {
                             <div className="flex flex-col">
                               <div className="flex items-center gap-2">
                                 <h2 className="text-sm md:text-base">
-                                  {address.name}
+                                  {address.name}{" "}
+                                  {address?.status == 1 ? (
+                                    <Badge className="ml-1 bg-apple-600">
+                                      Main Address
+                                    </Badge>
+                                  ) : (
+                                    <div></div>
+                                  )}
                                 </h2>
                               </div>
                               <div className="max-w-44 text-xs text-muted-foreground md:max-w-96 md:text-sm">
@@ -153,13 +153,15 @@ export default function CartPage() {
                 </Dialog>
               </CardFooter>
             </Card>
-            <CartLineItems
-              items={cartdata}
-              className="mt-5"
-              isCheckable={true}
-              onChecked={handleCheckChange}
-              checkedItems={checkedItems}
-            />
+            <div className="mb-3">
+              <CartLineItems
+                items={cartdata}
+                className="mt-5"
+                isCheckable={true}
+                onChecked={handleCheckChange}
+                checkedItems={checkedItems}
+              />
+            </div>
           </div>
 
           <div className="">
@@ -174,9 +176,7 @@ export default function CartPage() {
                 <div>
                   <p>
                     <span>Total Items: </span>
-                    <span>
-                      {checkedItems && Object.keys(checkedItems).length}
-                    </span>
+                    <span>{checkedItems && totalCheckedItems}</span>
                   </p>
                 </div>
               </CardContent>

@@ -30,7 +30,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const product_ids = cartLineItem.product_id as unknown as number[]
 
   return (
-    <div className="flex w-full items-center justify-between space-x-2 xs:w-auto xs:justify-normal">
+    <div className="flex w-full items-center space-x-2 xs:w-auto xs:justify-normal md:justify-between">
       <div className="flex items-center">
         <Button
           variant="outline"
@@ -39,9 +39,17 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           onClick={() => {
             const newQuantity = quantity > 1 ? quantity - 1 : 1
             setQuantity(newQuantity)
-            addToCartt({
-              product_id: cartLineItem.product_id,
-              quantity: newQuantity,
+            const minusItemQuantity = async () => {
+              const { success } = await addToCart({
+                product_id: cartLineItem.product_id,
+                quantity: newQuantity,
+              })
+              if (!success) throw new Error()
+            }
+
+            toast.promise(minusItemQuantity(), {
+              success: "Cart updated successfully",
+              error: "Failed to update Cart",
             })
           }}
           disabled={isLoading}
@@ -57,6 +65,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           onChange={(e) => {
             const newQuantity = Number(e.target.value)
             setQuantity(newQuantity)
+
             addToCartt({
               product_id: cartLineItem.product_id,
               quantity: newQuantity,
@@ -70,9 +79,17 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           onClick={() => {
             const newQuantity = quantity + 1
             setQuantity(newQuantity)
-            addToCartt({
-              product_id: cartLineItem.product_id,
-              quantity: newQuantity,
+            const addItemQuantity = async () => {
+              const { success } = await addToCart({
+                product_id: cartLineItem.product_id,
+                quantity: newQuantity,
+              })
+              if (!success) throw new Error()
+            }
+
+            toast.promise(addItemQuantity(), {
+              success: "Cart updated successfully",
+              error: "Failed to update Cart",
             })
           }}
         >
