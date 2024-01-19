@@ -346,7 +346,7 @@ export const useProductData = (filters: ProductsFilter) => {
   }
 }
 
-export async function updatePost(
+export async function updateProducts(
   mode: "add" | "edit",
   payload: ProductInputs,
   id?: number,
@@ -364,18 +364,9 @@ export async function updatePost(
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
 
-    // formData.append(
-    //   "image",
-    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
-    //     type: "png",
-    //   }),
-    // )
-
-    formData.append(
-      "image",
-      await fetch(payload.image).then((res) => res.blob()),
-      "image.png",
-    )
+    if (payload.image instanceof Blob || payload.image instanceof File) {
+      formData.append("image", payload.image, "image.png")
+    }
 
     formData.append("manufacturer_id", payload.manufacturer_id.toString())
     formData.append("selling_unit", payload.selling_unit.toString())
@@ -387,8 +378,6 @@ export async function updatePost(
       "product_category_id",
       payload.product_category_id.toString(),
     )
-
-    console.log(formData.get("image"))
 
     const url =
       BASE_URL + `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`
@@ -407,12 +396,6 @@ export async function updatePost(
       throw new Error("Failed to update a product")
     }
 
-    if (mode === "edit") {
-      mutate(url)
-      const id = (await res.json()).id as string
-      await fetch(`/api/revalidate/products/${id}`)
-    }
-
     return {
       success: true,
       message: `Product ${mode === "add" ? "added" : "updated"}`,
@@ -425,7 +408,7 @@ export async function updatePost(
   }
 }
 
-export async function deletePost(id: number): Promise<Response> {
+export async function deleteProducts(id: number): Promise<Response> {
   try {
     const url = BASE_URL + `/v1/products/${id}`
     const options: RequestInit = {
