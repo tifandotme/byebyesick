@@ -76,6 +76,12 @@ export const siteConfig = {
         role: "superAdmin",
       },
       {
+        title: "Manufacturers",
+        href: "/dashboard/manufacturers",
+        icon: "Manufacturers",
+        role: "superAdmin",
+      },
+      {
         title: "Categories",
         href: "/dashboard/productcategories",
         icon: "ProductCategory",
