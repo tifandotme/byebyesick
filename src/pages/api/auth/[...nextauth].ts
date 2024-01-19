@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
             email: string
             password: string
           }
-          const resp = await fetch(`${process.env.BASE_URL}/v1/auth/login`, {
+          const resp = await fetch(`${process.env.DB_URL}/v1/auth/login`, {
             method: "POST",
             body: JSON.stringify({
               email,
