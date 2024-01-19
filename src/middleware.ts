@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getToken } from "next-auth/jwt"
 import type { NextRequestWithAuth } from "next-auth/middleware"
 
+import { DOCTOR_ROLE, PHARMACY_ADMIN_ROLE, SUPER_ADMIN_ROLE } from "./config"
+
 const secret = process.env.NEXTAUTH_SECRET
 
 export default async function middleware(req: NextRequestWithAuth) {
