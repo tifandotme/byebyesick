@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps<{
   data: ProductsSchema
 }> = async (context) => {
   const id = context.query.id as string
-  const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+  const url = process.env.NEXT_PUBLIC_DB_URL + `/v1/products/${id}`
 
   const res = await fetch(url)
   const data = await res.json()
