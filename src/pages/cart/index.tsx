@@ -1,11 +1,14 @@
 import React, { type ReactElement } from "react"
-import Link from "next/link"
 import { useRouter } from "next/router"
-import { MapPin } from "lucide-react"
-import useSWR from "swr"
+import {
+  CheckCheckIcon,
+  CheckCircle,
+  CheckCircle2Icon,
+  MapPin,
+} from "lucide-react"
 
-import type { AddressIForm, ResponseGetAll } from "@/types/api"
-import { useAddressMain, useCartList } from "@/lib/fetchers"
+import { useAddressMain, useAdressList, useCartList } from "@/lib/fetchers"
+import { useAddressStore } from "@/lib/stores/address"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -16,15 +19,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CartLineItems } from "@/components/checkout/cart-items"
 import MainLayout from "@/components/layout/main-layout"
@@ -32,6 +34,11 @@ import MainLayout from "@/components/layout/main-layout"
 export default function CartPage() {
   const { cartdata, cartisLoading } = useCartList()
   const router = useRouter()
+
+  const selectedAddress = useAddressStore((state) => state.selectedAddress)
+  const setSelectedAddress = useAddressStore(
+    (state) => state.setSelectedAddress,
+  )
 
   const [checkedItems, setCheckedItems] = React.useState<
     Record<string, boolean>
@@ -48,7 +55,8 @@ export default function CartPage() {
     router.push(`/checkout?ids=${encodeURIComponent(idsString)}`)
   }
 
-  // const {addressError, addressMutate, addressIsLoading, addressList} = useAdressList()
+  const { addressError, addressMutate, addressIsLoading, addressList } =
+    useAdressList()
   const { addressData } = useAddressMain()
 
   if (cartisLoading) {
@@ -59,6 +67,10 @@ export default function CartPage() {
     return <div>No items in cart</div>
   }
 
+  const selectedAddressData = selectedAddress
+    ? addressList?.data.items.find((address) => address.id === selectedAddress)
+    : addressData?.data
+
   return (
     <>
       <div>
@@ -66,14 +78,81 @@ export default function CartPage() {
 
         <div className="space-y-2 md:flex md:space-x-2">
           <div className="w-full md:w-3/4">
-            <ChangeAddressCard
-              address={addressData?.data.address || ""}
-              name={addressData?.data.name || ""}
-              status={addressData?.data.status || 0}
-              sub_district={addressData?.data.sub_district || ""}
-              district={addressData?.data.district || ""}
-              postal_code={addressData?.data.postal_code || ""}
-            />
+            <Card className="mt-3 w-full ">
+              <CardHeader>
+                <CardTitle className="text-sm text-muted-foreground md:text-xl">
+                  Shipping Address
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div>
+                  <div className="flex space-x-1 ">
+                    <MapPin className="mr-2 " />
+                    {selectedAddressData?.name}
+                    {selectedAddressData?.status == 1 ? (
+                      <Badge variant="default">Main Address</Badge>
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                  <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
+                    {selectedAddressData?.address}{" "}
+                  </p>
+                  <p className="truncate text-sm md:mt-0 md:text-base">
+                    {selectedAddressData?.sub_district},{" "}
+                    {selectedAddressData?.district},{" "}
+                    {selectedAddressData?.postal_code}
+                  </p>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant={"outline"} size={"sm"}>
+                      Change Address
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="">
+                    <DialogHeader>
+                      <DialogTitle>Address List</DialogTitle>
+                      <DialogDescription>Change Address here</DialogDescription>
+                    </DialogHeader>
+                    <>
+                      {addressList?.data.items.map((address) => (
+                        <div key={address.id}>
+                          <div className="mr-auto flex items-center justify-between ">
+                            <div className="flex flex-col">
+                              <div className="flex items-center gap-2">
+                                <h2 className="text-sm md:text-base">
+                                  {address.name}
+                                </h2>
+                              </div>
+                              <div className="max-w-44 text-xs text-muted-foreground md:max-w-96 md:text-sm">
+                                {address.address}
+                              </div>
+                            </div>
+                            {address.id === selectedAddress && (
+                              <CheckCircle2Icon className="text-apple-600" />
+                            )}
+
+                            {address.id !== selectedAddress && (
+                              <Button
+                                variant={"default"}
+                                type="button"
+                                size={"sm"}
+                                onClick={() => setSelectedAddress(address.id)}
+                              >
+                                Choose
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  </DialogContent>
+                </Dialog>
+              </CardFooter>
+            </Card>
             <CartLineItems
               items={cartdata}
               className="mt-5"
@@ -115,57 +194,4 @@ export default function CartPage() {
 }
 CartPage.getLayout = function getLayout(page: ReactElement) {
   return <MainLayout>{page}</MainLayout>
-}
-
-interface ChangeAddressCardProps {
-  name: string
-  status: number
-  address: string
-  sub_district: string
-  district: string
-  postal_code: string
-}
-
-export function ChangeAddressCard({
-  address,
-  sub_district,
-  status,
-  postal_code,
-  name,
-  district,
-}: ChangeAddressCardProps) {
-  return (
-    <div>
-      <Card className="mt-3 w-full ">
-        <CardHeader>
-          <CardTitle className="text-sm text-muted-foreground md:text-xl">
-            Shipping Address
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <div className="flex space-x-1 ">
-              <MapPin className="mr-2 " /> {name} •{" "}
-              {status == 1 ? (
-                <Badge variant="default">Main Address</Badge>
-              ) : (
-                <div></div>
-              )}
-            </div>
-            <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
-              {address}
-            </p>
-            <p className="truncate text-sm md:mt-0 md:text-base">
-              {sub_district}, {district}, {postal_code}
-            </p>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button variant={"outline"} size={"sm"}>
-            Change Address
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
-  )
 }
