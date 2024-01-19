@@ -5,11 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type {
-  IManufacturer,
-  IProductCategory,
-  ResponseGetAll,
-} from "@/types/api"
+import type { IManufacturer, ResponseGetAll } from "@/types/api"
 import { deleteProductCategory } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -86,9 +82,9 @@ export function ProductManufacturersTable({
               <Button
                 aria-label="Open menu"
                 variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
               >
-                <DotsHorizontalIcon className="h-4 w-4" />
+                <DotsHorizontalIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
@@ -99,7 +95,7 @@ export function ProductManufacturersTable({
                   className="flex justify-between"
                 >
                   View
-                  <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
+                  <ExternalLinkIcon className="ml-1.5 size-3.5" />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>

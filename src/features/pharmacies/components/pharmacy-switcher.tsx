@@ -58,10 +58,10 @@ export function PharmacySwitcher() {
             disabled={isLoading}
             className="hidden w-full justify-between px-3 xxs:w-[180px] xs:flex"
           >
-            <CircleIcon className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
+            <CircleIcon className="mr-2 size-4 shrink-0" aria-hidden="true" />
             <span className="line-clamp-1">{currPharmacy?.name}</span>
             <CaretSortIcon
-              className="ml-auto h-4 w-4 shrink-0 opacity-50"
+              className="ml-auto size-4 shrink-0 opacity-50"
               aria-hidden="true"
             />
           </Button>
@@ -86,13 +86,13 @@ export function PharmacySwitcher() {
                     className="text-sm"
                   >
                     <CircleIcon
-                      className="mr-2 h-4 w-4 shrink-0"
+                      className="mr-2 size-4 shrink-0"
                       aria-hidden="true"
                     />
                     <span className="line-clamp-1">{pharmacy.name}</span>
                     <CheckIcon
                       className={cn(
-                        "ml-auto h-4 w-4 shrink-0",
+                        "ml-auto size-4 shrink-0",
                         currPharmacy?.id === pharmacy.id
                           ? "opacity-100"
                           : "opacity-0",
@@ -115,7 +115,7 @@ export function PharmacySwitcher() {
                     }}
                   >
                     <PlusCircledIcon
-                      className="mr-2 h-4 w-4"
+                      className="mr-2 size-4"
                       aria-hidden="true"
                     />
                     Create pharmacy

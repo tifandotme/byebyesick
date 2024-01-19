@@ -154,11 +154,11 @@ function PharmaciesToolbar() {
           >
             <span>Sort</span>
             {sorting.order === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
+              <ArrowDownIcon className="ml-2 size-4" />
             ) : sorting.order === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
+              <ArrowUpIcon className="ml-2 size-4" />
             ) : (
-              <CaretSortIcon className="ml-2 h-4 w-4" />
+              <CaretSortIcon className="ml-2 size-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -171,7 +171,7 @@ function PharmaciesToolbar() {
               })
             }
           >
-            <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpIcon className="mr-2 size-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -182,7 +182,7 @@ function PharmaciesToolbar() {
               })
             }
           >
-            <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDownIcon className="mr-2 size-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
           {sorting.id && (
@@ -194,7 +194,7 @@ function PharmaciesToolbar() {
                 })
               }
             >
-              <Cross2Icon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <Cross2Icon className="mr-2 size-3.5 text-muted-foreground/70" />
               Reset
             </DropdownMenuItem>
           )}

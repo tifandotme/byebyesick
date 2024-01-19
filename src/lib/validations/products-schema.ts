@@ -39,22 +39,38 @@ export const productSchema = z.object({
     }),
   unit_in_pack: z
     .string()
-    .min(2, { message: "Drug Form must be at least 2 characters long" })
+    .min(1, { message: "Drug Form must be at least 1" })
     .max(100, { message: "Drug Form must be no more than 100 characters long" })
     .refine((drug_form) => !/[^a-zA-Z0-9 ]/.test(drug_form), {
       message: "Drug Form can only contain alphanumeric characters and spaces",
     }),
-  weight: z.number().min(2, { message: "Weight must be at least 2" }),
+  weight: z.number().min(0.01, { message: "Weight must be greater than 0" }),
+  length: z.number().min(0.01, { message: "Length must be greater than 0" }),
+  width: z.number().min(0.01, { message: "Width must be greater than 0" }),
+  height: z.number().min(0.01, { message: "Height must be greater than 0" }),
 
-  length: z.number().min(2, { message: "Length must be at least 2" }),
+  image: z.string().or(
+    z.any().refine(
+      (file) => {
+        if (!(file instanceof File)) {
+          return false
+        }
 
-  width: z.number().min(2, { message: "Width must be at least 2" }),
+        if (file.size > 500 * 1024) {
+          return false
+        }
 
-  height: z.number().min(2, { message: "Height must be at least 2" }),
-  image: z.any().refine((image) => image.length > 0, {
-    message: "Image is required",
-  }),
+        if (!file.name.endsWith(".png")) {
+          return false
+        }
 
+        return true
+      },
+      {
+        message: "Image must be a .png file and cannot exceed 500 KB",
+      },
+    ),
+  ),
   selling_unit: z
     .string()
     .min(2, { message: "Seling Unit must be at least 2 characters long" })
