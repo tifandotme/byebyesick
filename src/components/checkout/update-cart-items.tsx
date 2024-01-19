@@ -35,8 +35,15 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8 rounded-r-none"
-          onClick={handleIncrement}
+          className="size-8 rounded-r-none"
+          onClick={() => {
+            const newQuantity = quantity > 1 ? quantity - 1 : 1
+            setQuantity(newQuantity)
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
+          }}
           disabled={isLoading}
         >
           <MinusIcon className="size-3" aria-hidden="true" />
@@ -60,7 +67,14 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           variant="outline"
           size="icon"
           className="size-8 rounded-l-none"
-          onClick={handleDecrement}
+          onClick={() => {
+            const newQuantity = quantity + 1
+            setQuantity(newQuantity)
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
+          }}
         >
           <PlusIcon className="size-3" aria-hidden="true" />
           <span className="sr-only">Add one item</span>
@@ -69,7 +83,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
       <Button
         variant="outline"
         size="icon"
-        className="size-8"
+        className="size-8 hover:bg-red-500 hover:text-white"
         onClick={() => {
           setIsLoading(true)
           const handleDeleteCartItem = async () => {
