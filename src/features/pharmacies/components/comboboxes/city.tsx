@@ -24,7 +24,7 @@ export function CityCombobox({
   const updateCities = useStore((state) => state.updateCities)
 
   const { data, isLoading } = useSWR<AddressResponse<City[]>>(
-    provinceId && !cities ? "v1/address-area/cities/no-params" : null,
+    provinceId && !cities ? "/v1/address-area/cities/no-params" : null,
     {
       onSuccess: ({ data }) => {
         data && updateCities(data)

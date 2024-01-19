@@ -9,7 +9,7 @@ import { mutate } from "swr"
 import type { CartInputs } from "@/types"
 import type { ProductsSchema } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
-import { cn, handleFailedRequest } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -51,7 +51,7 @@ export function ProductCard({
   }
   return (
     <Card
-      className={cn("h-full w-full overflow-hidden rounded-sm", className)}
+      className={cn("size-full overflow-hidden rounded-sm", className)}
       {...props}
     >
       <Link
@@ -93,13 +93,8 @@ export function ProductCard({
             size="sm"
             className="h-8 w-full rounded-sm"
             onClick={async () => {
-              try {
-                await addToCartt({ product_id: product.data.id, quantity: 1 })
-                cartMutate()
-              } catch (error) {
-                const Error = error as unknown as Response
-                handleFailedRequest(Error)
-              }
+              await addToCartt({ product_id: product.data.id, quantity: 1 })
+              cartMutate()
             }}
             disabled={isLoading}
           >
@@ -117,7 +112,7 @@ export function ProductCard({
               }),
             )}
           >
-            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
+            <EyeOpenIcon className="size-4" aria-hidden="true" />
             <span className="sr-only">Preview</span>
           </Link>
         </div>

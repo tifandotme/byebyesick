@@ -10,6 +10,7 @@ import type {
   ProductInputs,
   Response,
   StockMutationInputs,
+  StockMutationRequestInputs,
   UserInputs,
 } from "@/types"
 import type {
@@ -18,6 +19,7 @@ import type {
   ICart,
   IDrugClassification,
   IManufacturer,
+  IncomingRequest,
   IProduct,
   IProductCategory,
   Pharmacy,
@@ -35,7 +37,7 @@ export async function fetcher<TData = unknown>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<TData | undefined> {
-  const url = new URL(endpoint, BASE_URL)
+  const url = BASE_URL + endpoint
   const res = await fetch(url, options)
 
   if (!res.ok) {
@@ -210,6 +212,70 @@ export async function addStockMutation(
   }
 }
 
+export async function requestStockMutation(
+  payload: StockMutationRequestInputs & {
+    pharmacy_product_dest_id: number
+  },
+): Promise<Response> {
+  try {
+    const { stock, ...data } = payload
+
+    const endpoint = "/v1/stock-mutations/requests"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        stock: Number(stock),
+      } satisfies Record<keyof typeof payload, number>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is sent",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateStockMutationRequestStatus(
+  payload: Pick<IncomingRequest, "product_stock_mutation_request_status_id">,
+  id: number,
+): Promise<Response> {
+  try {
+    const endpoint = `/v1/stock-mutations/requests/${id}`
+    const options: RequestInit = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Stock mutation request is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
 export async function updatePharmacyProduct(
   mode: "add" | "edit",
   payload: PharmacyProductInputs & Pick<PharmacyProduct, "pharmacy_id">,
@@ -281,7 +347,7 @@ export const useProductData = (filters: ProductsFilter) => {
   }
 }
 
-export async function updatePost(
+export async function updateProducts(
   mode: "add" | "edit",
   payload: ProductInputs,
   id?: number,
@@ -299,18 +365,9 @@ export async function updatePost(
     formData.append("width", payload.width.toString())
     formData.append("height", payload.height.toString())
 
-    // formData.append(
-    //   "image",
-    //   new Blob([await fetch(payload.image).then((res) => res.arrayBuffer())], {
-    //     type: "png",
-    //   }),
-    // )
-
-    formData.append(
-      "image",
-      await fetch(payload.image).then((res) => res.blob()),
-      "image.png",
-    )
+    if (payload.image instanceof Blob || payload.image instanceof File) {
+      formData.append("image", payload.image, "image.png")
+    }
 
     formData.append("manufacturer_id", payload.manufacturer_id.toString())
     formData.append("selling_unit", payload.selling_unit.toString())
@@ -323,10 +380,8 @@ export async function updatePost(
       payload.product_category_id.toString(),
     )
 
-    const url = new URL(
-      `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url =
+      BASE_URL + `${mode === "edit" ? `/v1/products/${id}` : "/v1/products"}`
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
@@ -342,12 +397,6 @@ export async function updatePost(
       throw new Error("Failed to update a product")
     }
 
-    if (mode === "edit") {
-      mutate(url)
-      const id = (await res.json()).id as string
-      await fetch(`/api/revalidate/products/${id}`)
-    }
-
     return {
       success: true,
       message: `Product ${mode === "add" ? "added" : "updated"}`,
@@ -360,9 +409,9 @@ export async function updatePost(
   }
 }
 
-export async function deletePost(id: number): Promise<Response> {
+export async function deleteProducts(id: number): Promise<Response> {
   try {
-    const url = new URL(`/v1/products/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+    const url = BASE_URL + `/v1/products/${id}`
     const options: RequestInit = {
       method: "DELETE",
     }
@@ -395,14 +444,13 @@ export async function updateProductCategory(
   try {
     const { ...data } = payload
 
-    const url = new URL(
+    const url =
+      BASE_URL +
       `${
         mode === "edit"
           ? `/v1/product-categories/${id}`
           : "/v1/product-categories"
-      }`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+      }`
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
@@ -440,10 +488,7 @@ export async function updateProductCategory(
 
 export async function deleteProductCategory(id: number): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/product-categories/${id}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url = BASE_URL + `/v1/product-categories/${id}`
     const options: RequestInit = {
       method: "DELETE",
     }
@@ -511,7 +556,7 @@ export async function getManufacturerName(manufacturer_id: number) {
 export async function addToCart(payload: CartInputs): Promise<Response> {
   try {
     const { ...data } = payload
-    const url = new URL("/v1/cart-items", process.env.NEXT_PUBLIC_DB_URL)
+    const url = BASE_URL + "/v1/cart-items"
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -546,10 +591,7 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
 
 export async function deleteCart(product_ids: number[]): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/cart-items?product_ids=${product_ids}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url = BASE_URL + `/v1/cart-items?product_ids=${product_ids}`
 
     const options: RequestInit = {
       method: "DELETE",

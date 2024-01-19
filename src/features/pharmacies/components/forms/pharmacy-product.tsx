@@ -143,7 +143,7 @@ export function PharmacyProductForm({
             className="w-fit"
           >
             {form.formState.isSubmitting && (
-              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.Spinner className="mr-2 size-4 animate-spin" />
             )}
             {toSentenceCase(mode)} product
           </Button>
@@ -183,7 +183,7 @@ function ProductsCombobox({
     params.set("pharmacy_id", pharmacyId)
     params.set("not_added", String(mode === "add"))
     params.set("page", String(page))
-    params.set("limit", "100")
+    params.set("limit", "10")
     if (debouncedQuery) params.set("search", debouncedQuery)
 
     return `/v1/products/admin?${params.toString()}`
@@ -264,7 +264,7 @@ function ProductsCombobox({
                       </Badge>
                       <CheckIcon
                         className={cn(
-                          "h-4 w-4",
+                          "size-4",
                           value !== product.id && "invisible",
                         )}
                       />
@@ -277,7 +277,7 @@ function ProductsCombobox({
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9"
+              className="size-9"
               disabled={page === 1}
               onClick={() =>
                 setPage((prev) => {
@@ -286,12 +286,12 @@ function ProductsCombobox({
                 })
               }
             >
-              <ChevronLeftIcon className="h-4 w-4" />
+              <ChevronLeftIcon className="size-4" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9"
+              className="size-9"
               disabled={data?.data.total_pages === page}
               onClick={() =>
                 setPage((prev) => {
@@ -300,7 +300,7 @@ function ProductsCombobox({
                 })
               }
             >
-              <ChevronRightIcon className="h-4 w-4" />
+              <ChevronRightIcon className="size-4" />
             </Button>
           </div>
         </>
