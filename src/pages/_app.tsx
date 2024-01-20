@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import React from "react"
 import Head from "next/head"
 import { jwtDecode } from "jwt-decode"

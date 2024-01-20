@@ -15,9 +15,9 @@ export function CategoryCard({ category, icon }: CategoryCardProps) {
     <Link href={`/categories/${slugify(category)}`}>
       <>
         <span className="sr-only ">{category}</span>
-        <Card className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent transition-colors hover:bg-muted/50">
+        <Card className="relative flex size-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent transition-colors hover:bg-muted/50">
           <CardHeader>
-            <div className="grid h-11 w-11 place-items-center rounded-full border-2">
+            <div className="grid size-11 place-items-center rounded-full border-2">
               {icon}
             </div>
           </CardHeader>

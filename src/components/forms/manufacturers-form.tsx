@@ -100,7 +100,7 @@ export default function ManufacturersForm({
                               asChild
                             >
                               <div>
-                                <UploadCloudIcon className="mr-1.5 h-3.5 w-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
+                                <UploadCloudIcon className="mr-1.5 size-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
                                 Upload
                               </div>
                             </Button>
@@ -158,7 +158,7 @@ export default function ManufacturersForm({
                 className="w-fit"
               >
                 {form.formState.isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 size-4 animate-spin" />
                 )}
                 {toSentenceCase(mode)} Manufacturers
               </Button>

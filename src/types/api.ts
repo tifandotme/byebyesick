@@ -301,3 +301,56 @@ export interface ICheckout {
   product: IProduct & IManufacturer & IDrugClassification & IProductCategory
   pharmacy_product: Omit<PharmacyProduct, "product">
 }
+
+export interface ITransaction {
+  id: number
+  date: Date
+  payment_proof: string
+  payment_method: string
+  address: string
+  total_payment: string
+  transaction_status: ITransactionStatus
+  orders: IOrder[]
+}
+
+export interface IOrder {
+  pharmacy_name: string
+  shipping_method: string
+  shipping_cost: string
+  total_payment: string
+  order_details: IOrderDetail[]
+}
+
+export type ITransactionConfirmation = {
+  total_payment: string
+  transaction_status_id: number
+}
+
+export interface IOrderDetail {
+  name: string
+  generic_name: string
+  content: string
+  description: string
+  image: string
+  price: string
+  quantity: number
+}
+
+export interface ITransactionStatus {
+  id: number
+  name: string
+}
+
+export interface doctorI {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: Specialization
+  consultation_fee: string
+  is_online: boolean
+}
