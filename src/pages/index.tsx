@@ -3,7 +3,7 @@ import React from "react"
 import type { GetStaticProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
-import { ArrowRight, Loader2, MapIcon, MapPin, Tablets } from "lucide-react"
+import { ArrowRight, Loader2, MapPin, Tablets } from "lucide-react"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
@@ -56,8 +56,6 @@ export default function HomePage({
 }) {
   const { addressData, addressIsLoading } = useAddressMain()
 
-  console.log(addressData, "foo")
-
   const { location, locationError } = useGeolocation()
 
   const {
@@ -72,9 +70,7 @@ export default function HomePage({
       : null,
   )
 
-  const { data: productByAddress, error: productbyAddressError } = useSWR<
-    ResponseGetAll<IProduct[]>
-  >(
+  const { data: productByAddress } = useSWR<ResponseGetAll<IProduct[]>>(
     addressData
       ? `/v1/products?latitude=${addressData.data.latitude}&longitude=${addressData.data.longitude}&`
       : null,
@@ -86,8 +82,6 @@ export default function HomePage({
         <Loader2 className="animate-spin" /> searching products around you....
       </div>
     )
-
-  console.log(addressData)
 
   return (
     <div>
