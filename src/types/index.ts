@@ -96,5 +96,4 @@ export type CartInputs = z.infer<typeof cartSchema>
 export type ResetPasswordEmailSchemeType = z.infer<
   typeof resetPasswordEmailScheme
 >
-
 export type NewPasswordEmailSchemeType = z.infer<typeof newPasswordScheme>
