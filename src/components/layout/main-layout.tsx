@@ -5,7 +5,7 @@ import MainNavbar from "@/components/navbar/navbar"
 
 function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-screen min-h-screen flex-col">
       <div className="sticky w-full">
         <MainNavbar />
       </div>
