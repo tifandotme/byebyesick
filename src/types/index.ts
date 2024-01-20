@@ -97,3 +97,12 @@ export type ResetPasswordEmailSchemeType = z.infer<
   typeof resetPasswordEmailScheme
 >
 export type NewPasswordEmailSchemeType = z.infer<typeof newPasswordScheme>
+
+type CheckoutItem = {
+  pharmacy_product_id: number
+  quantity: number
+}
+export type CheckoutInput = {
+  address_id: number
+  checkout_items: CheckoutItem[]
+}
