@@ -203,3 +203,15 @@ export const usersRoleIds = {
   3: "doctor",
   4: "user",
 } as const
+
+export const PAYMENT_STATUS = {
+  UNPAID: 1,
+  WAITING_FOR_CONFIRMATION: 2,
+  PAYMENT_REJECTED: 3,
+  PAID: 4,
+} as const
+
+export const SUPER_ADMIN_ROLE = 1
+export const PHARMACY_ADMIN_ROLE = 2
+export const DOCTOR_ROLE = 3
+export const PATIENT_ROLE = 4
