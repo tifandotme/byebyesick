@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Image from "next/image"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSession } from "next-auth/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
@@ -83,14 +84,16 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <label htmlFor="profile" className="self-center ">
-          <img
+          <Image
+            width={40}
+            height={40}
             alt="Man"
             src={
-              image?.url ??
-              userProfile?.profile_photo ??
+              image?.url ||
+              userProfile?.profile_photo ||
               "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
             }
-            className="h-40 w-40 rounded-full object-cover"
+            className="size-40 rounded-full object-cover"
           />
           <input
             type="file"
