@@ -46,7 +46,7 @@ export default function LoginForm() {
           router.replace("/dashboard/pharmacies")
           break
         case 3:
-          router.replace("/")
+          router.replace("/doctor")
           break
         case 4:
           router.replace("/")
