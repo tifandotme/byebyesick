@@ -286,6 +286,14 @@ export interface AddressIForm {
   status: number
 }
 
+export type CheckoutResponse<TData = unknown> = {
+  total_items: number
+  total_pages: number
+  current_page_total_items: number
+  current_page: number
+  items: TData
+}
+
 export interface ICheckout {
   id: number
   user_id: number
