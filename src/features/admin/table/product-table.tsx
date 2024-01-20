@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import { deleteProducts, getDrugClassificationName } from "@/lib/fetchers"
+import { deleteProducts } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,

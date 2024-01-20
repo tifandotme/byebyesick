@@ -12,6 +12,15 @@ import {
 } from "@/types/api"
 import { groupBy } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { CheckoutCard } from "@/components/checkout/checkout-card"
 import MainLayout from "@/components/layout/main-layout"
 
@@ -90,6 +99,21 @@ export default function CheckoutPage() {
           {items.map((item) => (
             <CheckoutCard key={item.id} item={item} />
           ))}
+          <Select>
+            <SelectTrigger className="">
+              <SelectValue placeholder="Choose Shipping Method" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Fruits</SelectLabel>
+                <SelectItem value="apple">Apple</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="blueberry">Blueberry</SelectItem>
+                <SelectItem value="grapes">Grapes</SelectItem>
+                <SelectItem value="pineapple">Pineapple</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       ))}
     </>

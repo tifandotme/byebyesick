@@ -77,23 +77,7 @@ export function CheckoutCard({ item }: CheckoutCardProps) {
         </CardDescription>
       </CardContent>
       <Separator className="mb-4" />
-      <CardFooter className="space-x-4">
-        <Select>
-          <SelectTrigger className="">
-            <SelectValue placeholder="Choose Shipping Method" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Fruits</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </CardFooter>
+      <CardFooter className="space-x-4"></CardFooter>
     </Card>
   )
 }
