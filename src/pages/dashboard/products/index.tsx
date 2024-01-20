@@ -15,7 +15,7 @@ export default function ProductTablePage() {
 
   const { data, isLoading, mutate } = useSWR<ResponseGetAll<IProduct[]>>(() => {
     const params = new URLSearchParams()
-    if (per_page) params.set("per_page", per_page)
+    if (per_page) params.set("limit", per_page)
     if (search) params.set("search", search)
     if (page) params.set("page", page)
     if (drug_class) params.set("drug_class", drug_class)

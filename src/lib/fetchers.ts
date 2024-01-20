@@ -14,7 +14,9 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
+  AddressI,
   AddressIForm,
+  AddressResponse,
   doctorI,
   ICart,
   IDrugClassification,
@@ -313,7 +315,7 @@ export async function updatePharmacyProduct(
 }
 
 interface ProductsFilter {
-  drug_class?: number
+  drug_class?: number | string
   search?: string
   limit?: number
   sort?: string
@@ -321,18 +323,20 @@ interface ProductsFilter {
   page?: number
 }
 
-export const useProductData = (filters: ProductsFilter) => {
+export const useProductData = <T>(
+  filters: ProductsFilter,
+  baseUrl: string | null,
+) => {
   const { drug_class, search, limit, sort, sort_by, page } = filters
 
-  let url = "/v1/products?"
-  if (search) url += `search=${search}&`
+  let url = `${baseUrl}`
+  if (search) url += `&search=${search}&`
   if (limit) url += `limit=${limit}&`
   if (sort_by) url += `sort_by=${sort_by}&sort=${sort}&`
   if (drug_class) url += `drug_class=${drug_class}&`
-  if (page) url += `page=${page}`
+  if (page) url += `&page=${page}`
 
-  const { data, isLoading, mutate, error } =
-    useSWR<ResponseGetAll<IProduct[]>>(url)
+  const { data, isLoading, mutate, error } = useSWR<ResponseGetAll<T>>(url)
 
   const resetFilters = () => {
     mutate()
@@ -639,6 +643,19 @@ export const useAdressList = () => {
 
   return {
     addressList: data,
+    addressIsLoading: isLoading,
+    addressError: error,
+    addressMutate: mutate,
+  }
+}
+
+export const useAddressMain = () => {
+  const { data, isLoading, error, mutate } = useSWR<
+    AddressResponse<AddressIForm>
+  >(`/v1/profile/addresses/main`)
+
+  return {
+    addressData: data,
     addressIsLoading: isLoading,
     addressError: error,
     addressMutate: mutate,

@@ -197,6 +197,27 @@ export const SortByConfig = [
   { value: "desc", label: "Descending" },
 ]
 
+export const DrugClassConfig = [
+  { value: "1", label: "Obat Bebas" },
+  { value: "2", label: "Obat Keras" },
+  { value: "3", label: "Obat Bebas Terbatas" },
+  { value: "4", label: "Non Obat" },
+]
+
+export const classif = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
+export const categories = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
 export const usersRoleIds = {
   1: "superAdmin",
   2: "pharmacyAdmin",
