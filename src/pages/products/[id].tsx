@@ -6,16 +6,17 @@ import type {
 } from "next"
 import Head from "next/head"
 
-import type { ApiResponse, IProduct, ResponseById } from "@/types/api"
+import type { IProduct, ResponseById, ResponseGetAll } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import DetailProduct from "@/features/drug/component/section/detail-product"
-import OtherProduct from "@/features/drug/component/section/other-product"
+
+export const BASE_URL = process.env.DB_URL as string
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const url = new URL("/v1/products", process.env.NEXT_PUBLIC_DB_URL)
+  const url = BASE_URL + "/v1/products"
   const res = await fetch(url)
 
-  const products: ApiResponse<IProduct[]> = await res.json()
+  const products: ResponseGetAll<IProduct[]> = await res.json()
 
   const paths = products.data.items.map((product) => ({
     params: { id: product.id.toString() },
@@ -30,10 +31,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   product: ResponseById<IProduct>
 }> = async (context) => {
-  const url = new URL(
-    `/v1/products/${context?.params?.id}`,
-    process.env.NEXT_PUBLIC_DB_URL,
-  )
+  const url = BASE_URL + `/v1/products/${context?.params?.id}`
   const res = await fetch(url)
 
   const product = (await res.json()) as ResponseById<IProduct> | undefined
@@ -59,7 +57,6 @@ function DetailProductPage({
       </Head>
       <div className="flex flex-col gap-10">
         <DetailProduct {...product.data} />
-        <OtherProduct />
       </div>
     </>
   )

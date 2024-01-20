@@ -4,7 +4,7 @@ import Head from "next/head"
 import { getSession } from "next-auth/react"
 
 import type { IProfileDoctor, ResponseById } from "@/types/api"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import { getDoctorProfile } from "@/features/profile/api/getDoctorProfile"
 import DoctorProfileForm from "@/features/profile/components/form/doctorProfileForm"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"

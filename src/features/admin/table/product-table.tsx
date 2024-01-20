@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import { deletePost } from "@/lib/fetchers"
+import { deleteProducts, getDrugClassificationName } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +39,8 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
     id: index + 1,
     name: m.name,
     generic_name: m.generic_name,
+    drug_class: m.drug_classification_id,
+    product_category_id: m.product_category_id,
   }))
 
   type Data = (typeof product)[number]
@@ -47,8 +49,6 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
     () => [
       {
         accessorKey: "id",
-        minSize: 200,
-        maxSize: 200,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),
@@ -72,6 +72,29 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
       },
 
       {
+        accessorKey: "drug_class",
+        minSize: 250,
+        maxSize: 250,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Drug Classification" />
+        ),
+        cell: ({ cell }) => {
+          switch (cell.getValue()) {
+            case 1:
+              return "Obat Bebas"
+            case 2:
+              return "Obat Keras"
+            case 3:
+              return "Obat Bebas Terbatas"
+            case 4:
+              return "Non Obat"
+            default:
+              return "Unknown"
+          }
+        },
+      },
+
+      {
         id: "actions",
         cell: ({ row }) => (
           <DropdownMenu>
@@ -79,9 +102,9 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
               <Button
                 aria-label="Open menu"
                 variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
               >
-                <DotsHorizontalIcon className="h-4 w-4" />
+                <DotsHorizontalIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
@@ -92,7 +115,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
                   className="flex justify-between"
                 >
                   View
-                  <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
+                  <ExternalLinkIcon className="ml-1.5 size-3.5" />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -156,6 +179,18 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
       data={product}
       pageCount={pageCount}
       includeSearch={true}
+      filterableColumns={[
+        {
+          id: "drug_class",
+          title: "Classification",
+          options: [
+            { label: "Obat Bebas", value: "1" },
+            { label: "Obat Keras", value: "2" },
+            { label: "Obat Bebas Terbatas", value: "3" },
+            { label: "Non Obat", value: "4" },
+          ],
+        },
+      ]}
     />
   )
 }

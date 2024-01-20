@@ -29,6 +29,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  UncontrolledFormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
@@ -70,7 +71,7 @@ export default function ProductForm({
       name: initialProductData?.data.name ?? "",
       generic_name: initialProductData?.data.generic_name ?? "",
       content: initialProductData?.data.content ?? "",
-      image: initialProductData?.data.image ?? "",
+      image: initialProductData?.data.image ?? { size: 0, extension: "" },
       manufacturer_id: initialProductData?.data.manufacturer_id ?? 1,
       description: initialProductData?.data.description ?? "",
       drug_classification_id:
@@ -87,8 +88,6 @@ export default function ProductForm({
   })
 
   const onSubmit = async (data: ProductInputs) => {
-    setIsLoading(true)
-
     const { success, message } = await updateProducts(
       mode,
       data,
@@ -145,11 +144,7 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="paracetamol, aaa"
-                      {...field}
-                      rows={5}
-                    />
+                    <Textarea placeholder="paracetamol" {...field} rows={5} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -446,8 +441,7 @@ export default function ProductForm({
                               const file = files[0]
                               if (!file) return
 
-                              field.onChange(URL.createObjectURL(file))
-                              // convert to string
+                              field.onChange(file)
                             }}
                             accept="image/*"
                             ref={field.ref}
@@ -460,7 +454,7 @@ export default function ProductForm({
                               asChild
                             >
                               <div>
-                                <UploadCloudIcon className="mr-1.5 h-3.5 w-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
+                                <UploadCloudIcon className="mr-1.5 size-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
                                 Upload
                               </div>
                             </Button>
@@ -469,15 +463,19 @@ export default function ProductForm({
                           {preview && <img src={preview} alt="" />}
                         </>
                       </FormControl>
+
                       {mode === "add" &&
                         form.getFieldState("image").isDirty && (
-                          <img src={field.value} alt={"Image preview"} />
+                          <img
+                            src={URL.createObjectURL(field.value)}
+                            alt={"Image preview"}
+                          />
                         )}
                       {mode === "edit" && initialProductData && (
                         <img
                           src={
                             form.getFieldState("image").isDirty
-                              ? field.value
+                              ? URL.createObjectURL(field.value)
                               : initialProductData.data.image
                           }
                           alt={initialProductData.data.name}
@@ -495,14 +493,11 @@ export default function ProductForm({
             <div className="flex gap-4">
               <Button
                 type="submit"
-                // onClick={() => {
-                //   onSubmit(form.getValues())
-                // }}
                 disabled={form.formState.isSubmitting}
                 className="w-fit"
               >
                 {form.formState.isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 size-4 animate-spin" />
                 )}
                 {toSentenceCase(mode)} Product
               </Button>
@@ -519,7 +514,7 @@ export default function ProductForm({
                       target="_blank"
                     >
                       View product
-                      <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
+                      <ExternalLinkIcon className="ml-1.5 size-3.5" />
                     </Link>
                   </Button>
                 </>

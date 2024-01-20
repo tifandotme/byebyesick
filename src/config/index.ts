@@ -76,6 +76,12 @@ export const siteConfig = {
         role: "superAdmin",
       },
       {
+        title: "Manufacturers",
+        href: "/dashboard/manufacturers",
+        icon: "Manufacturers",
+        role: "superAdmin",
+      },
+      {
         title: "Categories",
         href: "/dashboard/productcategories",
         icon: "ProductCategory",
@@ -191,9 +197,42 @@ export const SortByConfig = [
   { value: "desc", label: "Descending" },
 ]
 
+export const DrugClassConfig = [
+  { value: "1", label: "Obat Bebas" },
+  { value: "2", label: "Obat Keras" },
+  { value: "3", label: "Obat Bebas Terbatas" },
+  { value: "4", label: "Non Obat" },
+]
+
+export const classif = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
+export const categories = {
+  "obat-bebas": 1,
+  "obat-keras": 2,
+  "obat-bebas-terbatas": 3,
+  "non-obat": 4,
+} as const
+
 export const usersRoleIds = {
   1: "superAdmin",
   2: "pharmacyAdmin",
   3: "doctor",
   4: "user",
 } as const
+
+export const PAYMENT_STATUS = {
+  UNPAID: 1,
+  WAITING_FOR_CONFIRMATION: 2,
+  PAYMENT_REJECTED: 3,
+  PAID: 4,
+} as const
+
+export const SUPER_ADMIN_ROLE = 1
+export const PHARMACY_ADMIN_ROLE = 2
+export const DOCTOR_ROLE = 3
+export const PATIENT_ROLE = 4

@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { LoaderIcon, MapPin } from "lucide-react"
+import { LoaderIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import type { CartInputs } from "@/types"
@@ -14,7 +14,6 @@ import {
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { PlaceholderImage } from "@/components/image-placeholer"
-import CollapsableBlock from "@/features/drug/component/collapsableBlock/collapsableBlock"
 import InfoBlock from "@/features/drug/component/infoBlock/infoBlock"
 
 function DetailProduct(data: IProduct) {
@@ -47,63 +46,84 @@ function DetailProduct(data: IProduct) {
   }
 
   return (
-    <div className="mt-8 flex flex-col gap-16 md:flex-row">
-      <div className="flex max-h-[336px] flex-auto justify-center md:w-1/2">
-        {data.image?.length ? (
-          <Image
-            src={data.image ?? "/images/placeholder.webp"}
-            loading="lazy"
-            className="object-cover"
-            alt={data.image ?? data.name}
-            width={600}
-            height={600}
-          />
-        ) : (
-          <PlaceholderImage className="rounded-none" asChild />
-        )}
+    <div className="mx-auto grid max-w-6xl items-start gap-6 px-4 py-6 md:grid-cols-2 lg:gap-12">
+      <div className="grid items-start gap-3 md:grid-cols-5">
+        <div className="md:col-span-4">
+          {data.image?.length ? (
+            <Image
+              src={data.image}
+              loading="lazy"
+              className="object-cover"
+              alt={data.image ?? data.name}
+              width={600}
+              height={600}
+            />
+          ) : (
+            <PlaceholderImage className="rounded-none" asChild />
+          )}
+        </div>
       </div>
-      <div className="flex flex-auto flex-col gap-3 md:w-1/2">
-        <div className="flex">
-          <div className="flex w-full justify-between">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-semibold">{data.name}</h1>
-              <h2 className="text-xl font-medium text-muted-foreground">
-                {formatPrice(data.minimum_price)} -{" "}
-                {formatPrice(data.maximum_price)}/
-                <span>{data.selling_unit}</span>
-              </h2>
-              <h3 className="text-sm font-normal text-muted-foreground">
-                {data.generic_name}
-              </h3>
-              <h4 className="flex gap-2 text-sm">
-                <span className="flex items-center justify-center truncate">
-                  {data.unit_in_pack}/{data.drug_form}
-                </span>
-              </h4>
+      <div className="grid items-start gap-4 md:gap-10">
+        <div className="hidden items-start md:flex">
+          <div className="grid gap-4">
+            <h1 className="text-truncate text-3xl font-bold lg:text-4xl">
+              {data.name}
+            </h1>
+            <p>{data.generic_name}</p>
+            <div className="flex items-center gap-4 font-semibold">
+              {formatPrice(data.minimum_price)} -{" "}
+              {formatPrice(data.maximum_price)}
             </div>
-            <div>
-              <Button
-                aria-label="Add to cart"
-                size="sm"
-                className="h-8 w-full rounded-sm"
-                onClick={() => addToCartt({ product_id: data.id, quantity: 1 })}
-                disabled={isLoading}
-              >
-                {isLoading && <LoaderIcon className="" />}
-                Add to cart
-              </Button>
-            </div>
+
+            <p>Per {data.selling_unit}</p>
           </div>
         </div>
-        <hr className="w-full border-primary" />
-        <div className="flex w-full gap-10">
-          <InfoBlock title="Classification">{drugClassificationName}</InfoBlock>
-          <InfoBlock title="Category">{productCategoryName} </InfoBlock>
-          <InfoBlock title="Manufacturer">
-            <div className="font-semibold">{manufacturerName}</div>
-          </InfoBlock>
+        <form className="grid gap-4 md:gap-10">
+          <div className="grid gap-2"></div>
+          <Button
+            size="lg"
+            onClick={() => addToCartt({ product_id: data.id, quantity: 1 })}
+            disabled={isLoading}
+          >
+            Buy Now
+            {isLoading && <LoaderIcon className="" />}
+          </Button>
+        </form>
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Description</h2>
+          <p>{data.description}</p>
         </div>
-        <CollapsableBlock label="Description" value={data.description} />
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Composition</h2>
+          <p>{data.content}</p>
+        </div>
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Details</h2>
+          <div className="flex w-full gap-10">
+            <InfoBlock title="Drug Form">{data.drug_form}</InfoBlock>
+            <InfoBlock title="Unit in Pack">{data.unit_in_pack}</InfoBlock>
+          </div>
+        </div>
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Information</h2>
+          <div className="flex w-full gap-10">
+            <InfoBlock title="Classification">
+              {drugClassificationName}
+            </InfoBlock>
+            <InfoBlock title="Category">{productCategoryName} </InfoBlock>
+            <InfoBlock title="Manufacturer">{manufacturerName}</InfoBlock>
+          </div>
+        </div>
+
+        <div className="grid gap-4 ">
+          <h2 className="text-2xl font-bold">Details</h2>
+          <div className="flex w-full gap-10">
+            <InfoBlock title="Weight">{data.weight} gr</InfoBlock>
+            <InfoBlock title="Width">{data.width} cm </InfoBlock>
+            <InfoBlock title="Length">{data.length} cm </InfoBlock>
+            <InfoBlock title="Height">{data.height} ml</InfoBlock>
+          </div>
+        </div>
       </div>
     </div>
   )

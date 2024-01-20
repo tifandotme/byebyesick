@@ -1,7 +1,6 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { Pencil1Icon, PlusIcon } from "@radix-ui/react-icons"
-import { PlusCircleIcon } from "lucide-react"
+import { PlusIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
 import {
