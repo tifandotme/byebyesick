@@ -4,6 +4,7 @@ import type {
   GetStaticProps,
   InferGetStaticPropsType,
 } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import {
   BadgeIcon,
@@ -58,12 +59,12 @@ export const getStaticProps: GetStaticProps<{
 }
 
 function DoctorDetail(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading] = React.useState(false)
   console.log(props)
   return (
     <div className="flex w-full items-start justify-center gap-10 p-9 md:flex-row md:gap-10">
       <div className="w-full shrink-0 md:w-1/3">
-        <img
+        <Image
           alt="Doctor's profile photo"
           className="h-auto w-full rounded-lg object-cover"
           height="256"
