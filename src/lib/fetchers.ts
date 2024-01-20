@@ -14,7 +14,6 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
-  AddressI,
   AddressIForm,
   AddressResponse,
   doctorI,
@@ -22,7 +21,6 @@ import type {
   IDrugClassification,
   IManufacturer,
   IncomingRequest,
-  IProduct,
   IProductCategory,
   Pharmacy,
   PharmacyProduct,
