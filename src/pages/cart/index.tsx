@@ -1,6 +1,7 @@
 import React, { type ReactElement } from "react"
 import { useRouter } from "next/router"
 import { CheckCircle2Icon, MapPin } from "lucide-react"
+import { toast } from "sonner"
 
 import { useAddressMain, useAdressList, useCartList } from "@/lib/fetchers"
 import { useAddressStore } from "@/lib/stores/address"
@@ -57,12 +58,17 @@ export default function CartPage() {
   const selectedAddressData = selectedAddress
     ? addressList?.data.items.find((address) => address.id === selectedAddress)
     : addressData?.data
+
   const totalCheckedItems = Object.values(checkedItems).filter(Boolean).length
 
   const handleCheckout = () => {
     const checkedIds = Object.keys(checkedItems).filter(
       (id) => checkedItems[id],
     )
+    if (checkedIds.length === 0) {
+      toast.warning("Please select at least one item")
+      return
+    }
     const idsString = checkedIds.join(",")
     const selectedAddressId = selectedAddress?.toString() ?? ""
     router.push(

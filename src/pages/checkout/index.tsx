@@ -4,13 +4,14 @@ import { useRouter } from "next/router"
 import { MapPin } from "lucide-react"
 import useSWR from "swr"
 
+import type { CheckoutInput } from "@/types"
 import {
   type AddressIForm,
   type AddressResponse,
   type CheckoutResponse,
   type ICheckout,
 } from "@/types/api"
-import { groupBy } from "@/lib/utils"
+import { handleFailedRequest } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
@@ -48,6 +49,31 @@ export default function CheckoutPage() {
       router.push("/cart")
     }
   }, [address, router, isReady])
+
+  async function getShippingMethods(payload: CheckoutInput) {
+    try {
+      const endpoint = `/v1/shipping-methods`
+      const options: RequestInit = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      }
+
+      const res = await fetch(endpoint, options)
+      if (!res.ok) await handleFailedRequest(res)
+      return res.json()
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Something went wrong",
+      }
+    }
+  }
 
   function groupByPharmacyId(items: ICheckout[]) {
     return items.reduce(
@@ -101,7 +127,19 @@ export default function CheckoutPage() {
           ))}
           <Select>
             <SelectTrigger className="">
-              <SelectValue placeholder="Choose Shipping Method" />
+              <SelectValue
+                onClick={async () => {
+                  const res = await getShippingMethods({
+                    address_id: Number(address),
+                    checkout_items: items.map((item) => ({
+                      pharmacy_product_id: item.pharmacy_product.id,
+                      quantity: item.quantity,
+                    })),
+                  })
+                  console.log(res)
+                }}
+                placeholder="Choose Shipping Method"
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
