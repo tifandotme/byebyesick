@@ -52,8 +52,6 @@ export default function ProductForm({
   initialProductData,
 }: ProductFormProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [preview, setPreview] = React.useState<string | null>()
 
   const { data: prodcat } = useSWR<ApiResponse<IProductCategory[]>>(
     `/v1/product-categories`,
@@ -459,8 +457,6 @@ export default function ProductForm({
                               </div>
                             </Button>
                           </label>
-
-                          {preview && <img src={preview} alt="" />}
                         </>
                       </FormControl>
 
