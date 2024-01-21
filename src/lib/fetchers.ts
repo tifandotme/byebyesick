@@ -3,6 +3,7 @@ import useSWR, { mutate } from "swr"
 
 import type {
   CartInputs,
+  CheckoutInput,
   ManufacturersInput,
   PharmacyInputs,
   PharmacyProductInputs,
@@ -14,7 +15,6 @@ import type {
   UserInputs,
 } from "@/types"
 import type {
-  AddressI,
   AddressIForm,
   AddressResponse,
   doctorI,
@@ -22,7 +22,6 @@ import type {
   IDrugClassification,
   IManufacturer,
   IncomingRequest,
-  IProduct,
   IProductCategory,
   Pharmacy,
   PharmacyProduct,
@@ -755,5 +754,31 @@ export const useDoctorList = (search?: string) => {
     doctorIsLoading: isLoading,
     doctorError: error,
     doctorMutate: mutate,
+  }
+}
+
+export async function getShippingMethods(
+  payload: CheckoutInput,
+): Promise<Response> {
+  try {
+    const endpoint = `/v1/shipping-methods`
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+    return res.json()
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    }
   }
 }

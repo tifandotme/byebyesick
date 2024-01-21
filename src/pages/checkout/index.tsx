@@ -1,17 +1,20 @@
 import React, { type ReactElement } from "react"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { MapPin } from "lucide-react"
+import { Loader2, MapPin } from "lucide-react"
+import { toast } from "sonner"
 import useSWR from "swr"
 
-import type { CheckoutInput } from "@/types"
 import {
   type AddressIForm,
   type AddressResponse,
   type CheckoutResponse,
   type ICheckout,
+  type IShippingMethod,
+  type ResponseGetAll,
 } from "@/types/api"
-import { handleFailedRequest } from "@/lib/utils"
+import { getShippingMethods } from "@/lib/fetchers"
+import { formatPrice } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
@@ -29,6 +32,10 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { isReady, query } = router
 
+  const [shippingMethods, setShippingMethods] =
+    React.useState<ResponseGetAll<IShippingMethod[]>>()
+  const [loadingShippingMethods, setLoadingShippingMethods] =
+    React.useState(false)
   const address = isReady ? query.address : null
 
   const ids =
@@ -41,7 +48,9 @@ export default function CheckoutPage() {
   )
 
   const { data: checkoutItems } = useSWR<CheckoutResponse<ICheckout[]>>(
-    `/v1/cart-items/checkout?cart_item_ids=${ids}&latitude=${selectedAddress?.data.latitude}&longitude=${selectedAddress?.data.longitude}`,
+    selectedAddress?.data
+      ? `/v1/cart-items/checkout?cart_item_ids=${ids}&latitude=${selectedAddress.data.latitude}&longitude=${selectedAddress.data.longitude}`
+      : null,
   )
 
   React.useEffect(() => {
@@ -50,45 +59,18 @@ export default function CheckoutPage() {
     }
   }, [address, router, isReady])
 
-  async function getShippingMethods(payload: CheckoutInput) {
-    try {
-      const endpoint = `/v1/shipping-methods`
-      const options: RequestInit = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...payload,
-        }),
-      }
-
-      const res = await fetch(endpoint, options)
-      if (!res.ok) await handleFailedRequest(res)
-      return res.json()
-    } catch (error) {
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Something went wrong",
-      }
-    }
-  }
-
-  function groupByPharmacyId(items: ICheckout[]) {
+  function groupingPharmacyId(items: ICheckout[]) {
     return items.reduce(
-      (acc, item) => {
-        const key = item.pharmacy_product.pharmacy_id
-        if (!acc[key]) {
-          acc[key] = []
-        }
-        acc[key]!.push(item)
-        return acc
+      (accumulator, item) => {
+        const accessorKey = item.pharmacy_product.pharmacy_id
+        accumulator[accessorKey] = accumulator[accessorKey] || []
+        accumulator[accessorKey]!.push(item)
+        return accumulator
       },
       {} as Record<number, ICheckout[]>,
     )
   }
-  const groupedItems = groupByPharmacyId(checkoutItems?.items || [])
+  const groupedPharmacyProducts = groupingPharmacyId(checkoutItems?.items || [])
 
   return (
     <>
@@ -119,36 +101,49 @@ export default function CheckoutPage() {
           </div>
         </CardContent>
       </Card>
-      {Object.entries(groupedItems).map(([pharmacyId, items]) => (
-        <div key={pharmacyId}>
+      {Object.entries(groupedPharmacyProducts).map(([pharmacyId, items]) => (
+        <div key={pharmacyId} className="mb-5">
           <h2>Pharmacy ID: {pharmacyId}</h2>
           {items.map((item) => (
             <CheckoutCard key={item.id} item={item} />
           ))}
-          <Select>
+          <Select
+            onOpenChange={async (open) => {
+              if (open) {
+                setLoadingShippingMethods(true)
+                const result = await getShippingMethods({
+                  address_id: Number(address),
+                  checkout_items: items.map((item) => ({
+                    pharmacy_product_id: item.pharmacy_product.id,
+                    quantity: item.quantity,
+                  })),
+                })
+                setLoadingShippingMethods(false)
+                if (!result.data) {
+                  toast.error("Failed to get shipping methods")
+                } else {
+                  setShippingMethods(
+                    result as unknown as ResponseGetAll<IShippingMethod[]>,
+                  )
+                }
+              }
+            }}
+          >
             <SelectTrigger className="">
-              <SelectValue
-                onClick={async () => {
-                  const res = await getShippingMethods({
-                    address_id: Number(address),
-                    checkout_items: items.map((item) => ({
-                      pharmacy_product_id: item.pharmacy_product.id,
-                      quantity: item.quantity,
-                    })),
-                  })
-                  console.log(res)
-                }}
-                placeholder="Choose Shipping Method"
-              />
+              <SelectValue placeholder="Choose Shipping Method" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
+                <SelectLabel>Shipping Methods</SelectLabel>
+                {loadingShippingMethods ? (
+                  <Loader2 className="ml-6 animate-spin" />
+                ) : (
+                  shippingMethods?.data.items.map((method) => (
+                    <SelectItem key={method.id} value={method.name}>
+                      {method.name} - {formatPrice(method.cost)}
+                    </SelectItem>
+                  ))
+                )}
               </SelectGroup>
             </SelectContent>
           </Select>

@@ -302,6 +302,12 @@ export interface ICheckout {
   pharmacy_product: Omit<PharmacyProduct, "product">
 }
 
+export interface IShippingMethod {
+  id: number
+  name: string
+  cost: string
+}
+
 export interface ITransaction {
   id: number
   date: Date
@@ -350,7 +356,7 @@ export interface doctorI {
   profile_photo: string
   starting_year: number
   doctor_certificate: string
-  doctor_specialization: Specialization
+  doctor_specialization?: Specialization
   consultation_fee: string
   is_online: boolean
 }

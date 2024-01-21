@@ -1,28 +1,15 @@
-import { format } from "path"
 import React from "react"
 import Image from "next/image"
-import { ImageIcon, Loader2 } from "lucide-react"
+import { ImageIcon } from "lucide-react"
 
-import type { ICart, ICheckout, ResponseGetAll } from "@/types/api"
+import type { ICheckout } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 
 interface CheckoutCardProps {
