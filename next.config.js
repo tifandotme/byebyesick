@@ -5,6 +5,16 @@ const config = {
     BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
   },
   basePath: process.env.NEXT_PUBLIC_SITE_PATH,
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: `${process.env.NEXT_PUBLIC_SITE_PATH}`,
+        basePath: false,
+        permanent: false,
+      },
+    ]
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
