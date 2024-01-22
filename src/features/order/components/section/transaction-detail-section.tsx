@@ -65,7 +65,13 @@ function TransactionDetailSection(transaction: ITransaction) {
             {renderBadge(transaction.transaction_status.id)}
             <p className="text-orange-500">
               <Clock10Icon className="mr-1 inline-block " />
-              {formatDate(transaction.date)}
+              {formatDate(
+                new Date(
+                  new Date(transaction.date).setDate(
+                    new Date(transaction.date).getDate() + 3,
+                  ),
+                ),
+              )}
             </p>
           </section>
           <section className="mb-8">
