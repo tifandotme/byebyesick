@@ -31,32 +31,51 @@ export default async function middleware(req: NextRequestWithAuth) {
   )
 
   const isAuthenticated = !!token
-
   if (pathname.startsWith("/auth") && isAuthenticated) {
     if (token && token.user_role_id === SUPER_ADMIN_ROLE) {
-      return NextResponse.redirect(new URL("/dashboard/products", req.url))
+      return NextResponse.redirect(
+        new URL(
+          process.env.NEXT_PUBLIC_SITE_PATH + "/dashboard/products",
+          req.url,
+        ),
+      )
     }
     if (token && token.user_role_id === PHARMACY_ADMIN_ROLE) {
-      return NextResponse.redirect(new URL("/dashboard/pharmacies", req.url))
+      return NextResponse.redirect(
+        new URL(
+          process.env.NEXT_PUBLIC_SITE_PATH + "/dashboard/pharmacies",
+          req.url,
+        ),
+      )
     }
     if (token && token.user_role_id === DOCTOR_ROLE) {
-      return NextResponse.redirect(new URL("/doctor", req.url))
+      return NextResponse.redirect(
+        new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/doctor", req.url),
+      )
     }
-    return NextResponse.redirect(new URL("/", req.url))
+    return NextResponse.redirect(
+      new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/", req.url),
+    )
   }
   if (superAdminProtectedPath) {
     if (!isAuthenticated) {
-      const url = new URL(`/auth/login`, req.url)
+      const url = new URL(
+        process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
+        req.url,
+      )
       url.searchParams.set("callbackUrl", req.nextUrl.pathname)
       return NextResponse.redirect(url)
     }
     if (token.user_role_id !== SUPER_ADMIN_ROLE) {
-      const url = new URL(`/403`, req.url)
+      const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
       return NextResponse.rewrite(url)
     }
   } else if (adminAndPharmacyAdminProtectedPath) {
     if (!isAuthenticated) {
-      const url = new URL(`/auth/login`, req.url)
+      const url = new URL(
+        process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
+        req.url,
+      )
       url.searchParams.set("callbackUrl", req.nextUrl.pathname)
       return NextResponse.redirect(url)
     }
@@ -64,37 +83,55 @@ export default async function middleware(req: NextRequestWithAuth) {
       token.user_role_id !== SUPER_ADMIN_ROLE &&
       token.user_role_id !== PHARMACY_ADMIN_ROLE
     ) {
-      const url = new URL(`/403`, req.url)
+      const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
       return NextResponse.rewrite(url)
     }
   } else if (doctorProtectedPath) {
     if (!isAuthenticated) {
-      const url = new URL(`/auth/login`, req.url)
+      const url = new URL(
+        process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
+        req.url,
+      )
       url.searchParams.set("callbackUrl", req.nextUrl.pathname)
       return NextResponse.redirect(url)
     }
     if (token.user_role_id !== DOCTOR_ROLE) {
-      const url = new URL(`/403`, req.url)
+      const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
       return NextResponse.rewrite(url)
     }
   } else if (pharmaciesAdminProtectedPath) {
     if (!isAuthenticated) {
-      const url = new URL(`/auth/login`, req.url)
+      const url = new URL(
+        process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
+        req.url,
+      )
       url.searchParams.set("callbackUrl", req.nextUrl.pathname)
       return NextResponse.redirect(url)
     }
     if (token.user_role_id !== PHARMACY_ADMIN_ROLE) {
-      const url = new URL(`/403`, req.url)
+      const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
       return NextResponse.rewrite(url)
     }
   } else {
     if (isAuthenticated) {
       if (token.user_role_id === SUPER_ADMIN_ROLE) {
-        return NextResponse.redirect(new URL("/dashboard/products", req.url))
+        return NextResponse.redirect(
+          new URL(
+            process.env.NEXT_PUBLIC_SITE_PATH + "/dashboard/products",
+            req.url,
+          ),
+        )
       } else if (token.user_role_id === PHARMACY_ADMIN_ROLE) {
-        return NextResponse.redirect(new URL("/dashboard/pharmacies", req.url))
+        return NextResponse.redirect(
+          new URL(
+            process.env.NEXT_PUBLIC_SITE_PATH + "/dashboard/pharmacies",
+            req.url,
+          ),
+        )
       } else if (token.user_role_id === DOCTOR_ROLE) {
-        return NextResponse.redirect(new URL("/doctor", req.url))
+        return NextResponse.redirect(
+          new URL(process.env.NEXT_PUBLIC_SITE_PATH + "/doctor", req.url),
+        )
       }
     }
   }
