@@ -308,6 +308,16 @@ export interface IShippingMethod {
   cost: string
 }
 
+export type Order = {
+  shipping_method_id: number
+  shipping_cost: string
+  order_details: CheckoutItem[]
+}
+
+export type CheckoutItem = {
+  pharmacy_product_id: number
+  quantity: number
+}
 export interface ITransaction {
   id: number
   date: Date

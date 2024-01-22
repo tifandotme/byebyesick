@@ -19,11 +19,6 @@ interface CheckoutCardProps {
 export function CheckoutCard({ item }: CheckoutCardProps) {
   return (
     <Card className="mb-2">
-      {/* <CardHeader className="flex flex-row items-center py-4 space-x-4">
-        <CardTitle className="flex-1 line-clamp-1">
-          {item.product.name}
-        </CardTitle>
-      </CardHeader> */}
       <Separator className="mb-4" />
       <CardContent className="pb-6 pl-6 pr-0">
         <CardDescription>

@@ -30,7 +30,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
   const product_ids = cartLineItem.product_id as unknown as number[]
 
   return (
-    <div className="flex w-full items-center space-x-2 xs:w-auto xs:justify-normal md:justify-between">
+    <div className="flex items-center space-x-2 ">
       <div className="flex items-center">
         <Button
           variant="outline"
