@@ -107,6 +107,23 @@ export function getBase64(w: number, h: number) {
   return isBrowser() ? Buffer.from(svg).toString("base64") : window.btoa(svg)
 }
 
+export function groupBy<T>(
+  array: T[],
+  keyGetter: (item: T) => string,
+): Map<string, T[]> {
+  const map = new Map<string, T[]>()
+  array.forEach((item) => {
+    const key = keyGetter(item)
+    const collection = map.get(key)
+    if (!collection) {
+      map.set(key, [item])
+    } else {
+      collection.push(item)
+    }
+  })
+  return map
+}
+
 export const calculateYear = (year: number) => {
   const output = new Date().getFullYear() - year
   if (output > 1) return output + " years"

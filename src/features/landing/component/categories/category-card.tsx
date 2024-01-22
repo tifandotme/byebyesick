@@ -1,4 +1,5 @@
 import * as React from "react"
+import Image from "next/image"
 import Link from "next/link"
 
 import { slugify } from "@/lib/utils"
@@ -23,20 +24,24 @@ export function CategoryCard({
       <>
         <span className="sr-only ">{category}</span>
         <Card
-          className={`relative flex h-full min-h-40 w-full flex-col items-center justify-center ${
+          className={`relative flex size-full min-h-40 flex-col items-center justify-center${
             background
               ? "bg-black/50 text-primary-foreground hover:text-primary"
               : "bg-transparent"
           } overflow-hidden rounded-lg transition-colors hover:bg-muted/50`}
         >
           {background && (
-            <div className="absolute -z-10 h-full w-full">
-              <img src={background} className="h-full w-full object-cover" />
+            <div className="absolute -z-10 size-full">
+              <Image
+                src={background}
+                className="size-full object-cover"
+                alt={""}
+              />
             </div>
           )}
           {icon && (
             <CardHeader>
-              <div className="grid h-11 w-11 place-items-center rounded-full border-2">
+              <div className="grid size-11 place-items-center rounded-full border-2">
                 {icon}
               </div>
             </CardHeader>

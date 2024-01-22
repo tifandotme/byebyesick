@@ -5,7 +5,6 @@ import Head from "next/head"
 import type { ResponseGetAll, Specialization } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import DoctorCategory from "@/features/consultation/component/doctorCategory/doctorCategory"
-import DoctorRecomendation from "@/features/consultation/component/doctorRecomendation/doctorRecomendation"
 
 export const getServerSideProps: GetServerSideProps<{
   category: Specialization[]

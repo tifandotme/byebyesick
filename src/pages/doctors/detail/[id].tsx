@@ -1,9 +1,6 @@
 import React from "react"
-import type {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-} from "next"
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import {
   BadgeIcon,
@@ -13,28 +10,12 @@ import {
   TagIcon,
 } from "lucide-react"
 
-import type { doctorI, ResponseById, ResponseGetAll } from "@/types/api"
+import type { doctorI, ResponseById } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import MainLayout from "@/components/layout/main-layout"
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const url = new URL("/v1/users/doctor", process.env.NEXT_PUBLIC_DB_URL)
-  const res = await fetch(url)
-
-  const doctors: ResponseGetAll<doctorI[]> = await res.json()
-
-  const paths = doctors.data.items.map((doc) => ({
-    params: { id: doc.id.toString() },
-  }))
-
-  return {
-    paths,
-    fallback: "blocking",
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   doctor: ResponseById<doctorI>
 }> = async (context) => {
   const url = new URL(
@@ -48,7 +29,6 @@ export const getStaticProps: GetStaticProps<{
   if (!doctor) {
     return {
       notFound: true,
-      revalidate: 60,
     }
   }
 
@@ -57,13 +37,14 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-function DoctorDetail(props: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [isLoading, setIsLoading] = React.useState(false)
-  console.log(props)
+function DoctorDetail(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
+  const [isLoading] = React.useState(false)
   return (
     <div className="flex w-full items-start justify-center gap-10 p-9 md:flex-row md:gap-10">
       <div className="w-full shrink-0 md:w-1/3">
-        <img
+        <Image
           alt="Doctor's profile photo"
           className="h-auto w-full rounded-lg object-cover"
           height="256"
@@ -85,7 +66,7 @@ function DoctorDetail(props: InferGetStaticPropsType<typeof getStaticProps>) {
           </span>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 md:text-base">
-          {props.doctor.data.doctor_specialization.name}
+          {props.doctor.data.doctor_specialization?.name}
         </p>
         <div className="flex items-center space-x-2">
           <MailIcon />

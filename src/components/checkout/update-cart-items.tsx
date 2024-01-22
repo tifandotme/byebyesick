@@ -18,49 +18,40 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
 
   const [quantity, setQuantity] = React.useState(cartLineItem.quantity)
 
-  const handleDecrement = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity > 0 ? prevQuantity - 1 : 0
-      addToCartt({
-        product_id: cartLineItem.product_id,
-        quantity: newQuantity,
-      }).then(() => cartMutate())
-      return newQuantity
-    })
-  }
-
-  const handleIncrement = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1
-      addToCartt({
-        product_id: cartLineItem.product_id,
-        quantity: newQuantity,
-      }).then(() => cartMutate())
-      return newQuantity
-    })
-  }
   const addToCartt = async (data: CartInputs) => {
     setIsLoading(true)
 
     const { success, message } = await addToCart(data)
-
     success ? toast.success(message) : toast.error(message)
-
     mutate(data)
-
     setIsLoading(false)
   }
 
   const product_ids = cartLineItem.product_id as unknown as number[]
 
   return (
-    <div className="flex w-full items-center justify-between space-x-2 xs:w-auto xs:justify-normal">
+    <div className="flex items-center space-x-2 ">
       <div className="flex items-center">
         <Button
           variant="outline"
           size="icon"
           className="size-8 rounded-r-none"
-          onClick={handleIncrement}
+          onClick={() => {
+            const newQuantity = quantity > 1 ? quantity - 1 : 1
+            setQuantity(newQuantity)
+            const minusItemQuantity = async () => {
+              const { success } = await addToCart({
+                product_id: cartLineItem.product_id,
+                quantity: newQuantity,
+              })
+              if (!success) throw new Error()
+            }
+
+            toast.promise(minusItemQuantity(), {
+              success: "Cart updated successfully",
+              error: "Failed to update Cart",
+            })
+          }}
           disabled={isLoading}
         >
           <MinusIcon className="size-3" aria-hidden="true" />
@@ -73,14 +64,34 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
           value={quantity}
           onChange={(e) => {
             const newQuantity = Number(e.target.value)
-            setQuantity(newQuantity >= 1 ? newQuantity : 1)
+            setQuantity(newQuantity)
+
+            addToCartt({
+              product_id: cartLineItem.product_id,
+              quantity: newQuantity,
+            })
           }}
         />
         <Button
           variant="outline"
           size="icon"
           className="size-8 rounded-l-none"
-          onClick={handleDecrement}
+          onClick={() => {
+            const newQuantity = quantity + 1
+            setQuantity(newQuantity)
+            const addItemQuantity = async () => {
+              const { success } = await addToCart({
+                product_id: cartLineItem.product_id,
+                quantity: newQuantity,
+              })
+              if (!success) throw new Error()
+            }
+
+            toast.promise(addItemQuantity(), {
+              success: "Cart updated successfully",
+              error: "Failed to update Cart",
+            })
+          }}
         >
           <PlusIcon className="size-3" aria-hidden="true" />
           <span className="sr-only">Add one item</span>
@@ -89,7 +100,7 @@ export function UpdateCart({ cartLineItem }: UpdateCartProps) {
       <Button
         variant="outline"
         size="icon"
-        className="size-8"
+        className="size-8 hover:bg-red-500 hover:text-white"
         onClick={() => {
           setIsLoading(true)
           const handleDeleteCartItem = async () => {

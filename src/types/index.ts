@@ -21,6 +21,8 @@ import type {
 import type { userSchema } from "@/lib/validations/user"
 import type { Icons } from "@/components/icons"
 
+import type { CheckoutItem, Order } from "./api"
+
 /**
  * Used in custom fetchers and API routes
  */
@@ -97,3 +99,14 @@ export type ResetPasswordEmailSchemeType = z.infer<
   typeof resetPasswordEmailScheme
 >
 export type NewPasswordEmailSchemeType = z.infer<typeof newPasswordScheme>
+
+export type CheckoutInput = {
+  address_id: number
+  checkout_items: CheckoutItem[]
+}
+
+export type TransactionInput = {
+  address_id: number
+  total_payment: string
+  orders: Order[]
+}
