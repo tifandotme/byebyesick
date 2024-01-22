@@ -15,7 +15,14 @@ import {
 } from "@/types/api"
 import { getShippingMethods } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Select,
   SelectContent,
@@ -25,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Skeleton } from "@/components/ui/skeleton"
 import { CheckoutCard } from "@/components/checkout/checkout-card"
 import MainLayout from "@/components/layout/main-layout"
 
@@ -32,10 +40,16 @@ export default function CheckoutPage() {
   const router = useRouter()
   const { isReady, query } = router
 
-  const [shippingMethods, setShippingMethods] =
-    React.useState<ResponseGetAll<IShippingMethod[]>>()
   const [loadingShippingMethods, setLoadingShippingMethods] =
     React.useState(false)
+  const [selectedShippingMethods, setSelectedShippingMethods] = React.useState<
+    Record<number, IShippingMethod>
+  >({})
+
+  const [shippingMethods, setShippingMethods] = React.useState<
+    Record<number, ResponseGetAll<IShippingMethod[]>>
+  >({})
+
   const address = isReady ? query.address : null
 
   const ids =
@@ -75,80 +89,167 @@ export default function CheckoutPage() {
   return (
     <>
       <Head>
-        <title>Checkout</title>
+        <title>Checkout | ByeByeSick</title>
       </Head>
       <h2 className="py-6 text-2xl font-bold">Checkout Page</h2>
-      <Card className="mb-3 w-full ">
-        <CardHeader>
-          <CardTitle className="text-sm text-muted-foreground md:text-xl">
-            Shipping Address
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <div className="flex space-x-1 ">
-              <MapPin className="mr-2 " />
-              {selectedAddress?.data.name}
-            </div>
-            <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
-              {selectedAddress?.data.address}
-            </p>
-            <p className="truncate text-sm md:mt-0 md:text-base">
-              {selectedAddress?.data.sub_district},{" "}
-              {selectedAddress?.data.district},{" "}
-              {selectedAddress?.data.postal_code}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-      {Object.entries(groupedPharmacyProducts).map(([pharmacyId, items]) => (
-        <div key={pharmacyId} className="mb-5">
-          <h2>Pharmacy ID: {pharmacyId}</h2>
-          {items.map((item) => (
-            <CheckoutCard key={item.id} item={item} />
-          ))}
-          <Select
-            onOpenChange={async (open) => {
-              if (open) {
-                setLoadingShippingMethods(true)
-                const result = await getShippingMethods({
-                  address_id: Number(address),
-                  checkout_items: items.map((item) => ({
-                    pharmacy_product_id: item.pharmacy_product.id,
-                    quantity: item.quantity,
-                  })),
-                })
-                setLoadingShippingMethods(false)
-                if (!result.data) {
-                  toast.error("Failed to get shipping methods")
-                } else {
-                  setShippingMethods(
-                    result as unknown as ResponseGetAll<IShippingMethod[]>,
-                  )
-                }
-              }
-            }}
-          >
-            <SelectTrigger className="">
-              <SelectValue placeholder="Choose Shipping Method" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Shipping Methods</SelectLabel>
-                {loadingShippingMethods ? (
-                  <Loader2 className="ml-6 animate-spin" />
-                ) : (
-                  shippingMethods?.data.items.map((method) => (
-                    <SelectItem key={method.id} value={method.name}>
-                      {method.name} - {formatPrice(method.cost)}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col md:flex-row md:space-x-3">
+        <div className="md:w-2/3">
+          <Card className="mb-3 w-full ">
+            <CardHeader>
+              <CardTitle className="text-sm text-muted-foreground md:text-xl">
+                Shipping Address
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div>
+                <div className="flex space-x-1 ">
+                  <MapPin className="mr-2 " />
+                  {selectedAddress?.data.name}
+                </div>
+                <p className="mt-2 truncate text-sm md:mt-3 md:text-base">
+                  {selectedAddress?.data.address}
+                </p>
+                <p className="truncate text-sm md:mt-0 md:text-base">
+                  {selectedAddress?.data.sub_district},{" "}
+                  {selectedAddress?.data.district},{" "}
+                  {selectedAddress?.data.postal_code}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+          {Object.entries(groupedPharmacyProducts).map(
+            ([pharmacyId, items]) => (
+              <div key={pharmacyId} className="mb-5">
+                <h2 className="text-xl font-semibold text-muted-foreground">
+                  Order {pharmacyId}
+                </h2>
+                {items.map((item) => (
+                  <CheckoutCard key={item.id} item={item} />
+                ))}
+                <Select
+                  onOpenChange={async (open) => {
+                    if (open) {
+                      setLoadingShippingMethods(true)
+                      const result = await getShippingMethods({
+                        address_id: Number(address),
+                        checkout_items: items.map((item) => ({
+                          pharmacy_product_id: item.pharmacy_product.id,
+                          quantity: item.quantity,
+                        })),
+                      })
+                      setLoadingShippingMethods(false)
+                      if (result.data) {
+                        setShippingMethods((prev) => ({
+                          ...prev,
+                          [pharmacyId]: result as unknown as ResponseGetAll<
+                            IShippingMethod[]
+                          >,
+                        }))
+                      } else {
+                        toast.error("Can't get shipping methods")
+                      }
+                    }
+                  }}
+                  onValueChange={(value) => {
+                    const selectedMethod = shippingMethods[
+                      Number(pharmacyId)
+                    ]?.data.items.find((method) => method.name === value)
+
+                    if (selectedMethod) {
+                      setSelectedShippingMethods((prev) => ({
+                        ...prev,
+                        [pharmacyId]: selectedMethod,
+                      }))
+                    }
+                  }}
+                >
+                  <SelectTrigger className="">
+                    <SelectValue placeholder="Choose Shipping Method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Shipping Methods</SelectLabel>
+                      {loadingShippingMethods ? (
+                        <>
+                          <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                          <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                          <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                        </>
+                      ) : (
+                        shippingMethods[Number(pharmacyId)]?.data.items.map(
+                          (method) => (
+                            <SelectItem key={method.id} value={method.name}>
+                              {method.name} - {formatPrice(method.cost)}
+                            </SelectItem>
+                          ),
+                        )
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            ),
+          )}
         </div>
-      ))}
+        <div className="md:w-1/3">
+          <Card className="mb-3 w-full">
+            <CardHeader>
+              <CardTitle className="text-sm text-muted-foreground md:text-xl">
+                Payment Summary
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between">
+                <p>Subtotal:</p>
+                <p>
+                  {formatPrice(
+                    checkoutItems?.items.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        item.quantity * Number(item.pharmacy_product.price),
+                      0,
+                    ) || 0,
+                  )}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p>Shipping:</p>
+                <p>
+                  {formatPrice(
+                    Object.values(selectedShippingMethods).reduce(
+                      (accumulator, method) =>
+                        accumulator + Number(method.cost),
+                      0,
+                    ) || 0,
+                  )}
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p>Total:</p>
+                <p>
+                  {formatPrice(
+                    (checkoutItems?.items.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        (item.quantity * Number(item.pharmacy_product.price) ||
+                          0),
+                      0,
+                    ) || 0) +
+                      (Object.values(selectedShippingMethods).reduce(
+                        (accumulator, method) =>
+                          accumulator + (Number(method?.cost) || 0),
+                        0,
+                      ) || 0),
+                  )}
+                </p>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Pay</Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     </>
   )
 }

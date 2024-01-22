@@ -12,6 +12,7 @@ import type {
   Response,
   StockMutationInputs,
   StockMutationRequestInputs,
+  TransactionInput,
   UserInputs,
 } from "@/types"
 import type {
@@ -772,6 +773,31 @@ export async function getShippingMethods(
       }),
     }
 
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+    return res.json()
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    }
+  }
+}
+
+export async function createTransactions(
+  payload: TransactionInput,
+): Promise<Response> {
+  try {
+    const endpoint = "v1/transactions"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
+    }
     const res = await fetch(BASE_URL + endpoint, options)
     if (!res.ok) await handleFailedRequest(res)
     return res.json()
