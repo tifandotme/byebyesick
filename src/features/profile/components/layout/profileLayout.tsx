@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { MapPinIcon, UserIcon } from "lucide-react"
@@ -27,16 +28,18 @@ function ProfileLayout({
   const { data: session } = useSession()
   const { pathname } = useRouter()
   return (
-    <div className="flex flex-col gap-5 py-5 md:flex-row">
+    <div className="flex w-full max-w-6xl flex-col  gap-5 py-5 md:flex-row">
       <Card className="h-fit md:w-1/2">
         <CardHeader className="flex flex-col items-center">
-          <img
+          <Image
             alt="Man"
             src={
               session?.user.image ||
               "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
             }
-            className="h-24 w-24 rounded-full object-cover"
+            width={96}
+            height={96}
+            className="rounded-full object-cover"
           />
           <CardTitle>{session?.user.name}</CardTitle>
           <CardDescription>{session?.user.email}</CardDescription>

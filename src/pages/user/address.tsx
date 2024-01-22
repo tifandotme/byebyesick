@@ -13,30 +13,32 @@ function AddressPage() {
   const { addressList, addressError, addressIsLoading } = useAdressList()
 
   return (
-    <ProfileLayout
-      title="My Address"
-      desc="User Address Management"
-      action={
-        <AddressModal
-          title="New Address"
-          trigger={
-            <div className="flex items-center justify-center gap-1 text-xs md:text-base">
-              <PlusIcon className="size-5" />
-              New Address
-            </div>
-          }
+    <div className="flex w-full justify-center">
+      <ProfileLayout
+        title="My Address"
+        desc="User Address Management"
+        action={
+          <AddressModal
+            title="New Address"
+            trigger={
+              <div className="flex items-center justify-center gap-1 text-xs md:text-base">
+                <PlusIcon className="size-5" />
+                New Address
+              </div>
+            }
+          />
+        }
+      >
+        <Head>
+          <title>ByeByeSick | Address</title>
+        </Head>
+        {addressError && toast.error("Error fetching address")}
+        <UserAddressList
+          addresses={addressList?.data.items}
+          isLoading={addressIsLoading}
         />
-      }
-    >
-      <Head>
-        <title>ByeByeSick | Address</title>
-      </Head>
-      {addressError && toast.error("Error fetching address")}
-      <UserAddressList
-        addresses={addressList?.data.items}
-        isLoading={addressIsLoading}
-      />
-    </ProfileLayout>
+      </ProfileLayout>
+    </div>
   )
 }
 
