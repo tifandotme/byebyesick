@@ -81,8 +81,20 @@ class MiniGl {
 
               const prefix =
                 "\n              precision highp float;\n            "
-              ;(material.vertexSource = `\n              ${prefix}\n              attribute vec4 position;\n              attribute vec2 uv;\n              attribute vec2 uvNorm;\n              ${getUniformVariableDeclarations(_miniGl.commonUniforms, "vertex")}\n              ${getUniformVariableDeclarations(uniforms, "vertex")}\n              ${vertexShaders}\n            `),
-                (material.Source = `\n              ${prefix}\n              ${getUniformVariableDeclarations(_miniGl.commonUniforms, "fragment")}\n              ${getUniformVariableDeclarations(uniforms, "fragment")}\n              ${fragments}\n            `),
+              ;(material.vertexSource = `\n              ${prefix}\n              attribute vec4 position;\n              attribute vec2 uv;\n              attribute vec2 uvNorm;\n              ${getUniformVariableDeclarations(
+                _miniGl.commonUniforms,
+                "vertex",
+              )}\n              ${getUniformVariableDeclarations(
+                uniforms,
+                "vertex",
+              )}\n              ${vertexShaders}\n            `),
+                (material.Source = `\n              ${prefix}\n              ${getUniformVariableDeclarations(
+                  _miniGl.commonUniforms,
+                  "fragment",
+                )}\n              ${getUniformVariableDeclarations(
+                  uniforms,
+                  "fragment",
+                )}\n              ${fragments}\n            `),
                 (material.vertexShader = getShaderByType(
                   context.VERTEX_SHADER,
                   material.vertexSource,
@@ -191,7 +203,9 @@ class MiniGl {
                       `\n} ${name}${length > 0 ? `[${length}]` : ""};`
                   )
                 }
-                return `uniform ${uniform.type} ${name}${length > 0 ? `[${length}]` : ""};`
+                return `uniform ${uniform.type} ${name}${
+                  length > 0 ? `[${length}]` : ""
+                };`
               }
             }
           },

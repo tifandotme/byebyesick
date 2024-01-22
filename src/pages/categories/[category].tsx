@@ -68,7 +68,6 @@ export default function CategoriesPage({
     return (
       <div className="flex items-center justify-center">
         <p>Error {error.message}</p>
-        {}
       </div>
     )
   }

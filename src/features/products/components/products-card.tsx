@@ -50,7 +50,7 @@ export function ProductCard({
       {...props}
     >
       <Link aria-label={product.name} href={`/products/${product.id}`}>
-        <CardHeader className="">
+        <CardHeader className="border-b p-0">
           <AspectRatio ratio={4 / 3}>
             {product.image?.length ? (
               <Image

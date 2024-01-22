@@ -3,6 +3,7 @@ import useSWR, { mutate } from "swr"
 
 import type {
   CartInputs,
+  CheckoutInput,
   ManufacturersInput,
   PharmacyInputs,
   PharmacyProductInputs,
@@ -11,10 +12,10 @@ import type {
   Response,
   StockMutationInputs,
   StockMutationRequestInputs,
+  TransactionInput,
   UserInputs,
 } from "@/types"
 import type {
-  AddressI,
   AddressIForm,
   AddressResponse,
   doctorI,
@@ -22,8 +23,8 @@ import type {
   IDrugClassification,
   IManufacturer,
   IncomingRequest,
-  IProduct,
   IProductCategory,
+  ITransaction,
   Pharmacy,
   PharmacyProduct,
   ResponseGetAll,
@@ -64,7 +65,7 @@ export async function updatePharmacy(
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       body: JSON.stringify({
         pharmacy_admin_id: session?.user.user_id,
@@ -358,6 +359,7 @@ export async function updateProducts(
 ): Promise<Response> {
   try {
     const formData = new FormData()
+
     formData.append("name", payload.name)
     formData.append("generic_name", payload.generic_name)
     formData.append("content", payload.content)
@@ -389,9 +391,9 @@ export async function updateProducts(
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
-      headers: {
-        accept: "application/json",
-      },
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
       body: formData,
     }
 
@@ -754,5 +756,60 @@ export const useDoctorList = (search?: string) => {
     doctorIsLoading: isLoading,
     doctorError: error,
     doctorMutate: mutate,
+  }
+}
+
+export async function getShippingMethods(
+  payload: CheckoutInput,
+): Promise<Response> {
+  try {
+    const endpoint = `/v1/shipping-methods`
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+    return res.json()
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    }
+  }
+}
+
+export async function createTransactions(
+  payload: TransactionInput,
+): Promise<Response<{ data: ITransaction }>> {
+  try {
+    const endpoint = "/v1/transactions"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
+    }
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+    return {
+      success: true,
+      message: `Transaction created`,
+      data: await res.json(),
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Something went wrong",
+    }
   }
 }

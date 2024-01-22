@@ -1,6 +1,6 @@
 import type { ReactElement } from "react"
 import React from "react"
-import type { GetStaticProps } from "next"
+import type { GetServerSideProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import { ArrowRight, Loader2, MapPin, Tablets } from "lucide-react"
@@ -15,7 +15,7 @@ import { CategoryCard } from "@/features/landing/components/categories/category-
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const url = new URL(
       "/v1/drug-classifications/no-params",

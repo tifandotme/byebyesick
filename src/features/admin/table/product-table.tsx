@@ -6,7 +6,7 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import { deleteProducts, getDrugClassificationName } from "@/lib/fetchers"
+import { deleteProducts } from "@/lib/fetchers"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,6 +70,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
           <DataTableColumnHeader column={column} title="Generic Name" />
         ),
       },
+
       {
         accessorKey: "drug_class",
         minSize: 250,

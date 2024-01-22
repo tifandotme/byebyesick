@@ -236,7 +236,6 @@ export interface IProduct {
   minimum_price: string
   maximum_price: string
 }
-
 export type AddressI = Omit<
   PharmacyInputs,
   | "operationalDays"
@@ -268,7 +267,7 @@ export interface IProfileDoctor {
   profile_photo: string
   starting_year: number
   doctor_certificate: string
-  doctor_specialization: Specialization
+  doctor_specialization: string
   consultation_fee: string
   is_online: boolean
 }
@@ -293,6 +292,38 @@ export type Specialization = {
   image: string
 }
 
+export type CheckoutResponse<TData = unknown> = {
+  total_items: number
+  total_pages: number
+  current_page_total_items: number
+  current_page: number
+  items: TData
+}
+
+export interface ICheckout {
+  id: number
+  user_id: number
+  quantity: number
+  product: IProduct & IManufacturer & IDrugClassification & IProductCategory
+  pharmacy_product: Omit<PharmacyProduct, "product">
+}
+
+export interface IShippingMethod {
+  id: number
+  name: string
+  cost: string
+}
+
+export type Order = {
+  shipping_method_id: number
+  shipping_cost: string
+  order_details: CheckoutItem[]
+}
+
+export type CheckoutItem = {
+  pharmacy_product_id: number
+  quantity: number
+}
 export interface ITransaction {
   id: number
   date: Date
@@ -341,7 +372,7 @@ export interface doctorI {
   profile_photo: string
   starting_year: number
   doctor_certificate: string
-  doctor_specialization: Specialization
+  doctor_specialization?: Specialization
   consultation_fee: string
   is_online: boolean
 }
