@@ -13,7 +13,7 @@ import {
 import type { doctorI, ResponseById } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 
 export const getServerSideProps: GetServerSideProps<{
   doctor: ResponseById<doctorI>
@@ -46,14 +46,17 @@ function DoctorDetail(
       <div className="w-full shrink-0 md:w-1/3">
         <Image
           alt="Doctor's profile photo"
-          className="h-auto w-full rounded-lg object-cover"
-          height="256"
-          src={props.doctor.data.profile_photo || ""}
+          className="rounded-lg object-cover"
+          height="300"
+          src={
+            props.doctor.data.profile_photo ||
+            "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
+          }
           style={{
             aspectRatio: "256/256",
             objectFit: "cover",
           }}
-          width="256"
+          width="300"
         />
       </div>
       <div className="space-y-4">

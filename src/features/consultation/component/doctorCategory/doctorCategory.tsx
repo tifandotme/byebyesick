@@ -5,8 +5,10 @@ import { CategoryCard } from "@/features/landing/component/categories/category-c
 
 function DoctorCategory({ category }: { category: Specialization[] }) {
   return (
-    <>
-      <h1 className="text-2xl font-semibold text-primary">Doctor Categories</h1>
+    <div className="w-full">
+      <h1 className="mb-3 text-3xl font-bold text-primary">
+        Doctor Categories
+      </h1>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
         {category &&
           category.map((cat) => {
@@ -23,7 +25,7 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
             )
           })}
       </div>
-    </>
+    </div>
   )
 }
 
