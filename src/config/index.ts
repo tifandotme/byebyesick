@@ -99,6 +99,12 @@ export const siteConfig = {
         icon: "PieChart",
         role: "superAdmin",
       },
+      {
+        title: "Transactions",
+        href: "/dashboard/transactions",
+        icon: "Transactions",
+        role: "superAdmin",
+      },
     ] satisfies NavItemRequiredWithRole[],
   },
   footerNav: [

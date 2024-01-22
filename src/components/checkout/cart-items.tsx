@@ -66,6 +66,10 @@ export function CartLineItems({
                 <span className="line-clamp-1 font-medium">
                   {item.product.name}
                 </span>
+                <span className="line-clamp-1 text-xs text-muted-foreground">
+                  {formatPrice(Number(item.product.minimum_price))} -
+                  {formatPrice(Number(item.product.maximum_price))}
+                </span>
               </div>
             </div>
             {isCheckable ? (
@@ -79,15 +83,7 @@ export function CartLineItems({
                 </div>
               </>
             ) : (
-              <div className="flex flex-col space-y-1 font-medium">
-                <span className="ml-auto line-clamp-1 text-sm">
-                  {formatPrice(item.product.maximum_price)}
-                </span>
-                <span className="line-clamp-1 text-xs text-muted-foreground">
-                  {formatPrice(Number(item.product.minimum_price))} -{" "}
-                  {formatPrice(Number(item.product.maximum_price))}
-                </span>
-              </div>
+              <div className="flex flex-col space-y-1 font-medium"></div>
             )}
           </div>
         </div>
