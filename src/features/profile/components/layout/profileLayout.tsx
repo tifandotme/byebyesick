@@ -39,7 +39,7 @@ function ProfileLayout({
             }
             width={96}
             height={96}
-            className="rounded-full object-cover"
+            className="size-24 rounded-full object-cover"
           />
           <CardTitle>{session?.user.name}</CardTitle>
           <CardDescription>{session?.user.email}</CardDescription>
