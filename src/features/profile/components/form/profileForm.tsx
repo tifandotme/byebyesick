@@ -91,8 +91,9 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
               userProfile?.profile_photo ||
               "https://cdn0.iconfinder.com/data/icons/communication-456/24/account_profile_user_contact_person_avatar_placeholder-512.png"
             }
-            height={160}
-            width={160}
+            height={100}
+            width={100}
+            className="size-40 rounded-full object-cover"
           />
           <input
             type="file"
