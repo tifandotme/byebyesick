@@ -1,11 +1,5 @@
 import React from "react"
-import type {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType,
-} from "next"
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import {
@@ -46,7 +40,7 @@ export const getServerSideProps: GetServerSideProps<{
 function DoctorDetail(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading] = React.useState(false)
   return (
     <div className="flex w-full items-start justify-center gap-10 p-9 md:flex-row md:gap-10">
       <div className="w-full shrink-0 md:w-1/3">
@@ -72,7 +66,7 @@ function DoctorDetail(
           </span>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 md:text-base">
-          {props.doctor.data.doctor_specialization.name}
+          {props.doctor.data.doctor_specialization?.name}
         </p>
         <div className="flex items-center space-x-2">
           <MailIcon />
