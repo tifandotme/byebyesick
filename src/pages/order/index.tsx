@@ -11,6 +11,7 @@ import { formatDate, formatPrice } from "@/lib/utils"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { MainLayout } from "@/components/layouts/main"
+import Search from "@/features/sales-report/components/search/search"
 
 function OrderListPage() {
   const [search, setSearch] = React.useState<string>("")
@@ -24,8 +25,11 @@ function OrderListPage() {
 
   return (
     <div className="flex justify-center py-9">
-      <div className="flex w-full max-w-6xl flex-col">
-        <div className="mb-3 self-center text-3xl font-bold">Order List</div>
+      <div className="flex w-full max-w-6xl flex-col gap-3">
+        <div className=" self-center text-3xl font-bold">Order List</div>
+        <div className="flex justify-between">
+          <Search setValue={setSearch} />
+        </div>
         <div className="grid grid-cols-1 gap-5">
           {isLoading ? (
             <div className="flex justify-center">loading</div>
