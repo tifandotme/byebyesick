@@ -1,6 +1,6 @@
 import type { ReactElement } from "react"
 import React from "react"
-import type { GetServerSideProps, GetStaticProps } from "next"
+import type { GetServerSideProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import { ArrowRight, Loader2, MapPin, Tablets } from "lucide-react"
@@ -15,38 +15,6 @@ import { CategoryCard } from "@/features/landing/components/categories/category-
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
 
-// export const getStaticProps: GetStaticProps = async () => {
-//   try {
-//     const url = new URL(
-//       "/v1/drug-classifications/no-params",
-//       process.env.DB_URL,
-//     )
-
-//     const response = await fetch(url)
-
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`)
-//     }
-
-//     const data = await response.json()
-
-//     if (!data) {
-//       return {
-//         notFound: true,
-//       }
-//     }
-
-//     return { props: { data } }
-//   } catch (error) {
-//     let errorMessage = "An error occurred"
-//     if (error instanceof Error) {
-//       errorMessage = error.message
-//     }
-//     return {
-//       props: { error: errorMessage },
-//     }
-//   }
-// }
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const url = new URL(

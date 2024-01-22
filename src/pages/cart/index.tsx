@@ -43,8 +43,7 @@ export default function CartPage() {
     setCheckedItems((prevState) => ({ ...prevState, [itemId]: isChecked }))
   }
 
-  const { addressError, addressMutate, addressIsLoading, addressList } =
-    useAdressList()
+  const { addressError, addressList } = useAdressList()
   const { addressData } = useAddressMain()
 
   if (cartisLoading) {
@@ -117,6 +116,11 @@ export default function CartPage() {
                       <DialogDescription>Change Address here</DialogDescription>
                     </DialogHeader>
                     <>
+                      {addressError && (
+                        <div>
+                          <p>Something went wrong</p>
+                        </div>
+                      )}
                       {addressList?.data.items.map((address) => (
                         <div key={address.id}>
                           <div className="mr-auto flex items-center justify-between ">

@@ -286,6 +286,12 @@ export interface AddressIForm {
   status: number
 }
 
+export type Specialization = {
+  id: number
+  name: string
+  image: string
+}
+
 export type CheckoutResponse<TData = unknown> = {
   total_items: number
   total_pages: number
