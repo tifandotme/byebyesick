@@ -344,7 +344,9 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
     const address = addressArr.filter((value) => value).join(", ")
 
     const handlePinpoint = async () => {
-      const res = await fetch(`/api/geocode?address=${address}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_PATH}/api/geocode?address=${address}`,
+      )
 
       const data: Response<Geocode[]> = await res.json()
       if (!data.success) throw new Error("Failed to pinpoint location")
@@ -369,7 +371,7 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
       className="w-full"
       onClick={onClick}
     >
-      <Crosshair2Icon className="mr-2 h-3.5 w-3.5" />
+      <Crosshair2Icon className="mr-2 size-3.5" />
       Pinpoint By Address
     </Button>
   )

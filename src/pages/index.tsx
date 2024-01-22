@@ -103,11 +103,12 @@ export default function HomePage({
             </div>
           ) : (
             <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {data.data.items.map((cat) => (
-                <div key={cat.id}>
-                  <CategoryCard category={cat.name} icon={<Tablets />} />
-                </div>
-              ))}
+              {data &&
+                data.data.items.map((cat) => (
+                  <div key={cat.id}>
+                    <CategoryCard category={cat.name} icon={<Tablets />} />
+                  </div>
+                ))}
             </div>
           )}
         </div>

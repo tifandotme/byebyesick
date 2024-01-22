@@ -54,7 +54,10 @@ export function ProductCard({
           <AspectRatio ratio={4 / 3}>
             {product.image?.length ? (
               <Image
-                src={product.image ?? "/images/product-placeholder.webp"}
+                src={
+                  product.image ??
+                  `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.webp`
+                }
                 loading="lazy"
                 className="object-cover"
                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"

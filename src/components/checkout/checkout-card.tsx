@@ -26,7 +26,10 @@ export function CheckoutCard({ item }: CheckoutCardProps) {
             <div className="relative aspect-square size-16 min-w-fit overflow-hidden rounded">
               {item?.product.image?.length ? (
                 <Image
-                  src={item.product.image ?? "/images/product-placeholder.webp"}
+                  src={
+                    item.product.image ??
+                    `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.webp`
+                  }
                   alt={item.product.name}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   fill
