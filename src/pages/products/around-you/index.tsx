@@ -8,7 +8,7 @@ import { useDebounce } from "@/hooks/use-debounce"
 import useGeolocation from "@/hooks/use-geolocation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import MainNavbar from "@/components/navbar/navbar"
+import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import { ProductCard } from "@/features/products/components/products-card"
 
@@ -42,7 +42,6 @@ export default function SeeAllAroundYou() {
 
   return (
     <>
-      <MainNavbar />
       <div className="w-full bg-[#f0fdf4]">
         <div className="container flex max-w-6xl justify-between ">
           <div className="mb-9 mt-8 md:mt-auto ">
@@ -76,12 +75,21 @@ export default function SeeAllAroundYou() {
       )}
 
       {locationError && (
-        <div>
-          <p>{locationError}</p>
+        <div className="flex flex-col items-center justify-center">
+          <Image
+            src="/images/no-location.svg"
+            className=""
+            width={450}
+            height={450}
+            alt=""
+          />
+          <p className="text-center ">
+            {locationError}, please allow location permission to see products
+          </p>
         </div>
       )}
 
-      {!error && (
+      {!error && !locationError && (
         <>
           <div className="container max-w-6xl">
             <Input
@@ -140,6 +148,6 @@ export default function SeeAllAroundYou() {
     </>
   )
 }
-// SeeAllAroundYou.getLayout = function getLayout(page: React.ReactElement) {
-//   return <MainLayout>{page}</MainLayout>
-// }
+SeeAllAroundYou.getLayout = function getLayout(page: React.ReactElement) {
+  return <MainLayout>{page}</MainLayout>
+}
