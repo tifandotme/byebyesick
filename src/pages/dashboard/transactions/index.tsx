@@ -11,14 +11,13 @@ import TransactionLayout from "@/features/transactions/layout"
 export default function TransactionsTablePage() {
   const router = useRouter()
 
-  const { page, per_page, search, transaction_status_id } = router.query
+  const { page, per_page, transaction_status_id } = router.query
 
   const { data, isLoading, mutate } = useSWR<
     ResponseGetAll<Omit<ITransaction[], "orders">>
   >(() => {
     const params = new URLSearchParams()
     if (per_page) params.set("limit", per_page)
-    if (search) params.set("search", search)
     if (page) params.set("page", page)
     if (transaction_status_id)
       params.set("transaction_status_id", transaction_status_id)
