@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -42,7 +44,7 @@ function MainNavbar() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="secondary"
-                  className="relative h-8 w-8 select-none rounded-full"
+                  className="relative size-8 select-none rounded-full"
                 >
                   <Avatar>
                     <AvatarImage
@@ -50,7 +52,7 @@ function MainNavbar() {
                       className="h-8 w-10"
                       src={session?.user.image}
                     />
-                    <AvatarFallback>YY</AvatarFallback>
+                    <AvatarFallback>{session?.user.name}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -69,19 +71,19 @@ function MainNavbar() {
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
                     <Link href="/user/profile" className="cursor-pointer">
-                      <Icons.Avatar className="mr-2 h-4 w-4" />
+                      <Icons.Avatar className="mr-2 size-4" />
                       Account
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard/item1" className="cursor-pointer">
-                      <Icons.CreditCard className="mr-2 h-4 w-4" />
+                      <Icons.CreditCard className="mr-2 size-4" />
                       Item 1
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard/item2" className="cursor-pointer">
-                      <Icons.Gear className="mr-2 h-4 w-4" />
+                      <Icons.Gear className="mr-2 size-4" />
                       Item2
                     </Link>
                   </DropdownMenuItem>
@@ -96,7 +98,7 @@ function MainNavbar() {
                     }}
                     className="w-full cursor-pointer"
                   >
-                    <ExitIcon className="mr-2 h-4 w-4" />
+                    <ExitIcon className="mr-2 size-4" />
                     Log out
                   </button>
                 </DropdownMenuItem>
