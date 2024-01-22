@@ -6,7 +6,7 @@ import { Tablets } from "lucide-react"
 import useSWR from "swr"
 
 import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"

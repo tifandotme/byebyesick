@@ -4,7 +4,7 @@ import { PlusIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { useAdressList } from "@/lib/fetchers"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import AddressModal from "@/features/profile/components/addressModal/addressModal"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
 import UserAddressList from "@/features/profile/components/userAddressList/userAddressList"
