@@ -44,7 +44,7 @@ function DoctorProfileSection(doctor: IProfileDoctor) {
             {doctorState.name}
           </h1>
           <p className="text-sm text-secondary-foreground">
-            {`${doctorState.doctor_specialization}`}
+            {`${doctorState.doctor_specialization.name}`}
           </p>
         </div>
       </div>
