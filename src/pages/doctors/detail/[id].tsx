@@ -1,7 +1,9 @@
 import React from "react"
 import type {
+  GetServerSideProps,
   GetStaticPaths,
   GetStaticProps,
+  InferGetServerSidePropsType,
   InferGetStaticPropsType,
 } from "next"
 import Image from "next/image"
@@ -14,28 +16,12 @@ import {
   TagIcon,
 } from "lucide-react"
 
-import type { doctorI, ResponseById, ResponseGetAll } from "@/types/api"
+import type { doctorI, ResponseById } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import MainLayout from "@/components/layout/main-layout"
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const url = new URL("/v1/users/doctor", process.env.NEXT_PUBLIC_DB_URL)
-  const res = await fetch(url)
-
-  const doctors: ResponseGetAll<doctorI[]> = await res.json()
-
-  const paths = doctors.data.items.map((doc) => ({
-    params: { id: doc.id.toString() },
-  }))
-
-  return {
-    paths,
-    fallback: "blocking",
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   doctor: ResponseById<doctorI>
 }> = async (context) => {
   const url = new URL(
@@ -49,7 +35,6 @@ export const getStaticProps: GetStaticProps<{
   if (!doctor) {
     return {
       notFound: true,
-      revalidate: 60,
     }
   }
 
@@ -58,9 +43,10 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-function DoctorDetail(props: InferGetStaticPropsType<typeof getStaticProps>) {
+function DoctorDetail(
+  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+) {
   const [isLoading, setIsLoading] = React.useState(false)
-  console.log(props)
   return (
     <div className="flex w-full items-start justify-center gap-10 p-9 md:flex-row md:gap-10">
       <div className="w-full shrink-0 md:w-1/3">

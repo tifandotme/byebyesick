@@ -1,34 +1,14 @@
 import React from "react"
-import type {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-} from "next"
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 
-import type { IProduct, ResponseById, ResponseGetAll } from "@/types/api"
+import type { IProduct, ResponseById } from "@/types/api"
 import MainLayout from "@/components/layout/main-layout"
 import DetailProduct from "@/features/drug/component/section/detail-product"
 
 export const BASE_URL = process.env.DB_URL as string
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const url = BASE_URL + "/v1/products"
-  const res = await fetch(url)
-
-  const products: ResponseGetAll<IProduct[]> = await res.json()
-
-  const paths = products.data.items.map((product) => ({
-    params: { id: product.id.toString() },
-  }))
-
-  return {
-    paths,
-    fallback: "blocking",
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   product: ResponseById<IProduct>
 }> = async (context) => {
   const url = BASE_URL + `/v1/products/${context?.params?.id}`
@@ -49,7 +29,7 @@ export const getStaticProps: GetStaticProps<{
 
 function DetailProductPage({
   product,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>

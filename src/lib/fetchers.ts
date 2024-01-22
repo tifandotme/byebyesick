@@ -24,6 +24,7 @@ import type {
   IManufacturer,
   IncomingRequest,
   IProductCategory,
+  ITransaction,
   Pharmacy,
   PharmacyProduct,
   ResponseGetAll,
@@ -786,9 +787,9 @@ export async function getShippingMethods(
 
 export async function createTransactions(
   payload: TransactionInput,
-): Promise<Response> {
+): Promise<Response<{ data: ITransaction }>> {
   try {
-    const endpoint = "v1/transactions"
+    const endpoint = "/v1/transactions"
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -800,7 +801,11 @@ export async function createTransactions(
     }
     const res = await fetch(BASE_URL + endpoint, options)
     if (!res.ok) await handleFailedRequest(res)
-    return res.json()
+    return {
+      success: true,
+      message: `Transaction created`,
+      data: await res.json(),
+    }
   } catch (error) {
     return {
       success: false,

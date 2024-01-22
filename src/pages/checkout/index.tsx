@@ -1,7 +1,7 @@
 import React, { type ReactElement } from "react"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { Loader2, MapPin } from "lucide-react"
+import { MapPin } from "lucide-react"
 import { toast } from "sonner"
 import useSWR from "swr"
 
@@ -13,7 +13,7 @@ import {
   type IShippingMethod,
   type ResponseGetAll,
 } from "@/types/api"
-import { getShippingMethods } from "@/lib/fetchers"
+import { createTransactions, getShippingMethods } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -245,7 +245,61 @@ export default function CheckoutPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Pay</Button>
+              <Button
+                className="w-full"
+                onClick={() => {
+                  const totalPayment =
+                    (checkoutItems?.items.reduce(
+                      (accumulator, item) =>
+                        accumulator +
+                        item.quantity * Number(item.pharmacy_product.price),
+                      0,
+                    ) || 0) +
+                    (Object.values(selectedShippingMethods).reduce(
+                      (accumulator, method) =>
+                        accumulator + Number(method.cost),
+                      0,
+                    ) || 0)
+
+                  const doTransaction = async () => {
+                    const response = await createTransactions({
+                      address_id: Number(address),
+                      total_payment: String(totalPayment),
+                      orders: Object.entries(groupedPharmacyProducts).map(
+                        ([pharmacyId, items]) => ({
+                          shipping_cost: String(
+                            selectedShippingMethods[Number(pharmacyId)]?.cost,
+                          ),
+                          shipping_method_id:
+                            selectedShippingMethods[Number(pharmacyId)]?.id!,
+                          order_details: items.map((item) => ({
+                            pharmacy_product_id: Number(
+                              item.pharmacy_product.id,
+                            ),
+                            quantity: Number(item.quantity),
+                          })),
+                        }),
+                      ),
+                    })
+                    if (response.success) {
+                      const transactionId = response.data?.data.id
+                      router.push(
+                        `/order/transaction-confirmation/${transactionId}`,
+                      )
+                    } else {
+                      throw new Error(response.message)
+                    }
+                  }
+
+                  toast.promise(doTransaction(), {
+                    success:
+                      "Transaction Created, please upload your payment proof",
+                    error: "Failed to create Transaction",
+                  })
+                }}
+              >
+                Pay
+              </Button>
             </CardFooter>
           </Card>
         </div>
