@@ -78,8 +78,8 @@ export default function CategoriesPage({
       : ""
 
   return (
-    <>
-      <div>
+    <div className="flex justify-center">
+      <div className="max-w-6xl">
         <h1 className="mt-9 text-2xl font-semibold capitalize">
           {categoryTitle}
         </h1>
@@ -113,7 +113,7 @@ export default function CategoriesPage({
                   buttonOpener="Sort By"
                 />
               </div>
-              <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="my-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data?.data.items.map((items) => (
                   <div key={items.id}>
                     <ProductCard product={items} />
@@ -128,7 +128,7 @@ export default function CategoriesPage({
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
