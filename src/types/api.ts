@@ -363,6 +363,19 @@ export interface ITransactionStatus {
   name: string
 }
 
+export interface IPharmacySalesReportByMonth {
+  month: number
+  total_sell: number
+}
+
+export interface IPharmacySalesReportByPharmacy {
+  year: string
+  pharmacy_admin_email: string
+  pharmacy_id: number
+  pharmacy_name: string
+  total_sells: number
+}
+
 export interface doctorI {
   id: number
   email: string

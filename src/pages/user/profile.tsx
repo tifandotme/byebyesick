@@ -4,7 +4,7 @@ import Head from "next/head"
 import { getSession } from "next-auth/react"
 
 import type { IProfileUser, ResponseById } from "@/types/api"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import { getUserProfile } from "@/features/profile/api/getUserProfile"
 import ProfileForm from "@/features/profile/components/form/profileForm"
 import ProfileLayout from "@/features/profile/components/layout/profileLayout"
@@ -32,7 +32,7 @@ function ProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   return (
-    <div className="py-7">
+    <div className="flex w-full justify-center">
       <ProfileLayout title="Profile" desc="User Profile Management">
         <Head>
           <title>ByeByeSick | Profile</title>
