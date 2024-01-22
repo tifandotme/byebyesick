@@ -833,7 +833,7 @@ export async function updatePayment(
     const res = await fetch(url, options)
     if (!res.ok) {
       const errorResponse = await res.json()
-      throw new Error(errorResponse.errors || "An error occurred")
+      throw new Error(errorResponse.errors || "An error occurred") // Use the error message from the backend, or a default message
     }
 
     return {
