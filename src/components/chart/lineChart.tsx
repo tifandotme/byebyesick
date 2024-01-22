@@ -21,40 +21,42 @@ ChartJS.register(
   Legend,
 )
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
-  },
-}
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"]
-export const data = {
+function LineChart({
+  data,
+  title,
   labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: [65, 59, 80, 81, 56, 55, 40],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+  name,
+}: {
+  data: number[]
+  title: string
+  labels: string[]
+  name: string
+}) {
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: false,
+        text: title,
+      },
     },
-    {
-      label: "Dataset 2",
-      data: [28, 48, 40, 19, 86, 27, 90],
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-}
+  }
 
-function LineChart() {
-  return <Line options={options} data={data} />
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: name,
+        data: data,
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  }
+  return <Line options={options} data={chartData} />
 }
 
 export default LineChart
