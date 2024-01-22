@@ -44,7 +44,8 @@ export function CartLineItems({
                 {item?.product.image?.length ? (
                   <Image
                     src={
-                      item.product.image ?? "/images/product-placeholder.webp"
+                      item.product.image ??
+                      `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.webp`
                     }
                     alt={item.product.name ?? item.product.name}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

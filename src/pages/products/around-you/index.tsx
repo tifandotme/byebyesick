@@ -53,7 +53,7 @@ export default function SeeAllAroundYou() {
 
           <div className="mt-auto">
             <Image
-              src="/images/around-me.svg"
+              src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/around-me.svg`}
               alt=""
               width={300}
               height={300}
@@ -77,7 +77,7 @@ export default function SeeAllAroundYou() {
       {locationError && (
         <div className="flex flex-col items-center justify-center">
           <Image
-            src="/images/no-location.svg"
+            src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/no-location.svg`}
             className=""
             width={450}
             height={450}

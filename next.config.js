@@ -4,6 +4,7 @@ const config = {
   env: {
     BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
   },
+  basePath: process.env.NEXT_PUBLIC_SITE_PATH,
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

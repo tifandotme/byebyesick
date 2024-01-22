@@ -82,7 +82,7 @@ export default function SeeAllAroundYourDistrict() {
 
             <div className="mt-auto">
               <img
-                src="/images/around-me.svg"
+                src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/around-me.svg`}
                 alt=""
                 width="300px"
                 height="300px"
