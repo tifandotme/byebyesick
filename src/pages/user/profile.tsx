@@ -32,7 +32,7 @@ function ProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   return (
-    <div className="py-7">
+    <div className="flex w-full justify-center">
       <ProfileLayout title="Profile" desc="User Profile Management">
         <Head>
           <title>ByeByeSick | Profile</title>

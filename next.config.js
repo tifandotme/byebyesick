@@ -23,6 +23,10 @@ const config = {
         protocol: "https",
         hostname: "byebyesick-bucket.irfancen.com",
       },
+      {
+        protocol: "https",
+        hostname: "cdn0.iconfinder.com",
+      },
     ],
   },
 }
