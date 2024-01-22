@@ -3,6 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { getSession } from "next-auth/react"
 
 import type { ITransaction, ResponseById } from "@/types/api"
+import TransactionDetailSection from "@/features/order/components/section/transaction-detail-section"
 
 export const getServerSideProps: GetServerSideProps<{
   props: ITransaction
@@ -32,8 +33,7 @@ export const getServerSideProps: GetServerSideProps<{
 function TransactionDetailPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(props)
-  return <div>TransactionDetailPage</div>
+  return <TransactionDetailSection {...props} />
 }
 
 export default TransactionDetailPage

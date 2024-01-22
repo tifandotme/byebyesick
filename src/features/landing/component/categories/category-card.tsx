@@ -26,7 +26,7 @@ export function CategoryCard({
         <Card
           className={`relative flex size-full min-h-40 flex-col items-center justify-center${
             background
-              ? "bg-black/50 text-primary-foreground hover:text-primary"
+              ? " bg-black/50 text-primary-foreground hover:text-primary"
               : "bg-transparent"
           } overflow-hidden rounded-lg transition-colors hover:bg-muted/50`}
         >
@@ -36,6 +36,7 @@ export function CategoryCard({
                 src={background}
                 className="size-full object-cover"
                 alt={""}
+                fill
               />
             </div>
           )}

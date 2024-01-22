@@ -5,7 +5,7 @@ import Head from "next/head"
 import type { ResponseGetAll, Specialization } from "@/types/api"
 import { useDoctorList } from "@/lib/fetchers"
 import { unslugify } from "@/lib/utils"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import DoctorSearch from "@/features/consultation/component/doctorSearch/doctorSearch"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -39,21 +39,23 @@ function DoctorsByCategoryPage({
   const { doctorIsLoading, doctorList } = useDoctorList(category[0]?.name)
 
   return (
-    <div className="flex h-full min-h-full flex-auto gap-10">
-      <Head>
-        <title>ByeByeSick | {category[0]?.name}</title>
-      </Head>
-      <div className="w-full">
-        {doctorIsLoading ? (
-          <>loading</>
-        ) : (
-          category && (
-            <DoctorSearch
-              title={category[0]?.name}
-              DoctorList={doctorList?.data.items}
-            />
-          )
-        )}
+    <div className="flex h-full min-h-full justify-center gap-10">
+      <div className="max-w-6xl">
+        <Head>
+          <title>ByeByeSick | {category[0]?.name}</title>
+        </Head>
+        <div className="w-full">
+          {doctorIsLoading ? (
+            <>loading</>
+          ) : (
+            category && (
+              <DoctorSearch
+                title={category[0]?.name}
+                DoctorList={doctorList?.data.items}
+              />
+            )
+          )}
+        </div>
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 
 import type { ResponseGetAll, Specialization } from "@/types/api"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import DoctorCategory from "@/features/consultation/component/doctorCategory/doctorCategory"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -24,12 +24,13 @@ function DoctorListPage({
   category,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <div className="flex flex-col gap-5 py-9">
-      <Head>
-        <title>ByeByeSick | Consultation</title>
-      </Head>
-      <DoctorCategory category={category} />
-      {/* <DoctorRecomendation /> */}
+    <div className="flex w-full justify-center py-9">
+      <div className="max-w-6xl">
+        <Head>
+          <title>ByeByeSick | Consultation</title>
+        </Head>
+        <DoctorCategory category={category} />
+      </div>
     </div>
   )
 }

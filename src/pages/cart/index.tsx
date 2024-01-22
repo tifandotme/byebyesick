@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CartLineItems } from "@/components/checkout/cart-items"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 
 export default function CartPage() {
   const { cartdata, cartisLoading } = useCartList()
@@ -75,8 +75,8 @@ export default function CartPage() {
     )
   }
   return (
-    <>
-      <div>
+    <div className="flex w-full items-center justify-center">
+      <div className="w-full max-w-6xl">
         <h1 className="mt-9 text-2xl font-semibold capitalize ">Cart Page</h1>
 
         <div className="space-y-2 md:flex md:space-x-2">
@@ -199,7 +199,7 @@ export default function CartPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 CartPage.getLayout = function getLayout(page: ReactElement) {
