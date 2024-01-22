@@ -55,13 +55,13 @@ export function ProductCard({
             {product.image?.length ? (
               <Image
                 src={
-                  product.image ??
+                  product.image ||
                   `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.webp`
                 }
                 loading="lazy"
                 className="object-cover"
                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-                alt={product.image ?? product.name}
+                alt={product.image || product.name}
                 fill
               />
             ) : (
