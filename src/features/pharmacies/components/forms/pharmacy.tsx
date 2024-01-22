@@ -497,7 +497,9 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
     const address = addressArr.filter((value) => value).join(", ")
 
     const handlePinpoint = async () => {
-      const res = await fetch(`/api/geocode?address=${address}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_PATH}/api/geocode?address=${address}`,
+      )
 
       const data: Response<Geocode[]> = await res.json()
       if (!data.success) throw new Error("Failed to pinpoint location")
