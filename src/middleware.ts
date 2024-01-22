@@ -18,11 +18,15 @@ export default async function middleware(req: NextRequestWithAuth) {
     "/dashboard/productcategories",
     "/dashboard/manufacturers",
   ]
+  const adminAndPharmacyAdminPath = "/dashboard/sales-report"
 
   const doctorProtectedPath = pathname.startsWith(doctorPath)
   const pharmaciesAdminProtectedPath = pathname.startsWith(pharmaciesAdminPath)
   const superAdminProtectedPath = superAdminPath.some((path) =>
     pathname.startsWith(path),
+  )
+  const adminAndPharmacyAdminProtectedPath = pathname.startsWith(
+    adminAndPharmacyAdminPath,
   )
 
   const isAuthenticated = !!token
@@ -39,7 +43,6 @@ export default async function middleware(req: NextRequestWithAuth) {
     }
     return NextResponse.redirect(new URL("/", req.url))
   }
-
   if (superAdminProtectedPath) {
     if (!isAuthenticated) {
       const url = new URL(`/auth/login`, req.url)
@@ -47,6 +50,19 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.redirect(url)
     }
     if (token.user_role_id !== SUPER_ADMIN_ROLE) {
+      const url = new URL(`/403`, req.url)
+      return NextResponse.rewrite(url)
+    }
+  } else if (adminAndPharmacyAdminProtectedPath) {
+    if (!isAuthenticated) {
+      const url = new URL(`/auth/login`, req.url)
+      url.searchParams.set("callbackUrl", req.nextUrl.pathname)
+      return NextResponse.redirect(url)
+    }
+    if (
+      token.user_role_id !== SUPER_ADMIN_ROLE &&
+      token.user_role_id !== PHARMACY_ADMIN_ROLE
+    ) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }

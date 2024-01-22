@@ -338,6 +338,7 @@ export interface IPharmacySalesReportByMonth {
 }
 
 export interface IPharmacySalesReportByPharmacy {
+  year: string
   pharmacy_admin_email: string
   pharmacy_id: number
   pharmacy_name: string
