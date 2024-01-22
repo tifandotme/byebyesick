@@ -24,4 +24,4 @@ function DoctorRecomendation() {
   )
 }
 
-// export default DoctorRecomendation
+export default DoctorRecomendation
