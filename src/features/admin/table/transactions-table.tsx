@@ -10,7 +10,7 @@ import type {
   ITransactionStatus,
   ResponseGetAll,
 } from "@/types/api"
-import { deleteProducts, updatePayment } from "@/lib/fetchers"
+import { updatePayment } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 import {
   AlertDialog,

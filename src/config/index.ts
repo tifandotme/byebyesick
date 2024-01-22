@@ -94,6 +94,12 @@ export const siteConfig = {
         role: "pharmacyAdmin",
       },
       {
+        title: "Sales Report",
+        href: "/dashboard/sales-report",
+        icon: "PieChart",
+        role: "superAdmin",
+      },
+      {
         title: "Transactions",
         href: "/dashboard/transactions",
         icon: "Transactions",

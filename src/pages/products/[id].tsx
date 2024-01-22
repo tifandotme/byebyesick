@@ -3,7 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 
 import type { IProduct, ResponseById } from "@/types/api"
-import MainLayout from "@/components/layout/main-layout"
+import { MainLayout } from "@/components/layouts/main"
 import DetailProduct from "@/features/drug/component/section/detail-product"
 
 export const BASE_URL = process.env.DB_URL as string
