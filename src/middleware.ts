@@ -70,6 +70,16 @@ export default async function middleware(req: NextRequestWithAuth) {
       const url = new URL(`/403`, req.url)
       return NextResponse.rewrite(url)
     }
+  } else {
+    if (isAuthenticated) {
+      if (token.user_role_id === SUPER_ADMIN_ROLE) {
+        return NextResponse.redirect(new URL("/dashboard/products", req.url))
+      } else if (token.user_role_id === PHARMACY_ADMIN_ROLE) {
+        return NextResponse.redirect(new URL("/dashboard/pharmacies", req.url))
+      } else if (token.user_role_id === DOCTOR_ROLE) {
+        return NextResponse.redirect(new URL("/doctor", req.url))
+      }
+    }
   }
 
   return NextResponse.next()

@@ -331,3 +331,15 @@ export interface ITransactionStatus {
   id: number
   name: string
 }
+
+export interface IPharmacySalesReportByMonth {
+  month: number
+  total_sell: number
+}
+
+export interface IPharmacySalesReportByPharmacy {
+  pharmacy_admin_email: string
+  pharmacy_id: number
+  pharmacy_name: string
+  total_sells: number
+}
