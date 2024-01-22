@@ -85,8 +85,8 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
       >
         <label htmlFor="profile" className="self-center ">
           <Image
-            width={40}
-            height={40}
+            width={160}
+            height={160}
             alt="Man"
             src={
               image?.url ||

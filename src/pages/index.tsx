@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const url = new URL(
       "/v1/drug-classifications/no-params",
-      process.env.DB_URL,
+      process.env.NEXT_PUBLIC_DB_URL,
     )
 
     const response = await fetch(url)
@@ -84,8 +84,8 @@ export default function HomePage({
     )
 
   return (
-    <div className="flex justify-center">
-      <div className="max-w-6xl">
+    <div className="container flex justify-center">
+      <div className="container max-w-6xl">
         <Head>
           <title>ByeByeSick | Home</title>
         </Head>
@@ -97,7 +97,7 @@ export default function HomePage({
           </div>
         )}
         <div>
-          {data.data.current_page_total_items == 0 ? (
+          {data?.data.current_page_total_items == 0 ? (
             <div>
               <p>No Product Yet</p>
             </div>
@@ -156,7 +156,7 @@ export default function HomePage({
             </div>
           )}
 
-          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {around?.data.items.slice(0, 6).map((cat) => (
               <div key={cat.id} className="flex justify-center">
                 <ProductCard product={cat} />
@@ -164,17 +164,20 @@ export default function HomePage({
             ))}
           </div>
 
-          <div className="mt-5 flex justify-between text-2xl font-semibold">
-            <h2 className="mt-5 flex items-center">
-              <MapPin className="mr-2" /> Around{" "}
-              {addressData?.data.sub_district}
-            </h2>
-            <Link href="/products/around-your-district">
-              <Button variant={"link"}>
-                See All <ArrowRight className="ml-2 size-4" />
-              </Button>
-            </Link>
-          </div>
+          {addressData && (
+            <div className="mt-5 flex justify-between text-2xl font-semibold">
+              <h2 className="mt-5 flex items-center">
+                <MapPin className="mr-2" /> Around{" "}
+                {addressData?.data.sub_district}
+              </h2>
+              <Link href="/products/around-your-district">
+                <Button variant={"link"}>
+                  See All <ArrowRight className="ml-2 size-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+
           {productByAddress?.data.total_items === 0 && (
             <div>
               <p>

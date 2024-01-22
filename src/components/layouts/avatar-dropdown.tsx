@@ -3,7 +3,6 @@ import { useRouter } from "next/router"
 import { ExitIcon } from "@radix-ui/react-icons"
 import { signOut, useSession } from "next-auth/react"
 
-import { siteConfig } from "@/config"
 import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -45,7 +44,9 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
       )}
       {status === "authenticated" && session && (
         <>
-          <CartSheet />
+          {status === "authenticated" && session.user.user_role_id === 4 && (
+            <CartSheet />
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -59,6 +60,7 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
                   <AvatarImage
                     src={session.user.image}
                     alt={session.user.name}
+                    className="object-cover "
                   />
                   {initials ? (
                     <AvatarFallback>

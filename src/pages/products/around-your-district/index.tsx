@@ -9,7 +9,7 @@ import { useAddressMain, useProductData } from "@/lib/fetchers"
 import { useDebounce } from "@/hooks/use-debounce"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import MainNavbar from "@/components/navbar/navbar"
+import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import { ProductCard } from "@/features/products/components/products-card"
 
@@ -68,7 +68,6 @@ export default function SeeAllAroundYourDistrict() {
 
   return (
     <>
-      <MainNavbar />
       <div>
         <div className="w-full bg-[#f0fdf4]">
           <div className="container flex max-w-6xl justify-between ">
@@ -162,4 +161,10 @@ export default function SeeAllAroundYourDistrict() {
       )}
     </>
   )
+}
+
+SeeAllAroundYourDistrict.getLayout = function getLayout(
+  page: React.ReactElement,
+) {
+  return <MainLayout>{page}</MainLayout>
 }

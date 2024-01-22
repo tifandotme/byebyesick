@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 import { MainLayout } from "@/components/layouts/main"
 import Loader from "@/components/loader"
 import DropdownFilter from "@/features/products/components/filter-sorter"
-import PaginationComponent from "@/features/products/components/pagination-product"
+// import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -42,11 +42,11 @@ export default function CategoriesPage({
   const [sortBy, setSortBy] = useState("desc")
   const [sort, setSort] = useState("date")
 
-  const [, setCurrentPage] = useState<number>(1)
+  // const [, setCurrentPage] = useState<number>(1)
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce(search, 500)
 
-  const { data, error, isLoading } = useProductData<IProduct[]>(
+  const { data, error, isLoading, resetFilters } = useProductData<IProduct[]>(
     {
       drug_class: categories[category],
       search: debouncedSearch,
@@ -77,6 +77,13 @@ export default function CategoriesPage({
       ? unslugify(router.query.category)
       : ""
 
+  const handleResetFilters = () => {
+    resetFilters()
+    setSearch("")
+    setSortBy("")
+    setSort("desc")
+  }
+
   return (
     <div className="flex justify-center">
       <div className="max-w-6xl">
@@ -91,39 +98,54 @@ export default function CategoriesPage({
             </div>
           ) : (
             <>
-              <div className="mt-5 flex w-full max-w-md items-center space-x-2">
-                <Input
-                  type="text"
-                  placeholder="Search products here..."
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Button>Search</Button>
-                <DropdownFilter
-                  filter={sortBy}
-                  setFilter={setSortBy}
-                  options={SortConfig}
-                  title="Sort"
-                  buttonOpener="Sort"
-                />
-                <DropdownFilter
-                  filter={sort}
-                  setFilter={setSort}
-                  options={SortByConfig}
-                  title="Sort By"
-                  buttonOpener="Sort By"
-                />
-              </div>
-              <div className="my-5 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {data?.data.items.map((items) => (
-                  <div key={items.id}>
-                    <ProductCard product={items} />
+              {!error && (
+                <>
+                  <div className="container max-w-6xl">
+                    <Input
+                      type="text"
+                      placeholder="Search products here..."
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="mt-4"
+                    />
                   </div>
-                ))}
-              </div>
-              <PaginationComponent
-                page={data?.data.current_page!}
-                setCurrentPage={setCurrentPage}
-              />
+
+                  <div className="container mr-auto mt-2 flex max-w-6xl space-x-2">
+                    <DropdownFilter
+                      filter={sortBy}
+                      setFilter={setSortBy}
+                      options={SortConfig}
+                      title="Sort"
+                      buttonOpener="Sort"
+                    />
+                    <DropdownFilter
+                      filter={sort}
+                      setFilter={setSort}
+                      options={SortByConfig}
+                      title="Sort By"
+                      buttonOpener="Sort By"
+                    />
+
+                    <Button
+                      className="rounded-full border-dashed border-red-300 text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
+                      variant={"outline"}
+                      size={"sm"}
+                      onClick={handleResetFilters}
+                    >
+                      Reset Filter
+                    </Button>
+                  </div>
+
+                  <div className="container max-w-6xl">
+                    <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+                      {data?.data.items.map((cat) => (
+                        <div key={cat.id}>
+                          <ProductCard product={cat} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>
