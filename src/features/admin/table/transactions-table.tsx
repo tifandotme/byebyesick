@@ -10,7 +10,7 @@ import type {
   ITransactionStatus,
   ResponseGetAll,
 } from "@/types/api"
-import { deleteProducts } from "@/lib/fetchers"
+import { deleteProducts, updatePayment } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 import {
   AlertDialog,
@@ -65,7 +65,6 @@ export function TransactionTable({
           <DataTableColumnHeader column={column} title="No" />
         ),
       },
-
       {
         accessorKey: "payment_method",
         minSize: 200,
@@ -127,7 +126,7 @@ export function TransactionTable({
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/products/${row.original.id}`}
+                  href={`/order/transaction-detail/${row.original.id}`}
                   target="_blank"
                   className="flex justify-between"
                 >
@@ -135,44 +134,85 @@ export function TransactionTable({
                   <ExternalLinkIcon className="ml-1.5 size-3.5" />
                 </Link>
               </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem>
                 <AlertDialog>
-                  <AlertDialogTrigger className="mb-1.5 ml-2 text-sm">
-                    Delete
+                  <AlertDialogTrigger
+                    className="w-full text-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    asChild
+                  >
+                    <span>Accept</span>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>Accept</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        You are about to accept this payment. This action cannot
+                        be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => {
-                          const handleDeletion = async () => {
-                            const { success } = await deleteProducts(
+                          const handleAccept = async () => {
+                            const { success, message } = await updatePayment(
                               row.original.id,
+                              "accept",
                             )
-
-                            if (!success) throw new Error()
+                            if (!success) throw new Error(message)
                             await mutate()
                           }
-
-                          toast.promise(handleDeletion(), {
-                            loading: "Deleting products...",
-                            success: "Products deleted successfully",
-                            error: "Failed to delete products",
+                          toast.promise(handleAccept(), {
+                            loading: "Accepting payment...",
+                            success: "Payment accepted successfully",
+                            error: (err) => `${err.message}`,
                           })
                         }}
                       >
-                        Delete
+                        Accept
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger
+                    className="w-full text-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    asChild
+                  >
+                    <span>Reject</span>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Reject</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You are about to reject this payment. This action cannot
+                        be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          const handleReject = async () => {
+                            const { success, message } = await updatePayment(
+                              row.original.id,
+                              "reject",
+                            )
+                            if (!success) throw new Error(message)
+                            await mutate()
+                          }
+                          toast.promise(handleReject(), {
+                            loading: "Rejecting payment...",
+                            success: "Payment rejected successfully",
+                            error: (err) => `${err.message}`,
+                          })
+                        }}
+                      >
+                        Reject
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -191,7 +231,7 @@ export function TransactionTable({
       columns={columns}
       data={transaction}
       pageCount={pageCount}
-      includeSearch={true}
+      includeSearch={false}
       filterableColumns={[
         {
           id: "transaction_status",

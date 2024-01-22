@@ -170,6 +170,7 @@ export const Icons = {
       height="15"
       viewBox="0 0 15 15"
       fill="none"
+      className="mr-2"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
