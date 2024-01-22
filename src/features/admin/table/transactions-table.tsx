@@ -5,11 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type {
-  ITransaction,
-  ITransactionStatus,
-  ResponseGetAll,
-} from "@/types/api"
+import type { ITransaction, ResponseGetAll } from "@/types/api"
 import { updatePayment } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 import {
@@ -52,6 +48,7 @@ export function TransactionTable({
     payment_method: m.payment_method,
     total_payment: m.total_payment,
     date: m.date,
+    transaction_status_id: m.transaction_status.id,
     transaction_status: m.transaction_status,
   }))
 
@@ -86,30 +83,31 @@ export function TransactionTable({
         },
       },
       {
-        accessorKey: "transaction_status",
+        accessorKey: "transaction_status_id",
         minSize: 200,
         maxSize: 200,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Status Payment" />
         ),
         cell: ({ cell }) => {
-          const status = cell.getValue() as ITransactionStatus
-          switch (status.id) {
+          const status = cell.getValue() as number
+          switch (status) {
             case 1:
-              return <Badge variant={"destructive"}>{status.name}</Badge>
+              return <Badge variant={"destructive"}>Unpaid</Badge>
             case 2:
-              return <Badge variant={"secondary"}>{status.name}</Badge>
+              return <Badge variant={"secondary"}>Waiting for Payment</Badge>
             case 3:
-              return <Badge className="bg-yellow-500">{status.name}</Badge>
+              return <Badge className="bg-yellow-500">Payment Rejected</Badge>
             case 4:
-              return <Badge variant={"success"}>{status.name}</Badge>
+              return <Badge variant={"success"}>Paid</Badge>
             case 5:
-              return <Badge variant={"destructive"}>{status.name}</Badge>
+              return <Badge variant={"destructive"}>Canceled</Badge>
             default:
-              return <Badge variant={"default"}>{status.name}</Badge>
+              return <Badge variant={"default"}>Unpaid</Badge>
           }
         },
       },
+
       {
         id: "actions",
         cell: ({ row }) => (
@@ -234,7 +232,7 @@ export function TransactionTable({
       includeSearch={false}
       filterableColumns={[
         {
-          id: "transaction_status",
+          id: "transaction_status_id",
           title: "Status",
           options: [
             { label: "Unpaid", value: "1" },
