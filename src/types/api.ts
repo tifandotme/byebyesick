@@ -509,3 +509,18 @@ export interface OrderStatusI {
   id: string
   name: string
 }
+
+interface StatusOrder {
+  id: number
+  name: string
+}
+
+export interface IOrderResponse {
+  id: number
+  Pharmacy: Pick<Pharmacy, "id" | "name">
+  date: Date
+  no_of_items: number
+  total_payment: string
+  transaction_id: number
+  Status: StatusOrder
+}

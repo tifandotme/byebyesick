@@ -26,7 +26,10 @@ export default async function middleware(req: NextRequestWithAuth) {
     "/dashboard/manufacturers",
     "/dashboard/transactions",
   ]
-  const adminAndPharmacyAdminPath = "/dashboard/sales-report"
+  const adminAndPharmacyAdminPath = [
+    "/dashboard/sales-report",
+    "/dashboard/orders",
+  ]
 
   const doctorProtectedPath = pathname.startsWith(doctorPath)
   const pharmaciesAdminProtectedPath = pathname.startsWith(pharmaciesAdminPath)
@@ -35,8 +38,8 @@ export default async function middleware(req: NextRequestWithAuth) {
   )
   const consultationBranchingPath = pathname === consultationPath
   const profileBranchingPath = pathname === profilePath
-  const adminAndPharmacyAdminProtectedPath = pathname.startsWith(
-    adminAndPharmacyAdminPath,
+  const adminAndPharmacyAdminProtectedPath = adminAndPharmacyAdminPath.some(
+    (path) => pathname.startsWith(path),
   )
 
   const isAuthenticated = !!token

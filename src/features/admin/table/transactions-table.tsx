@@ -95,7 +95,9 @@ export function TransactionTable({
             case 1:
               return <Badge variant={"destructive"}>Unpaid</Badge>
             case 2:
-              return <Badge variant={"secondary"}>Waiting for Payment</Badge>
+              return (
+                <Badge variant={"secondary"}>Waiting for Confirmation</Badge>
+              )
             case 3:
               return <Badge className="bg-yellow-500">Payment Rejected</Badge>
             case 4:
