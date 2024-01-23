@@ -69,7 +69,12 @@ export default function CartPage() {
       return
     }
     const idsString = checkedIds.join(",")
-    const selectedAddressId = selectedAddress?.toString() ?? ""
+    const selectedAddressId =
+      selectedAddress?.toString() ?? addressData?.data.id.toString()
+    if (!selectedAddressId) {
+      toast.warning("Please select address")
+      return
+    }
     router.push(
       `/checkout?ids=${encodeURIComponent(idsString)}&address=${encodeURIComponent(selectedAddressId)}`,
     )
