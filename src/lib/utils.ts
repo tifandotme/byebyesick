@@ -33,6 +33,45 @@ export function formatDate(date: string | Date, showTime?: boolean) {
   }).format(new Date(date))
 }
 
+export function formatDateChat(date: string) {
+  const messageDate = new Date(date)
+  const now = new Date()
+
+  const sameDay = now.toDateString() === messageDate.toDateString()
+  if (sameDay) {
+    return messageDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  }
+
+  const yesterday = new Date(now)
+  yesterday.setDate(now.getDate() - 1)
+  const isYesterday = yesterday.toDateString() === messageDate.toDateString()
+  if (isYesterday) {
+    return "Yesterday"
+  }
+
+  const sameWeek = now.getDate() - messageDate.getDate() < 7
+  if (sameWeek) {
+    return messageDate.toLocaleDateString([], { weekday: "long" })
+  }
+
+  const sameYear = now.getFullYear() === messageDate.getFullYear()
+  if (sameYear) {
+    return messageDate.toLocaleDateString([], {
+      month: "short",
+      day: "2-digit",
+    })
+  }
+
+  return messageDate.toLocaleDateString([], {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  })
+}
+
 /**
  * @example toSentenceCase("helloWorld") // "Hello World"
  */
@@ -46,6 +85,23 @@ export function removeLastSegment(url: string, nth = 1) {
   const segments = url.split("/")
   segments.splice(-nth, nth)
   return segments.join("/")
+}
+
+export function blobToFile(blob: Blob, fileName: string): File {
+  const file: any = blob
+  file.lastModified = new Date()
+  file.name = fileName
+
+  return file as File
+}
+
+export function fileToBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result?.toString() ?? "")
+    reader.onerror = (error) => reject(error)
+  })
 }
 
 export function slugify(text: string): string {
@@ -82,27 +138,4 @@ export async function handleFailedRequest(res: Response) {
   if (errors.length) console.error(errors)
 
   throw new Error("Operation failed. Please try again later.")
-}
-
-/**
- * Get shimmer effect placeholder for `next/image`
- *
- * Alternative to `plaiceholder`, when SSR is not possible
- */
-export function getBase64(w: number, h: number) {
-  const svg = `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#d9d9d9" offset="20%" />
-      <stop stop-color="#e6e6e6" offset="50%" />
-      <stop stop-color="#d9d9d9" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#d9d9d9" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`
-
-  return isBrowser() ? Buffer.from(svg).toString("base64") : window.btoa(svg)
 }
