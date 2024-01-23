@@ -1,7 +1,8 @@
 import type { z } from "zod"
 
 import type { PharmacyInputs } from "@/types"
-import type { usersRoleIds } from "@/config"
+import type { Message } from "@/types/websocket"
+import type { consultationSessionStatusIds, usersRoleIds } from "@/config"
 import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
@@ -159,6 +160,92 @@ export type IncomingRequest = Request & {
   }
 }
 
+// GET /v1/products/admin
+
+export type Product = Omit<
+  IProduct,
+  "created_at" | "updated_at" | "minimum_price" | "maximum_price"
+>
+
+// GET /v1/sick-leave-forms/:session_id
+
+export type SickLeaveForm = {
+  id: number
+  session_id: number
+  starting_date: string
+  ending_date: string
+  description: string
+  updated_at: string
+  created_at: string
+  prescription: Pick<Prescription, "symptoms" | "diagnosis">
+  user: {
+    email: string
+    name: string
+    date_of_birth: string
+  }
+  doctor: {
+    email: string
+    name: string
+    doctor_specialization: string
+  }
+}
+
+// GET /v1/prescriptions/:session_id
+
+export type PrescriptionProduct = {
+  id: number
+  product_id: number
+  note: string
+  created_at: string
+  updated_at: string
+  product: {
+    id: number
+    name: string
+    generic_name: string
+    content: string
+    image: string
+    manufacturer: {
+      name: string
+      image: string
+    }
+  }
+}
+
+export type Prescription = {
+  id: number
+  session_id: number
+  symptoms: string
+  diagnosis: string
+  created_at: string
+  updated_at: string
+  prescription_products: PrescriptionProduct[]
+}
+
+// GET /v1/chats
+
+export type ChatRoomUser = {
+  user_id: number
+  name: string
+  profile_photo: string
+}
+
+export type ChatRoom = {
+  id: number
+  user_id: number
+  doctor_id: number
+  consultation_session_status_id: keyof typeof consultationSessionStatusIds
+  created_at: string
+  updated_at: string
+  consultation_session_status: {
+    name: (typeof consultationSessionStatusIds)[keyof typeof consultationSessionStatusIds]
+  }
+  user: ChatRoomUser
+  doctor: ChatRoomUser
+  messages: Message[]
+  sick_leave_form?: Omit<SickLeaveForm, "prescription" | "user" | "doctor">
+  prescription?: Prescription
+}
+
 // FOR SCHEMAS
 export type ProductsSchema = {
   data: {
@@ -236,6 +323,7 @@ export interface IProduct {
   minimum_price: string
   maximum_price: string
 }
+
 export type AddressI = Omit<
   PharmacyInputs,
   | "operationalDays"
@@ -324,6 +412,7 @@ export type CheckoutItem = {
   pharmacy_product_id: number
   quantity: number
 }
+
 export interface ITransaction {
   id: number
   date: Date

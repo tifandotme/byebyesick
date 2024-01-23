@@ -5,7 +5,15 @@ import { siteConfig } from "@/config"
 import { SiteFooter } from "@/components/layouts/site-footer"
 import { SiteHeader } from "@/components/layouts/site-header"
 
-export function MainLayout({ children }: React.PropsWithChildren) {
+interface MainLayoutProps
+  extends React.PropsWithChildren<{
+    includeFooter?: boolean
+  }> {}
+
+export function MainLayout({
+  children,
+  includeFooter = true,
+}: MainLayoutProps) {
   return (
     <>
       <Head>
@@ -15,9 +23,9 @@ export function MainLayout({ children }: React.PropsWithChildren) {
       <div className="relative flex min-h-screen flex-col">
         <SiteHeader />
 
-        <main className="min-h-[calc(100vh-5rem)] flex-1">{children}</main>
+        <main className="min-h-[calc(100vh-5rem-1px)] flex-1">{children}</main>
 
-        <SiteFooter />
+        {includeFooter && <SiteFooter />}
       </div>
     </>
   )
