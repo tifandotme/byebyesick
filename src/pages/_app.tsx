@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
       <SessionProvider session={pageProps.session}>
         <SWRConfigWrapper>
-          <ThemeProvider attribute="class">
+          <ThemeProvider attribute="class" defaultTheme="light">
             {getLayout(<Component {...pageProps} />)}
 
             <Toaster richColors />
