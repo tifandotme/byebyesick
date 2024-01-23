@@ -3,6 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { getSession } from "next-auth/react"
 
 import type { ITransaction, ResponseById } from "@/types/api"
+import { MainLayout } from "@/components/layouts/main"
 import TransactionDetailSection from "@/features/order/components/section/transaction-detail-section"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -33,7 +34,12 @@ export const getServerSideProps: GetServerSideProps<{
 function TransactionDetailPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  // console.log(props)
   return <TransactionDetailSection {...props} />
+}
+
+TransactionDetailPage.getLayout = function getLayout(page: React.ReactElement) {
+  return <MainLayout>{page}</MainLayout>
 }
 
 export default TransactionDetailPage
