@@ -3,6 +3,11 @@ import type { z } from "zod"
 import type { usersRoleIds } from "@/config"
 import type { addressSchema } from "@/lib/validations/address"
 import type cartSchema from "@/lib/validations/cart-schema"
+import type {
+  certificateSchema,
+  chatRoomSchema,
+  prescriptionSchema,
+} from "@/lib/validations/consultation"
 import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type {
   pharmacyProductSchema,
@@ -82,6 +87,12 @@ export type UserInputs = z.infer<typeof userSchema>
 export type ProductInputs = z.infer<typeof productSchema>
 
 export type StockMutationInputs = z.infer<typeof stockMutationSchema>
+
+export type chatRoomInputs = z.infer<typeof chatRoomSchema>
+
+export type CertificateInputs = z.infer<typeof certificateSchema>
+
+export type PrescriptionInputs = z.infer<typeof prescriptionSchema>
 
 export type StockMutationRequestInputs = z.infer<
   typeof stockMutationRequestSchema
