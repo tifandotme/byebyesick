@@ -251,6 +251,10 @@ export const DOCTOR_ROLE = 3
 export const PATIENT_ROLE = 4
 
 export const ORDER_STATUS_OPTION: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
   { value: "1", label: "Waiting for Pharmacy" },
   { value: "2", label: "Processed" },
   { value: "3", label: "Sent" },
