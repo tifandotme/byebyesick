@@ -341,6 +341,13 @@ export interface doctorI {
   is_online: boolean
 }
 
+// GET /v1/products/admin
+
+export type Product = Omit<
+  IProduct,
+  "created_at" | "updated_at" | "minimum_price" | "maximum_price"
+>
+
 // GET /v1/sick-leave-forms/:session_id
 
 export type SickLeaveForm = {
