@@ -5,6 +5,7 @@ import { Loader2, ShoppingCart } from "lucide-react"
 
 import { useCartList } from "@/lib/fetchers"
 import { cn } from "@/lib/utils"
+import { useWindowScroll } from "@/hooks/use-window-scroll"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -17,8 +18,12 @@ import {
 } from "@/components/ui/sheet"
 import { CartLineItems } from "@/components/checkout/cart-items"
 
+import { Icons } from "../icons"
+
 export default function CartSheet() {
   const { cartdata } = useCartList()
+  const { y } = useWindowScroll()
+  const isScrolled = y > 100
   if (!cartdata) return <Loader2 />
   const itemCount = cartdata?.data?.items.length ?? 0
 
@@ -26,10 +31,13 @@ export default function CartSheet() {
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          aria-label="Open cart"
-          variant="outline"
           size="icon"
-          className="relative"
+          variant="outline"
+          className={cn(
+            "relative size-9 rounded-md bg-transparent",
+            !isScrolled &&
+              "border-0 text-background drop-shadow-md hover:bg-transparent hover:text-background/70",
+          )}
         >
           {itemCount > 0 && (
             <Badge
@@ -39,7 +47,13 @@ export default function CartSheet() {
               {itemCount}
             </Badge>
           )}
-          <ShoppingCart className="size-4" aria-hidden="true" />
+          <Icons.Cart
+            className={cn(
+              "size-4 transition-[height,_width]",
+              !isScrolled && "size-5",
+            )}
+            aria-hidden="true"
+          />
         </Button>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
