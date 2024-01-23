@@ -24,7 +24,7 @@ function PageHeader({
 }
 
 const headingVariants = cva(
-  "font-bold leading-tight tracking-tighter lg:leading-[1.1]",
+  "font-extrabold leading-tight tracking-tighter lg:leading-[1.1]",
   {
     variants: {
       size: {
@@ -48,7 +48,7 @@ interface PageHeaderHeadingProps
 function PageHeaderHeading({
   className,
   size,
-  as: Comp = "h1",
+  as: Comp = "h2",
   ...props
 }: PageHeaderHeadingProps) {
   return (
