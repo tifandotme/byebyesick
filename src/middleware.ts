@@ -11,7 +11,7 @@ export default async function middleware(req: NextRequestWithAuth) {
   const token = await getToken({ req, secret })
 
   const doctorPath = "/doctor"
-  const pharmaciesAdminPath = "/dashboard/pharmacies"
+  const pharmaciesAdminPath = ["/dashboard/pharmacies", "/dashboard/orders"]
   const superAdminPath = [
     "/dashboard/products",
     "/dashboard/users",
@@ -22,7 +22,9 @@ export default async function middleware(req: NextRequestWithAuth) {
   const adminAndPharmacyAdminPath = "/dashboard/sales-report"
 
   const doctorProtectedPath = pathname.startsWith(doctorPath)
-  const pharmaciesAdminProtectedPath = pathname.startsWith(pharmaciesAdminPath)
+  const pharmaciesAdminProtectedPath = pharmaciesAdminPath.some((path) =>
+    pathname.startsWith(path),
+  )
   const superAdminProtectedPath = superAdminPath.some((path) =>
     pathname.startsWith(path),
   )
