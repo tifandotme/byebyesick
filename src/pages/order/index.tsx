@@ -13,6 +13,26 @@ import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import Search from "@/features/sales-report/components/search/search"
 
+export const setTextColor = (orderStatus: string): string => {
+  let textColor = ""
+  if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
+    textColor = "text-yellow-500"
+  else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
+    textColor = "text-blue-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
+  )
+    textColor = "text-red-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.SENT ||
+    orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
+  )
+    textColor = "text-green-500"
+  else textColor = ""
+  return textColor
+}
+
 function OrderListPage() {
   const [search, setSearch] = React.useState<string>("")
   const [orderStatus, setOrderStatus] = React.useState<string>("")
@@ -30,26 +50,6 @@ function OrderListPage() {
       label: "",
       value: "",
     }
-  }
-
-  const setTextColor = (orderStatus: string): string => {
-    let textColor = ""
-    if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
-      textColor = "text-yellow-500"
-    else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
-      textColor = "text-blue-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
-    )
-      textColor = "text-red-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.SENT ||
-      orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
-    )
-      textColor = "text-green-500"
-    else textColor = ""
-    return textColor
   }
 
   return (
