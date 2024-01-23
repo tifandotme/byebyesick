@@ -47,6 +47,7 @@ export const getServerSideProps: GetServerSideProps<{
 function TransactionConfirmationPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  console.log(props)
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 py-6">
       <TransacrionConfirmationSection {...props} />

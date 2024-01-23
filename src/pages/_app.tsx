@@ -27,7 +27,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link
+          rel="icon"
+          href={`${process.env.NEXT_PUBLIC_SITE_PATH}/favicon.svg`}
+          type="image/svg+xml"
+        />
         <style jsx global>
           {`
           <!-- https://github.com/shadcn-ui/ui/issues/138 -->
@@ -40,7 +44,10 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         </style>
       </Head>
 
-      <SessionProvider session={pageProps.session}>
+      <SessionProvider
+        session={pageProps.session}
+        basePath={`${process.env.NEXT_PUBLIC_SITE_PATH}/api/auth`}
+      >
         <SWRConfigWrapper>
           <ThemeProvider attribute="class">
             {getLayout(<Component {...pageProps} />)}

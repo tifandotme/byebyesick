@@ -17,19 +17,19 @@ function Hero() {
   const contentText = [
     {
       text: "Consult with doctors online",
-      image: "/images/doctor-chat.svg",
+      image: `${process.env.NEXT_PUBLIC_SITE_PATH}/images/doctor-chat.svg`,
       description:
         "Get professional medical advice from the comfort of your home.",
     },
     {
       text: "Order your medications online",
-      image: "/images/doctor-delivery.svg",
+      image: `${process.env.NEXT_PUBLIC_SITE_PATH}/images/doctor-delivery.svg`,
       description:
         "Skip the pharmacy lines. Get your medications delivered to your doorstep.",
     },
     {
       text: "Get your health solutions at one place",
-      image: "/images/doctor-c-3.svg",
+      image: `${process.env.NEXT_PUBLIC_SITE_PATH}/images/doctor-c-3.svg`,
       description:
         "From consultations to medication - we've got all your healthcare needs covered.",
     },
@@ -55,7 +55,7 @@ function Hero() {
           </div>
 
           <img
-            src="/images/doctor-homepage.svg"
+            src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/doctor-homepage.svg`}
             className=""
             width="600px"
             height="600px"
