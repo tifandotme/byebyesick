@@ -4,6 +4,7 @@ import {
   GearIcon,
   PersonIcon,
 } from "@radix-ui/react-icons"
+import { ShoppingBagIcon } from "lucide-react"
 
 type IconProps = React.SVGAttributes<SVGElement>
 
@@ -112,6 +113,7 @@ export const Icons = {
   Person: PersonIcon,
   Avatar: AvatarIcon,
   Gear: GearIcon,
+  ShoppingBag: ShoppingBagIcon,
   Pharmacies: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -389,3 +389,23 @@ export interface doctorI {
   consultation_fee: string
   is_online: boolean
 }
+
+export interface OrderWithStatusI {
+  id: number
+  Pharmacy: PharmacyOrderI
+  date: Date
+  no_of_items: number
+  total_payment: string
+  transaction_id: number
+  Status: OrderStatusI
+}
+
+export interface PharmacyOrderI {
+  id: number
+  name: string
+}
+
+export interface OrderStatusI {
+  id: string
+  name: string
+}

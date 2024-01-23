@@ -3,6 +3,7 @@ import type {
   MainNavItem,
   NavItemRequired,
   NavItemRequiredWithRole,
+  Option,
 } from "@/types"
 
 export const siteConfig = {
@@ -248,3 +249,31 @@ export const SUPER_ADMIN_ROLE = 1
 export const PHARMACY_ADMIN_ROLE = 2
 export const DOCTOR_ROLE = 3
 export const PATIENT_ROLE = 4
+
+export const ORDER_STATUS_OPTION: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
+  { value: "1", label: "Waiting for Pharmacy" },
+  { value: "2", label: "Processed" },
+  { value: "3", label: "Sent" },
+  { value: "4", label: "Order Confirmed" },
+  {
+    value: "5",
+    label: "Canceled by Pharmacy",
+  },
+  {
+    value: "6",
+    label: "Canceled by User",
+  },
+]
+
+export const ORDER_STATUS_MAP = {
+  WAITING_FOR_PHARMACY: "1",
+  PROCESSED: "2",
+  SENT: "3",
+  ORDER_CONFIRMED: "4",
+  CANCELED_BY_PHARMACY: "5",
+  CANCELED_BY_USER: "6",
+}
