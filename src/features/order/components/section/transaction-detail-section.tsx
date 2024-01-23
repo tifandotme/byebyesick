@@ -1,5 +1,6 @@
 import React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Clock10Icon } from "lucide-react"
 
 import type { ITransaction } from "@/types/api"
@@ -157,6 +158,17 @@ function TransactionDetailSection(transaction: ITransaction) {
               <p>Total:</p>
               <p>{formatPrice(totalPrice)}</p>
             </div>
+            {!transaction.payment_proof && (
+              <div>
+                <Link
+                  href={`/order/transaction-confirmation/${transaction.id}`}
+                >
+                  <Button className="mt-6 w-full" variant={"outline"}>
+                    Upload your payment proof
+                  </Button>
+                </Link>
+              </div>
+            )}
             {transaction.payment_proof && (
               <Dialog>
                 <DialogTrigger asChild className="mt-6">
