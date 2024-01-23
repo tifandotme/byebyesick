@@ -152,7 +152,11 @@ export default function HomePage({
 
           {locationError && (
             <div>
-              <p>{locationError}</p>
+              <p>
+                {" "}
+                {locationError}, please allow location permission to see
+                products
+              </p>
             </div>
           )}
 
