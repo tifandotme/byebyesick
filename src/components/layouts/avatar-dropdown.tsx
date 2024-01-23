@@ -31,7 +31,6 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
 
   const onLogout = async () => {
     await signOut({ redirect: false })
-
     router.replace("/auth/login")
   }
 
@@ -95,6 +94,12 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
                   <Link href="/user/profile" className="cursor-pointer">
                     <Icons.Avatar className="mr-2 size-4" />
                     Account
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/order" className="cursor-pointer">
+                    <Icons.ShoppingBag className="mr-2 size-4" />
+                    My Order
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
