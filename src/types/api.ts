@@ -1,6 +1,9 @@
 import type { z } from "zod"
 
-import type { usersRoleIds } from "@/config"
+import type { PharmacyInputs } from "@/types"
+import type { Message } from "@/types/websocket"
+import type { consultationSessionStatusIds, usersRoleIds } from "@/config"
+// import type { manufacturersSchema } from "@/lib/validations/manufacturers-schema"
 import type { productCategoriesSchema } from "@/lib/validations/product-categories-schema"
 import type { productSchema } from "@/lib/validations/products-schema"
 
@@ -190,8 +193,8 @@ export interface IDrugClassification {
 
 export interface IManufacturer {
   id: number
+  image?: string
   name: string
-  image: string
 }
 export interface IProductCategory {
   id: number
@@ -227,4 +230,192 @@ export interface IProduct {
   updated_at: string
   minimum_price: string
   maximum_price: string
+}
+
+export type AddressI = Omit<
+  PharmacyInputs,
+  | "operationalDays"
+  | "closesAt"
+  | "opensAt"
+  | "pharmacistPhone"
+  | "pharmacistName"
+  | "pharmacistLicense"
+  | "operational_hours_open"
+  | "operational_hours_close"
+>
+
+export interface IProfileUser {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  date_of_birth: string
+}
+
+export interface IProfileDoctor {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: Specialization
+  consultation_fee: string
+  is_online: boolean
+}
+
+export interface AddressIForm {
+  id: string
+  name: string
+  address: string
+  sub_district: string
+  district: string
+  city_id: number
+  province_id: number
+  postal_code: string
+  latitude: string
+  longitude: string
+  status: number
+}
+
+export type Specialization = {
+  id: number
+  name: string
+  image: string
+}
+
+export interface ITransaction {
+  id: number
+  date: Date
+  payment_proof: string
+  payment_method: string
+  address: string
+  total_payment: string
+  transaction_status: ITransactionStatus
+  orders: IOrder[]
+}
+
+export interface IOrder {
+  pharmacy_name: string
+  shipping_method: string
+  shipping_cost: string
+  total_payment: string
+  order_details: IOrderDetail[]
+}
+
+export type ITransactionConfirmation = {
+  total_payment: string
+  transaction_status_id: number
+}
+
+export interface IOrderDetail {
+  name: string
+  generic_name: string
+  content: string
+  description: string
+  image: string
+  price: string
+  quantity: number
+}
+
+export interface ITransactionStatus {
+  id: number
+  name: string
+}
+
+export interface doctorI {
+  id: number
+  email: string
+  user_role_id: number
+  is_verified: boolean
+  name: string
+  profile_photo: string
+  starting_year: number
+  doctor_certificate: string
+  doctor_specialization: Specialization
+  consultation_fee: string
+  is_online: boolean
+}
+
+// GET /v1/sick-leave-forms/:session_id
+
+export type SickLeaveForm = {
+  id: number
+  session_id: number
+  starting_date: string
+  ending_date: string
+  description: string
+  updated_at: string
+  created_at: string
+  prescription: Pick<Prescription, "symptoms" | "diagnosis">
+  user: {
+    email: string
+    name: string
+    date_of_birth: string
+  }
+  doctor: {
+    email: string
+    name: string
+    doctor_specialization: string
+  }
+}
+
+// GET /v1/prescriptions/:session_id
+
+export type PrescriptionProduct = {
+  id: number
+  product_id: number
+  note: string
+  created_at: string
+  updated_at: string
+  product: {
+    id: number
+    name: string
+    generic_name: string
+    content: string
+    image: string
+    manufacturer: {
+      name: string
+      image: string
+    }
+  }
+}
+
+export type Prescription = {
+  id: number
+  session_id: number
+  symptoms: string
+  diagnosis: string
+  created_at: string
+  updated_at: string
+  prescription_products: PrescriptionProduct[]
+}
+
+// GET /v1/chats
+
+export type ChatRoomUser = {
+  user_id: number
+  name: string
+  profile_photo: string
+}
+
+export type ChatRoom = {
+  id: number
+  user_id: number
+  doctor_id: number
+  consultation_session_status_id: keyof typeof consultationSessionStatusIds
+  created_at: string
+  updated_at: string
+  consultation_session_status: {
+    name: (typeof consultationSessionStatusIds)[keyof typeof consultationSessionStatusIds]
+  }
+  user: ChatRoomUser
+  doctor: ChatRoomUser
+  messages: Message[]
+  sick_leave_form?: Omit<SickLeaveForm, "prescription" | "user" | "doctor">
+  prescription?: Prescription
 }
