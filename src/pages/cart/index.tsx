@@ -200,7 +200,7 @@ export default function CartPage() {
               </CardContent>
               <CardFooter>
                 <Button onClick={handleCheckout} className="w-full">
-                  Beli
+                  Buy
                 </Button>
               </CardFooter>
             </Card>
