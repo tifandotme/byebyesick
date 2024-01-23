@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
 import Link from "next/link"
 import useSWR from "swr"
@@ -12,6 +14,26 @@ import ChartLoader from "@/components/chart/chartLoader"
 import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import Search from "@/features/sales-report/components/search/search"
+
+export const setTextColor = (orderStatus: string): string => {
+  let textColor = ""
+  if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
+    textColor = "text-yellow-500"
+  else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
+    textColor = "text-blue-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
+  )
+    textColor = "text-red-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.SENT ||
+    orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
+  )
+    textColor = "text-green-500"
+  else textColor = ""
+  return textColor
+}
 
 function OrderListPage() {
   const [search, setSearch] = React.useState<string>("")
@@ -32,30 +54,10 @@ function OrderListPage() {
     }
   }
 
-  const setTextColor = (orderStatus: string): string => {
-    let textColor = ""
-    if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
-      textColor = "text-yellow-500"
-    else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
-      textColor = "text-blue-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
-    )
-      textColor = "text-red-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.SENT ||
-      orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
-    )
-      textColor = "text-green-500"
-    else textColor = ""
-    return textColor
-  }
-
   return (
     <div className="flex justify-center py-9">
       <div className="flex w-full max-w-6xl flex-col gap-3">
-        <div className=" self-center text-3xl font-bold">Order List</div>
+        <div className="self-center text-3xl font-bold ">Order List</div>
         <div className="flex items-center gap-5">
           <Search setValue={setSearch} placeholder="Search Pharmacy" />
           <DropdownFilter
@@ -84,7 +86,7 @@ function OrderListPage() {
                       </div>
                     </div>
                     <div
-                      className={`flex items-center justify-center rounded-md border p-2 font-medium ${setTextColor(order.Status.id)}`}
+                      className={`flex items-center justify-center rounded-md p-2 text-xl font-medium ${setTextColor(order.Status.id)}`}
                     >
                       {order.Status.name}
                     </div>
@@ -105,7 +107,7 @@ function OrderListPage() {
                   <div className="flex items-center gap-2">
                     <div className="text-2xl">
                       Total Payment:{" "}
-                      <span className="font-bold">
+                      <span className="text-3xl font-bold text-apple-500">
                         {formatPrice(order.total_payment)}
                       </span>
                     </div>
@@ -122,7 +124,7 @@ function OrderListPage() {
           )}
           {!isLoading && data && data.data.items.length === 0 && (
             <div className="flex py-9">
-              <div className="flex w-full max-w-6xl flex-col items-center justify-center  gap-3">
+              <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-3">
                 <img
                   src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/empty-order.svg`}
                   className=""
@@ -130,7 +132,7 @@ function OrderListPage() {
                   height="600px"
                   alt=""
                 />
-                <div className=" self-center text-3xl font-bold">
+                <div className="self-center text-3xl font-bold ">
                   No Order Found
                 </div>
               </div>
