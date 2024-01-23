@@ -714,8 +714,6 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
       throw new Error("Failed to delete a product")
     }
 
-    mutate(url)
-
     return {
       success: true,
       message: "Cart deleted",
@@ -941,6 +939,43 @@ export async function updatePayment(
     return {
       success: true,
       message: `Payment ${mode === "accept" ? "accepted" : "rejected"}`,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function updatePharmacyAdminOrder(
+  id: number,
+  mode: "reject" | "accept" | "cancel" | "ship",
+): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/orders/${id}/${mode}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    const res = await fetch(url, options)
+    if (!res.ok) {
+      const errorResponse = await res.json()
+      throw new Error(errorResponse.errors || "An error occurred")
+    }
+
+    return {
+      success: true,
+      message: `Orders ${mode === "accept" ? "accepted" : "rejected"}`,
     }
   } catch (error) {
     return {

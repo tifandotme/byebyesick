@@ -97,6 +97,12 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link href="/transactions" className="cursor-pointer">
+                    <Icons.Transactions className="mr-2 size-4" />
+                    My Transactions
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link href="/order" className="cursor-pointer">
                     <Icons.ShoppingBag className="mr-2 size-4" />
                     My Order

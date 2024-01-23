@@ -106,6 +106,12 @@ export const siteConfig = {
         icon: "Transactions",
         role: "superAdmin",
       },
+      {
+        title: "Orders",
+        href: "/dashboard/orders",
+        icon: "Transactions",
+        role: "pharmacyAdmin",
+      },
     ] satisfies NavItemRequiredWithRole[],
   },
   footerNav: [
@@ -217,13 +223,6 @@ export const DrugClassConfig = [
   { value: "4", label: "Non Obat" },
 ]
 
-export const classif = {
-  "obat-bebas": 1,
-  "obat-keras": 2,
-  "obat-bebas-terbatas": 3,
-  "non-obat": 4,
-} as const
-
 export const categories = {
   "obat-bebas": 1,
   "obat-keras": 2,
@@ -257,6 +256,24 @@ export const PAYMENT_STATUS = {
   PAYMENT_REJECTED: 3,
   PAID: 4,
 } as const
+
+export const PAYMENT_STATUS_OPTION: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
+  { value: "1", label: "Unpaid" },
+  { value: "2", label: "Waiting for Confirmation" },
+  { value: "3", label: "Payment Rejected" },
+  { value: "4", label: "Paid" },
+]
+
+export const PAYMENT_STATUS_MAP = {
+  UNPAID: "1",
+  WAITING_FOR_CONFIRMATION: "2",
+  PAYMENT_REJECTED: "3",
+  PAID: "4",
+}
 
 export const SUPER_ADMIN_ROLE = 1
 export const PHARMACY_ADMIN_ROLE = 2
