@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -44,10 +42,33 @@ function TransactionDetailSection(transaction: ITransaction) {
         return <Badge variant={"default"}>Unknown</Badge>
     }
   }
+  console.log(
+    "Orders:",
+    transaction.orders.map((order) => ({
+      ...order,
+      totalOrderPrice: order.order_details.reduce(
+        (total, detail) =>
+          total + Number(detail.price) * Number(detail.quantity),
+        0,
+      ),
+    })),
+  )
+
+  const totalPrice = transaction.orders.reduce(
+    (total, order) =>
+      total +
+      order.order_details.reduce(
+        (total, detail) =>
+          total + Number(detail.price) * Number(detail.quantity),
+        0,
+      ) +
+      Number(order.shipping_cost),
+    0,
+  )
 
   return (
     <>
-      <div className="container flex min-h-screen max-w-3xl flex-col p-6 dark:bg-gray-800">
+      <div className="container flex min-h-screen max-w-3xl flex-col p-6">
         <header className="flex flex-col items-center gap-4">
           <SiteLogo />
           <div className="text-center">
@@ -110,10 +131,11 @@ function TransactionDetailSection(transaction: ITransaction) {
                   transaction.orders.reduce(
                     (total, order) =>
                       total +
-                      Number(
-                        order.order_details
-                          .map((detail) => detail.price)
-                          .reduce((total, price) => total + Number(price), 0),
+                      order.order_details.reduce(
+                        (total, detail) =>
+                          total +
+                          Number(detail.price) * Number(detail.quantity),
+                        0,
                       ),
                     0,
                   ),
@@ -133,7 +155,7 @@ function TransactionDetailSection(transaction: ITransaction) {
             </div>
             <div className="flex justify-between font-bold">
               <p>Total:</p>
-              <p>{formatPrice(transaction.total_payment)}</p>
+              <p>{formatPrice(totalPrice)}</p>
             </div>
             {transaction.payment_proof && (
               <Dialog>
