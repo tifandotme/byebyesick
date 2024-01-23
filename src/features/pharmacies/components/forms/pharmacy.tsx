@@ -352,7 +352,7 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
                   </FormControl>
                   <SelectContent side="top" className="max-h-[250px]">
                     <SelectGroup>
-                      {Array.from({ length: 23 }, (_, i) => i).map((option) => {
+                      {Array.from({ length: 24 }, (_, i) => i).map((option) => {
                         const hour = option.toString().padStart(2, "0")
 
                         return (
@@ -380,7 +380,6 @@ export function PharmacyForm({ mode, initialData }: PharmacyFormProps) {
           <FormField
             control={form.control}
             name="latitude"
-            rules={{}}
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Latitude</FormLabel>
