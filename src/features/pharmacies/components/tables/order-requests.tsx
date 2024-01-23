@@ -5,8 +5,8 @@ import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
 import type { IOrderResponse } from "@/types/api"
-import { updateStockMutationRequestStatus } from "@/lib/fetchers"
-import { cn, formatDate, formatPrice, toSentenceCase } from "@/lib/utils"
+import { updatePharmacyAdminOrder } from "@/lib/fetchers"
+import { formatDate, formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
@@ -34,8 +34,8 @@ export function OrderRequestsTable({
     requester: request.Pharmacy.name,
     Pharmacy: request.Pharmacy.name,
     items: request.no_of_items,
-
-    status: request.Status.name,
+    status: request.Status.id,
+    statusName: request.Status.name,
     amount: request.total_payment,
     date: request.date,
   }))
@@ -48,14 +48,22 @@ export function OrderRequestsTable({
         accessorKey: "requester",
         enableHiding: false,
         enableSorting: false,
-        minSize: 150,
-        maxSize: 150,
+        minSize: 190,
+        maxSize: 190,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Requester" />
         ),
       },
       {
-        accessorKey: "statusId",
+        accessorKey: "items",
+        enableHiding: false,
+        enableSorting: false,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Items" />
+        ),
+      },
+      {
+        accessorKey: "status",
         enableSorting: false,
         enableHiding: false,
         header: ({ column }) => (
@@ -65,15 +73,19 @@ export function OrderRequestsTable({
           const status = cell.getValue() as number
           switch (status) {
             case 1:
-              return <Badge variant={"destructive"}>Unpaid</Badge>
+              return (
+                <Badge className="bg-orange-500">Waiting For Pharmacy</Badge>
+              )
             case 2:
-              return <Badge variant={"secondary"}>Waiting for Payment</Badge>
+              return <Badge className="bg-green-600">Processed</Badge>
             case 3:
-              return <Badge className="bg-yellow-500">Payment Rejected</Badge>
+              return <Badge className="bg-yellow-500">Sent</Badge>
             case 4:
-              return <Badge variant={"success"}>Paid</Badge>
+              return <Badge className="bg-blue-500">Order Confirmed</Badge>
             case 5:
-              return <Badge variant={"destructive"}>Canceled</Badge>
+              return <Badge variant={"destructive"}>Canceled by Pharmacy</Badge>
+            case 6:
+              return <Badge variant={"destructive"}>Canceled by User</Badge>
             default:
               return <Badge variant={"default"}>Unpaid</Badge>
           }
@@ -105,67 +117,120 @@ export function OrderRequestsTable({
       },
       {
         id: "actions",
-        cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="flex size-8 p-0 data-[state=open]:bg-muted"
-              >
-                <DotsHorizontalIcon className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem
-                onClick={() => {
-                  const handleApproval = async () => {
-                    const { success } = await updateStockMutationRequestStatus(
-                      {
-                        product_stock_mutation_request_status_id: 2,
-                      },
-                      row.original.id,
-                    )
+        cell: ({ row }) => {
+          const status = row.getValue("status") as Data["status"]
 
-                    if (!success) throw new Error()
-                    await mutate()
-                  }
+          return (
+            <>
+              {status !== 3 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      aria-label="Open menu"
+                      variant="ghost"
+                      className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                      <DotsHorizontalIcon className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[130px]">
+                    {status !== 2 && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "accept",
+                                )
 
-                  toast.promise(handleApproval(), {
-                    loading: "Approving request...",
-                    success: "Request approved",
-                    error: "Failed to approve request",
-                  })
-                }}
-              >
-                Accept
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  const handleApproval = async () => {
-                    const { success } = await updateStockMutationRequestStatus(
-                      {
-                        product_stock_mutation_request_status_id: 3,
-                      },
-                      row.original.id,
-                    )
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                    if (!success) throw new Error()
-                    await mutate()
-                  }
+                            toast.promise(handleApproval(), {
+                              loading: "Approving request...",
+                              success: "Request approved",
+                              error: "Failed to approve request",
+                            })
+                          }}
+                        >
+                          Accept
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "reject",
+                                )
 
-                  toast.promise(handleApproval(), {
-                    loading: "Rejecting request...",
-                    success: "Request rejected",
-                    error: "Failed to reject request",
-                  })
-                }}
-              >
-                Reject
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ),
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
+
+                            toast.promise(handleApproval(), {
+                              loading: "Rejecting request...",
+                              success: "Request rejected",
+                              error: "Failed to reject request",
+                            })
+                          }}
+                        >
+                          Reject
+                        </DropdownMenuItem>
+                      </>
+                    )}
+
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const handleApproval = async () => {
+                          const { success } = await updatePharmacyAdminOrder(
+                            row.original.id,
+                            "cancel",
+                          )
+
+                          if (!success) throw new Error()
+                          await mutate()
+                        }
+
+                        toast.promise(handleApproval(), {
+                          loading: "Canceling request...",
+                          success: "Request canceled",
+                          error: "Failed to cancel request",
+                        })
+                      }}
+                    >
+                      Cancel
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const handleApproval = async () => {
+                          const { success } = await updatePharmacyAdminOrder(
+                            row.original.id,
+                            "ship",
+                          )
+
+                          if (!success) throw new Error()
+                          await mutate()
+                        }
+
+                        toast.promise(handleApproval(), {
+                          loading: "Canceling Shipping...",
+                          success: "Request Shipped",
+                          error: "Failed to cancel Shipping",
+                        })
+                      }}
+                    >
+                      Ship
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </>
+          )
+        },
       },
     ],
     [mutate],
@@ -176,18 +241,7 @@ export function OrderRequestsTable({
       columns={columns}
       data={data}
       pageCount={pageCount}
-      includeSearch={false}
-      filterableColumns={[
-        {
-          id: "status",
-          title: "Status",
-          options: [
-            { label: "Pending", value: "1" },
-            { label: "Accepted", value: "2" },
-            { label: "Rejected", value: "3" },
-          ],
-        },
-      ]}
+      includeSearch={true}
     />
   )
 }

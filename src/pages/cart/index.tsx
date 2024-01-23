@@ -155,7 +155,10 @@ export default function CartPage() {
                                 variant={"default"}
                                 type="button"
                                 size={"sm"}
-                                onClick={() => setSelectedAddress(address.id)}
+                                onClick={() => {
+                                  setSelectedAddress(address.id)
+                                  console.log(cartdata)
+                                }}
                               >
                                 Choose
                               </Button>

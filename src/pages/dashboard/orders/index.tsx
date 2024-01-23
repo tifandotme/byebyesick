@@ -1,21 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react"
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import useSWR from "swr"
 
 import type { IOrderResponse, ResponseGetAll } from "@/types/api"
-import { cn } from "@/lib/utils"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { RangeDatePicker } from "@/components/range-date-picker"
-import { PharmaciesLayout } from "@/features/pharmacies/components/layout"
+import { PageHeaderDescription } from "@/components/page-header"
 import { OrderRequestsTable } from "@/features/pharmacies/components/tables/order-requests"
-import { PharmaciesTabs } from "@/features/pharmacies/components/tabs"
 
 export default function OrderRequestsPage() {
   const router = useRouter()
-  const { page, per_page, sort, start_date, end_date, statusId } = router.query
+  const { page, per_page, sort } = router.query
 
   const { data, isLoading, mutate } = useSWR<ResponseGetAll<IOrderResponse[]>>(
     () => {
@@ -24,27 +21,22 @@ export default function OrderRequestsPage() {
       if (per_page) params.set("limit", per_page)
       if (sort) params.set("sort_by", sort.split(".")[0] as string)
       if (sort) params.set("sort", sort.split(".")[1] as string)
-      if (statusId) params.set("mutation_status_id", statusId as string)
-      if (start_date && end_date) {
-        params.set("start_date", start_date)
-        params.set("end_date", end_date)
-      }
 
       return `/v1/orders/pharmacy-admin?${params.toString()}`
     },
   )
 
-  console.log(data)
-
   return (
     <div className="space-y-6 overflow-auto">
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
-          <h3 className="text-2xl font-bold leading-10 tracking-tight">
+          <h3 className="mt-10 text-2xl font-bold leading-10 tracking-tight">
             Order Requests
           </h3>
-          <RangeDatePicker />
         </div>
+        <PageHeaderDescription size="sm">
+          Manage my orders
+        </PageHeaderDescription>
       </div>
 
       {isLoading && !data && (
@@ -54,24 +46,21 @@ export default function OrderRequestsPage() {
           isSearchable={false}
         />
       )}
-      {data && (
+      {data && data.data.items.length > 0 ? (
         <OrderRequestsTable
           data={data.data.items}
           pageCount={data.data.total_pages}
           mutate={mutate}
         />
+      ) : (
+        <div>
+          <img src="/images/empty-order" width="600px" height="600px" alt="" />
+        </div>
       )}
     </div>
   )
 }
 
 OrderRequestsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <DashboardLayout>
-      <PharmaciesLayout>
-        <PharmaciesTabs />
-        {page}
-      </PharmaciesLayout>
-    </DashboardLayout>
-  )
+  return <DashboardLayout>{page}</DashboardLayout>
 }
