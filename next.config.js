@@ -40,6 +40,10 @@ const config = {
         protocol: "https",
         hostname: "cdn0.iconfinder.com",
       },
+      {
+        protocol: "https",
+        hostname: "digitalent.games.test.shopee.io",
+      },
     ],
   },
 }
