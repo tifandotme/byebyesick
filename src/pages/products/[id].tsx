@@ -6,7 +6,7 @@ import type { IProduct, ResponseById } from "@/types/api"
 import { MainLayout } from "@/components/layouts/main"
 import DetailProduct from "@/features/drug/component/section/detail-product"
 
-export const BASE_URL = process.env.DB_URL as string
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 
 export const getServerSideProps: GetServerSideProps<{
   product: ResponseById<IProduct>
