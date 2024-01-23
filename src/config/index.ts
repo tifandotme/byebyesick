@@ -105,6 +105,12 @@ export const siteConfig = {
         icon: "Transactions",
         role: "superAdmin",
       },
+      {
+        title: "Orders",
+        href: "/dashboard/orders",
+        icon: "Transactions",
+        role: "pharmacyAdmin",
+      },
     ] satisfies NavItemRequiredWithRole[],
   },
   footerNav: [
@@ -215,13 +221,6 @@ export const DrugClassConfig = [
   { value: "3", label: "Obat Bebas Terbatas" },
   { value: "4", label: "Non Obat" },
 ]
-
-export const classif = {
-  "obat-bebas": 1,
-  "obat-keras": 2,
-  "obat-bebas-terbatas": 3,
-  "non-obat": 4,
-} as const
 
 export const categories = {
   "obat-bebas": 1,
