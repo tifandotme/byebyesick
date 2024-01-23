@@ -406,6 +406,6 @@ export interface PharmacyOrderI {
 }
 
 export interface OrderStatusI {
-  id: number
+  id: string
   name: string
 }
