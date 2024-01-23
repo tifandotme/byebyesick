@@ -14,11 +14,13 @@ import { Separator } from "@/components/ui/separator"
 
 interface CheckoutCardProps {
   item: ICheckout
+  disabled?: boolean
 }
 
-export function CheckoutCard({ item }: CheckoutCardProps) {
+export function CheckoutCard({ item, disabled = false }: CheckoutCardProps) {
+  const cardClass = disabled ? "opacity-50" : ""
   return (
-    <Card className="mb-2">
+    <Card className={`mb-2 ${cardClass}`}>
       <Separator className="mb-4" />
       <CardContent className="pb-6 pl-6 pr-0">
         <CardDescription>
