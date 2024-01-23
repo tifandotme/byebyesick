@@ -124,9 +124,14 @@ export default function CheckoutPage() {
                   <h2 className="text-xl font-semibold text-muted-foreground">
                     Order {pharmacyId}
                   </h2>
-                  {items.map((item) => (
-                    <CheckoutCard key={item.id} item={item} />
-                  ))}
+                  {!pharmacyId && (
+                    <div>
+                      {items.map((item) => (
+                        <CheckoutCard key={item.id} item={item} />
+                      ))}
+                    </div>
+                  )}
+
                   <Select
                     onOpenChange={async (open) => {
                       if (open) {
