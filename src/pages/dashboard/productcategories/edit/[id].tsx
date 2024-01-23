@@ -1,4 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { BASE_URL } from "@/pages"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,9 +11,9 @@ export const getServerSideProps: GetServerSideProps<{
   data: ProductsCategoriesSchema
 }> = async (context) => {
   const id = context.query.id as string
-  const res = await fetch(
-    `http://10.20.191.30:8080/v1/product-categories/${id}`,
-  )
+  const url = BASE_URL + `/v1/product-categories/${id}`
+
+  const res = await fetch(url)
   const data = await res.json()
 
   if (!data) {

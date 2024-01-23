@@ -1,5 +1,6 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import { useRouter } from "next/router"
+import { BASE_URL } from "@/pages"
 import { toast } from "sonner"
 
 import type { ProductsCategoriesSchema } from "@/types/api"
@@ -30,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<{
   data: ProductsCategoriesSchema
 }> = async (context) => {
   const id = context.query.id as string
-  const url = new URL(`/v1/manufacturers/${id}`, process.env.NEXT_PUBLIC_DB_URL)
+  const url = BASE_URL + `/v1/manufacturers/${id}`
   const res = await fetch(url)
   const data = await res.json()
 

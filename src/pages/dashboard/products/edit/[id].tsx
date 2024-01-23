@@ -1,4 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
+import { BASE_URL } from "@/pages"
 import { getSession } from "next-auth/react"
 
 import type { ProductsSchema } from "@/types/api"
@@ -13,7 +14,7 @@ export const getServerSideProps: GetServerSideProps<{
   const session = await getSession(context)
 
   const id = context.query.id as string
-  const url = process.env.NEXT_PUBLIC_DB_URL + `/v1/products/${id}/admin`
+  const url = BASE_URL + `/v1/products/${id}/admin`
 
   const res = await fetch(url, {
     headers: {

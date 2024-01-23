@@ -22,10 +22,7 @@ export default async function handler(
       })
     }
 
-    const url = new URL("https://maps.googleapis.com/maps/api/geocode/json")
-    url.searchParams.append("key", process.env.GOOGLE_MAPS_API_KEY as string)
-    url.searchParams.append("address", address)
-    url.searchParams.append("region", "id")
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?key=${process.env.GOOGLE_MAPS_API_KEY as string}&address=${address}&region=id`
 
     const response = await fetch(url)
 

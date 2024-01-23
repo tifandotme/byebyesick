@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/pages"
+
 export async function getDoctorProfile(token: string) {
   var requestOptions: RequestInit = {
     method: "GET",
@@ -5,5 +7,7 @@ export async function getDoctorProfile(token: string) {
       Authorization: `Bearer ${token}`,
     },
   }
-  return fetch(`${process.env.BASE_URL}/v1/profile/doctor`, requestOptions)
+
+  const url = BASE_URL + "/v1/profile/doctor"
+  return fetch(url, requestOptions)
 }
