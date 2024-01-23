@@ -44,7 +44,7 @@ export function HomeHeader() {
             className={cn(
               "text-[0.95rem]",
               !isScrolled &&
-                "!bg-transparent font-bold text-background drop-shadow-lg hover:text-background/70 dark:text-white hover:dark:text-white/70",
+                "!bg-transparent font-bold text-background drop-shadow-lg hover:text-background/70 focus:text-background active:text-background dark:text-white hover:dark:text-white/70",
             )}
           />
         </div>
