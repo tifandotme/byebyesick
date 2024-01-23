@@ -1,6 +1,8 @@
 import Link from "next/link"
 
 import { siteConfig } from "@/config"
+import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/icons"
 import { AvatarDropdown } from "@/components/layouts/avatar-dropdown"
 import { MainNav } from "@/components/layouts/main-nav"
 import { MobileNav } from "@/components/layouts/mobile-nav"
@@ -25,6 +27,17 @@ export function SiteHeader() {
         />
 
         <div className="flex items-center space-x-4">
+          <Button
+            size="icon"
+            variant="outline"
+            className="size-9 rounded-md bg-transparent"
+          >
+            <Icons.Cart
+              className="size-4 transition-[height,_width]"
+              aria-hidden="true"
+            />
+          </Button>
+
           <AvatarDropdown />
         </div>
       </div>
