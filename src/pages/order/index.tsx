@@ -84,7 +84,7 @@ function OrderListPage() {
                       </div>
                     </div>
                     <div
-                      className={`flex items-center justify-center rounded-md border p-2 font-medium ${setTextColor(order.Status.id)}`}
+                      className={`flex items-center justify-center rounded-md p-2 text-xl font-medium ${setTextColor(order.Status.id)}`}
                     >
                       {order.Status.name}
                     </div>
@@ -105,7 +105,7 @@ function OrderListPage() {
                   <div className="flex items-center gap-2">
                     <div className="text-2xl">
                       Total Payment:{" "}
-                      <span className="font-bold">
+                      <span className="text-3xl font-bold text-apple-500">
                         {formatPrice(order.total_payment)}
                       </span>
                     </div>
