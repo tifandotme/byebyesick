@@ -11,7 +11,7 @@ import {
 import { toast } from "sonner"
 
 import type { AddressFormSchemaType, Response } from "@/types"
-import type { AddressI, AddressIForm } from "@/types/api"
+import type { AddressI, AddressIForm, ResponseById } from "@/types/api"
 import type { Location } from "@/types/gmaps"
 import { useAdressList } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
@@ -90,8 +90,10 @@ function AddressForm({
           },
           initialData.id,
         )
-        if (!result?.ok) {
-          throw new Error(result.statusText)
+        const parsed = await result.json()
+        if (!result.ok) {
+          if (parsed.errors) throw new Error(parsed.errors[0])
+          throw new Error("Failed to add new address")
         }
         toast.success("Success edit address", { duration: 2000 })
       } else {
@@ -106,8 +108,10 @@ function AddressForm({
           longitude: data.longitude,
           name: data.name,
         })
-        if (!result?.ok) {
-          throw new Error(result.statusText)
+        const parsed: ResponseById<AddressI> = await result.json()
+        if (!result.ok) {
+          if (parsed.errors) throw new Error(parsed.errors[0])
+          throw new Error("Failed to edit address")
         }
         toast.success("Success add new address", { duration: 2000 })
       }
@@ -344,7 +348,9 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
     const address = addressArr.filter((value) => value).join(", ")
 
     const handlePinpoint = async () => {
-      const res = await fetch(`/api/geocode?address=${address}`)
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_PATH}/api/geocode?address=${address}`,
+      )
 
       const data: Response<Geocode[]> = await res.json()
       if (!data.success) throw new Error("Failed to pinpoint location")
@@ -369,7 +375,7 @@ function PinpointButton({ form, onPinpoint }: PinpointButtonProps) {
       className="w-full"
       onClick={onClick}
     >
-      <Crosshair2Icon className="mr-2 h-3.5 w-3.5" />
+      <Crosshair2Icon className="mr-2 size-3.5" />
       Pinpoint By Address
     </Button>
   )

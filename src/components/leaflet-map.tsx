@@ -68,8 +68,8 @@ function LocationMarker({ coords, onCoordsChange }: LocationMarkerProps) {
       position={coords}
       ref={markerRef}
       icon={L.icon({
-        iconUrl: "/images/marker-icon-2x.png",
-        shadowUrl: "/images/marker-shadow.png",
+        iconUrl: `${process.env.NEXT_PUBLIC_SITE_PATH}/images/marker-icon-2x.png`,
+        shadowUrl: `${process.env.NEXT_PUBLIC_SITE_PATH}/images/marker-shadow.png`,
         iconSize: [25, 40],
         iconAnchor: [20, 40],
       })}

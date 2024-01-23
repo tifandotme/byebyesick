@@ -4,6 +4,19 @@ const config = {
   env: {
     BASE_URL: process.env.NEXT_PUBLIC_DB_URL,
   },
+  basePath: process.env.NEXT_PUBLIC_SITE_PATH,
+
+  async redirects() {
+    if (process.env.NEXT_PUBLIC_SITE_PATH === "") return []
+    return [
+      {
+        source: "/",
+        destination: `${process.env.NEXT_PUBLIC_SITE_PATH}`,
+        basePath: false,
+        permanent: false,
+      },
+    ]
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
