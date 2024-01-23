@@ -33,6 +33,8 @@ import {
 import { CertificateForm } from "@/features/consultation/components/forms/certificate"
 import { PrescriptionForm } from "@/features/consultation/components/forms/prescription"
 
+import AddToCart from "./forms/add-to-cart"
+
 const END_CHAT_COUNTDOWN = 30
 
 interface ConsultationSidebarProps {
@@ -68,9 +70,10 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
                 <li key={product.id} className="flex flex-col">
                   <span className="font-bold">{product.product.name}</span>
                   <span>Note: {product.note}</span>
-                  <button className="w-fit font-semibold text-primary hover:underline">
+                  <AddToCart {...product} />
+                  {/* <button className="w-fit font-semibold text-primary hover:underline">
                     Add to cart
-                  </button>
+                  </button> */}
                 </li>
               ))}
             </ul>

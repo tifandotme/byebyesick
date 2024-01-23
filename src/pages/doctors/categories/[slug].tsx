@@ -6,6 +6,7 @@ import { BASE_URL } from "@/pages"
 import type { ResponseGetAll, Specialization } from "@/types/api"
 import { useDoctorList } from "@/lib/fetchers"
 import { unslugify } from "@/lib/utils"
+import ChartLoader from "@/components/chart/chartLoader"
 import { MainLayout } from "@/components/layouts/main"
 import DoctorSearch from "@/features/consultation/component/doctorSearch/doctorSearch"
 
@@ -41,13 +42,13 @@ function DoctorsByCategoryPage({
 
   return (
     <div className="flex h-full min-h-full justify-center gap-10">
-      <div className="max-w-6xl">
+      <div className="w-full max-w-5xl">
         <Head>
           <title>ByeByeSick | {category[0]?.name}</title>
         </Head>
         <div className="w-full">
           {doctorIsLoading ? (
-            <>loading</>
+            <ChartLoader />
           ) : (
             category && (
               <DoctorSearch
