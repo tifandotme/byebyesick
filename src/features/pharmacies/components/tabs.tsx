@@ -30,8 +30,8 @@ export function PharmaciesTabs() {
           href: `/dashboard/pharmacies/${pharmacyId}/journal`,
         },
         {
-          title: "Analytics",
-          href: `/dashboard/pharmacies/${pharmacyId}/analytics`,
+          title: "Orders",
+          href: `/dashboard/pharmacies/${pharmacyId}/orders`,
         },
       ]}
     />

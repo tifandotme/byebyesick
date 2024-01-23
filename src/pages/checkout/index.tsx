@@ -124,70 +124,84 @@ export default function CheckoutPage() {
                   <h2 className="text-xl font-semibold text-muted-foreground">
                     Order {pharmacyId}
                   </h2>
-                  {items.map((item) => (
-                    <CheckoutCard key={item.id} item={item} />
-                  ))}
-                  <Select
-                    onOpenChange={async (open) => {
-                      if (open) {
-                        setLoadingShippingMethods(true)
-                        const result = await getShippingMethods({
-                          address_id: Number(address),
-                          checkout_items: items.map((item) => ({
-                            pharmacy_product_id: item.pharmacy_product.id,
-                            quantity: item.quantity,
-                          })),
-                        })
-                        setLoadingShippingMethods(false)
-                        if (result.data) {
-                          setShippingMethods((prev) => ({
-                            ...prev,
-                            [pharmacyId]: result as unknown as ResponseGetAll<
-                              IShippingMethod[]
-                            >,
-                          }))
-                        } else {
-                          toast.error("Can't get shipping methods")
-                        }
-                      }
-                    }}
-                    onValueChange={(value) => {
-                      const selectedMethod = shippingMethods[
-                        Number(pharmacyId)
-                      ]?.data.items.find((method) => method.name === value)
 
-                      if (selectedMethod) {
-                        setSelectedShippingMethods((prev) => ({
-                          ...prev,
-                          [pharmacyId]: selectedMethod,
-                        }))
-                      }
-                    }}
-                  >
-                    <SelectTrigger className="">
-                      <SelectValue placeholder="Choose Shipping Method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Shipping Methods</SelectLabel>
-                        {loadingShippingMethods ? (
-                          <>
-                            <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
-                            <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
-                            <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
-                          </>
+                  <div>
+                    {items.map((item) => (
+                      <div key={item.id}>
+                        {item.pharmacy_product.id !== 0 ? (
+                          <CheckoutCard item={item} />
                         ) : (
-                          shippingMethods[Number(pharmacyId)]?.data.items.map(
-                            (method) => (
-                              <SelectItem key={method.id} value={method.name}>
-                                {method.name} - {formatPrice(method.cost)}
-                              </SelectItem>
-                            ),
-                          )
+                          <div>
+                            <CheckoutCard item={item} disabled />
+                          </div>
                         )}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                      </div>
+                    ))}
+                  </div>
+
+                  {items.every((item) => item.pharmacy_product.id !== 0) && (
+                    <Select
+                      onOpenChange={async (open) => {
+                        if (open) {
+                          setLoadingShippingMethods(true)
+                          const result = await getShippingMethods({
+                            address_id: Number(address),
+                            checkout_items: items.map((item) => ({
+                              pharmacy_product_id: item.pharmacy_product.id,
+                              quantity: item.quantity,
+                            })),
+                          })
+                          setLoadingShippingMethods(false)
+                          if (result.data) {
+                            setShippingMethods((prev) => ({
+                              ...prev,
+                              [pharmacyId]: result as unknown as ResponseGetAll<
+                                IShippingMethod[]
+                              >,
+                            }))
+                          } else {
+                            toast.error("Can't get shipping methods")
+                          }
+                        }
+                      }}
+                      onValueChange={(value) => {
+                        const selectedMethod = shippingMethods[
+                          Number(pharmacyId)
+                        ]?.data.items.find((method) => method.name === value)
+
+                        if (selectedMethod) {
+                          setSelectedShippingMethods((prev) => ({
+                            ...prev,
+                            [pharmacyId]: selectedMethod,
+                          }))
+                        }
+                      }}
+                    >
+                      <SelectTrigger className="">
+                        <SelectValue placeholder="Choose Shipping Method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Shipping Methods</SelectLabel>
+                          {loadingShippingMethods ? (
+                            <>
+                              <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                              <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                              <Skeleton className="ml-6 mt-3 h-7 w-[150px] animate-pulse lg:w-[250px]" />
+                            </>
+                          ) : (
+                            shippingMethods[Number(pharmacyId)]?.data.items.map(
+                              (method) => (
+                                <SelectItem key={method.id} value={method.name}>
+                                  {method.name} - {formatPrice(method.cost)}
+                                </SelectItem>
+                              ),
+                            )
+                          )}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
                 </div>
               ),
             )}

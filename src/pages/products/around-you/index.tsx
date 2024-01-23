@@ -2,7 +2,7 @@ import React from "react"
 import Image from "next/image"
 
 import type { IProduct } from "@/types/api"
-import { classif, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
+import { categories, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
 import { useProductData } from "@/lib/fetchers"
 import { useDebounce } from "@/hooks/use-debounce"
 import useGeolocation from "@/hooks/use-geolocation"
@@ -18,7 +18,7 @@ export default function SeeAllAroundYou() {
   const [sort, setSort] = React.useState("date")
   const [search, setSearch] = React.useState("")
   const debouncedSearch = useDebounce(search, 500)
-  const [drugClass, setDrugClass] = React.useState<keyof typeof classif>()
+  const [drugClass, setDrugClass] = React.useState<keyof typeof categories>()
 
   const { data, error, isLoading, resetFilters } = useProductData<IProduct[]>(
     {
