@@ -1,5 +1,7 @@
 import React from "react"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
+import { toast } from "sonner"
 
 import type { doctorI } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
@@ -14,6 +16,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
+import { startChat } from "../../api/start-chat"
+
 function DoctorCard({
   name,
   profile_photo,
@@ -24,6 +28,22 @@ function DoctorCard({
   id,
 }: doctorI) {
   const { push } = useRouter()
+  const { data: session } = useSession()
+  const handleStartChat = async () => {
+    try {
+      const res = await startChat(id, session?.user?.user_id)
+      if (!res.ok) {
+        throw new Error("Failed to start chat with Status code: " + res.status)
+      }
+      const data = await res.json()
+      console.log(data)
+      push("/consultation/as-patient/" + data.id)
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      }
+    }
+  }
   return (
     <Card>
       <CardHeader>
@@ -71,7 +91,14 @@ function DoctorCard({
         >
           View Profile
         </Button>
-        <Button variant="default" size={"sm"} type="button">
+        <Button
+          variant="default"
+          onClick={() => {
+            handleStartChat()
+          }}
+          size={"sm"}
+          type="button"
+        >
           Chat Doctor
         </Button>
       </CardFooter>
