@@ -7,6 +7,8 @@ import { cn, formatPrice } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox"
 import { UpdateCart } from "@/components/checkout/update-cart-items"
 
+import { imageLoader } from "../image-loader"
+
 interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   items: ResponseGetAll<ICart[]>
   isScrollable?: boolean
@@ -52,6 +54,7 @@ export function CartLineItems({
                     fill
                     className="absolute object-cover"
                     loading="lazy"
+                    loader={imageLoader}
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-secondary">

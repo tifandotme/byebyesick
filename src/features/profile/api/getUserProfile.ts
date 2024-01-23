@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/pages"
+
 export async function getUserProfile(token: string) {
   var requestOptions: RequestInit = {
     method: "GET",
@@ -5,5 +7,7 @@ export async function getUserProfile(token: string) {
       Authorization: `Bearer ${token}`,
     },
   }
-  return fetch(`${process.env.BASE_URL}/v1/profile/user`, requestOptions)
+
+  const url = BASE_URL + "/v1/profile/user"
+  return fetch(url, requestOptions)
 }

@@ -21,6 +21,8 @@ import {
 import CartSheet from "@/components/checkout/cart-sheet"
 import { Icons } from "@/components/icons"
 
+import { imageLoader } from "../image-loader"
+
 function MainNavbar() {
   const router = useRouter()
   const { data: session } = useSession()
@@ -30,7 +32,13 @@ function MainNavbar() {
       <div className="container py-2">
         <div className="flex items-center justify-between sm:gap-4">
           <Link href={"/"} className="flex items-center">
-            <Image src="/logo.png" alt="Logo png" width={150} height={50} />
+            <Image
+              src="/logo.png"
+              alt="Logo png"
+              width={150}
+              height={50}
+              loader={imageLoader}
+            />
           </Link>
           <div className="relative hidden translate-y-[2px] text-primary sm:flex sm:gap-3">
             <Link href={"#"}>Consultation</Link>

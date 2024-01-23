@@ -15,12 +15,10 @@ import { CategoryCard } from "@/features/landing/components/categories/category-
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
 
+export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const url = new URL(
-      "/v1/drug-classifications/no-params",
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url = BASE_URL + "/v1/drug-classifications/no-params"
 
     const response = await fetch(url)
 

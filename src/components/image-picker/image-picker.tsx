@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import Image from "next/image"
 import { ArrowDownIcon, ImageDownIcon } from "lucide-react"
 
+import { imageLoader } from "../image-loader"
+
 const ImagePicker = ({
   onChange,
   handleDrop,
@@ -47,6 +49,7 @@ const ImagePicker = ({
           width={500}
           height={500}
           className="max-h-44 object-contain"
+          loader={imageLoader}
         />
       ) : (
         <></>
@@ -66,7 +69,7 @@ const ImagePicker = ({
         ) : (
           <div className="flex flex-col items-center">
             <p className="text-primary">
-              <span className=" text-blue-500">Drop </span> your files here or{" "}
+              <span className="text-blue-500 ">Drop </span> your files here or{" "}
               <span className="font-medium text-blue-500">
                 <label className="cursor-pointer" htmlFor="image">
                   browse

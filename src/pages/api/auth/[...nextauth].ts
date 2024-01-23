@@ -13,13 +13,16 @@ export const authOptions: NextAuthOptions = {
             email: string
             password: string
           }
-          const resp = await fetch(`${process.env.DB_URL}/v1/auth/login`, {
-            method: "POST",
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-          })
+          const resp = await fetch(
+            `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/login`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                email,
+                password,
+              }),
+            },
+          )
           const parsedResponse = await resp.json()
           if (!resp.ok || resp.status !== 200) {
             return null

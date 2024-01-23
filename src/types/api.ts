@@ -400,6 +400,17 @@ export interface OrderWithStatusI {
   Status: OrderStatusI
 }
 
+export interface DetailOrderPageI {
+  id: number
+  order_status: OrderStatusI
+  date: string
+  shippingMethod: Omit<IShippingMethod, "cost">
+  shipping_cost: string
+  pharmacy: PharmacyOrderI
+  user_address: string
+  order_details: IOrderDetail[]
+}
+
 export interface PharmacyOrderI {
   id: number
   name: string
