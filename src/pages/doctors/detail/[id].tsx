@@ -14,6 +14,7 @@ import {
 import type { doctorI, ResponseById } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { imageLoader } from "@/components/image-loader"
 import { MainLayout } from "@/components/layouts/main"
 
 export const getServerSideProps: GetServerSideProps<{
@@ -45,6 +46,7 @@ function DoctorDetail(
         <Image
           alt="Doctor's profile photo"
           className="rounded-lg object-cover"
+          loader={imageLoader}
           height="300"
           src={
             props.doctor.data.profile_photo ||

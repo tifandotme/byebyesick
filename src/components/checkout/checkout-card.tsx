@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
+import { imageLoader } from "../image-loader"
+
 interface CheckoutCardProps {
   item: ICheckout
 }
@@ -35,6 +37,7 @@ export function CheckoutCard({ item }: CheckoutCardProps) {
                   fill
                   className="absolute object-cover"
                   loading="lazy"
+                  loader={imageLoader}
                 />
               ) : (
                 <div className="flex h-full items-center justify-center bg-secondary">
