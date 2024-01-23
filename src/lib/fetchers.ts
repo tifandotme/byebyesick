@@ -21,7 +21,10 @@ import type {
   IProductCategory,
   Pharmacy,
   PharmacyProduct,
+  Prescription,
+  PrescriptionProduct,
   ResponseGetAll,
+  SickLeaveForm,
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
@@ -300,6 +303,105 @@ export async function updatePharmacyProduct(
     return {
       success: true,
       message: `Pharmacy product ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateCertificate(
+  mode: "add" | "edit",
+  payload: Pick<
+    SickLeaveForm,
+    "session_id" | "starting_date" | "ending_date" | "description"
+  >,
+  id?: number,
+): Promise<Response> {
+  try {
+    const { session_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/sick-leave-forms" : `/v1/sick-leave-forms/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { session_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Sick leave certificate is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updatePrescription(
+  mode: "add" | "edit",
+  payload: Pick<Prescription, "session_id" | "symptoms" | "diagnosis"> & {
+    prescription_products: Pick<PrescriptionProduct, "product_id" | "note">[]
+  },
+  id?: number,
+): Promise<Response> {
+  try {
+    const { session_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/prescriptions" : `/v1/prescriptions/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { session_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Prescription is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function endChatRoom(id: number): Promise<Response> {
+  try {
+    const endpoint = `/v1/chats/${id}`
+    const options: RequestInit = {
+      method: "PUT",
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Chat room is ended",
     }
   } catch (err) {
     return {
