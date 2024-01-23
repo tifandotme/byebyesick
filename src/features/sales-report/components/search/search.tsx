@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input"
 
 function Search({
   setValue,
+  placeholder = "Search...",
 }: {
   setValue: React.Dispatch<React.SetStateAction<string>>
+  placeholder?: string
 }) {
   const [query, setQuery] = React.useState("")
   const debounceQuery = useDebounce(query, 500)
@@ -22,7 +24,7 @@ function Search({
       <Input
         value={query}
         className="ps-10"
-        placeholder="Search Product..."
+        placeholder={placeholder}
         onChange={(e) => {
           setQuery(e.target.value)
         }}
