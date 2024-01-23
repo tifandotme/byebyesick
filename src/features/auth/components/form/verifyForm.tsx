@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { imageLoader } from "@/components/image-loader"
 import { verify } from "@/features/auth/api/verify"
 
 function VerifyForm({ data }: RegisterToken) {
@@ -119,6 +120,7 @@ function VerifyForm({ data }: RegisterToken) {
                   alt="patient"
                   className="container h-20 object-contain"
                   width={200}
+                  loader={imageLoader}
                   height={200}
                 />
                 <p className="mt-1 text-gray-900">Patient</p>

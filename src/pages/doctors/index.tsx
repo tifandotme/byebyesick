@@ -6,10 +6,12 @@ import type { ResponseGetAll, Specialization } from "@/types/api"
 import { MainLayout } from "@/components/layouts/main"
 import DoctorCategory from "@/features/consultation/component/doctorCategory/doctorCategory"
 
+import { BASE_URL } from ".."
+
 export const getServerSideProps: GetServerSideProps<{
   category: Specialization[]
 }> = async () => {
-  const url = new URL(`/v1/doctor-specs`, process.env.NEXT_PUBLIC_DB_URL)
+  const url = BASE_URL + `/v1/doctor-specs`
   const res = await fetch(url)
   const decoded: ResponseGetAll<Specialization[]> = await res.json()
   const category = decoded.data.items

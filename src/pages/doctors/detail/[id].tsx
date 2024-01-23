@@ -2,6 +2,7 @@ import React from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { BASE_URL } from "@/pages"
 import {
   BadgeIcon,
   CalendarIcon,
@@ -13,15 +14,13 @@ import {
 import type { doctorI, ResponseById } from "@/types/api"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { imageLoader } from "@/components/image-loader"
 import { MainLayout } from "@/components/layouts/main"
 
 export const getServerSideProps: GetServerSideProps<{
   doctor: ResponseById<doctorI>
 }> = async (context) => {
-  const url = new URL(
-    `/v1/users/doctor/${context?.params?.id}`,
-    process.env.NEXT_PUBLIC_DB_URL,
-  )
+  const url = BASE_URL + `/v1/users/doctor/${context?.params?.id}`
   const res = await fetch(url)
 
   const doctor = (await res.json()) as ResponseById<doctorI> | undefined
@@ -47,6 +46,7 @@ function DoctorDetail(
         <Image
           alt="Doctor's profile photo"
           className="rounded-lg object-cover"
+          loader={imageLoader}
           height="300"
           src={
             props.doctor.data.profile_photo ||

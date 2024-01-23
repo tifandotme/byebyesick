@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { imageLoader } from "@/components/image-loader"
 import { updateProfile } from "@/features/profile/api/updateProfile"
 
 function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
@@ -88,6 +89,7 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
             width={160}
             height={160}
             alt="Man"
+            loader={imageLoader}
             src={
               image?.url ||
               userProfile?.profile_photo ||

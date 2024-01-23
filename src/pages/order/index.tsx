@@ -15,6 +15,26 @@ import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
 import Search from "@/features/sales-report/components/search/search"
 
+export const setTextColor = (orderStatus: string): string => {
+  let textColor = ""
+  if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
+    textColor = "text-yellow-500"
+  else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
+    textColor = "text-blue-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
+    orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
+  )
+    textColor = "text-red-500"
+  else if (
+    orderStatus == ORDER_STATUS_MAP.SENT ||
+    orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
+  )
+    textColor = "text-green-500"
+  else textColor = ""
+  return textColor
+}
+
 function OrderListPage() {
   const [search, setSearch] = React.useState<string>("")
   const [orderStatus, setOrderStatus] = React.useState<string>("")
@@ -32,26 +52,6 @@ function OrderListPage() {
       label: "",
       value: "",
     }
-  }
-
-  const setTextColor = (orderStatus: string): string => {
-    let textColor = ""
-    if (orderStatus == ORDER_STATUS_MAP.WAITING_FOR_PHARMACY)
-      textColor = "text-yellow-500"
-    else if (orderStatus == ORDER_STATUS_MAP.PROCESSED)
-      textColor = "text-blue-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_USER ||
-      orderStatus == ORDER_STATUS_MAP.CANCELED_BY_PHARMACY
-    )
-      textColor = "text-red-500"
-    else if (
-      orderStatus == ORDER_STATUS_MAP.SENT ||
-      orderStatus == ORDER_STATUS_MAP.ORDER_CONFIRMED
-    )
-      textColor = "text-green-500"
-    else textColor = ""
-    return textColor
   }
 
   return (
@@ -86,7 +86,7 @@ function OrderListPage() {
                       </div>
                     </div>
                     <div
-                      className={`flex items-center justify-center rounded-md border p-2 font-medium ${setTextColor(order.Status.id)}`}
+                      className={`flex items-center justify-center rounded-md p-2 text-xl font-medium ${setTextColor(order.Status.id)}`}
                     >
                       {order.Status.name}
                     </div>
@@ -107,7 +107,7 @@ function OrderListPage() {
                   <div className="flex items-center gap-2">
                     <div className="text-2xl">
                       Total Payment:{" "}
-                      <span className="font-bold">
+                      <span className="text-3xl font-bold text-apple-500">
                         {formatPrice(order.total_payment)}
                       </span>
                     </div>

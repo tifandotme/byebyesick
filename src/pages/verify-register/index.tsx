@@ -6,12 +6,15 @@ import type { RegisterToken } from "@/types/user"
 import VerifyForm from "@/features/auth/components/form/verifyForm"
 import AuthLayout from "@/features/auth/components/layout/layout"
 
+import { BASE_URL } from ".."
+
 export const getServerSideProps = (async (context) => {
   const token = context?.query?.token
+
+  const url = BASE_URL + `/v1/auth/verify-register?token=${token}`
   try {
-    const verify = await fetch(
-      `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/verify-register?token=${token}`,
-    )
+    const verify = await fetch(url)
+
     if (!verify.ok || verify.status === 400) {
       throw new Error("Invalid Token")
     }
