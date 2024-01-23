@@ -8,5 +8,8 @@ export async function postAddress(body: Partial<AddressIForm>) {
     },
     body: JSON.stringify(body),
   }
-  return fetch(`${process.env.BASE_URL}/v1/profile/addresses`, requestOptions)
+  return fetch(
+    `${process.env.NEXT_PUBLIC_DB_URL}/v1/profile/addresses`,
+    requestOptions,
+  )
 }

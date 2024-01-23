@@ -11,7 +11,7 @@ import {
 import { toast } from "sonner"
 
 import type { AddressFormSchemaType, Response } from "@/types"
-import type { AddressI, AddressIForm } from "@/types/api"
+import type { AddressI, AddressIForm, ResponseById } from "@/types/api"
 import type { Location } from "@/types/gmaps"
 import { useAdressList } from "@/lib/fetchers"
 import { useStore } from "@/lib/stores/pharmacies"
@@ -90,8 +90,10 @@ function AddressForm({
           },
           initialData.id,
         )
-        if (!result?.ok) {
-          throw new Error(result.statusText)
+        const parsed = await result.json()
+        if (!result.ok) {
+          if (parsed.errors) throw new Error(parsed.errors[0])
+          throw new Error("Failed to add new address")
         }
         toast.success("Success edit address", { duration: 2000 })
       } else {
@@ -106,8 +108,10 @@ function AddressForm({
           longitude: data.longitude,
           name: data.name,
         })
-        if (!result?.ok) {
-          throw new Error(result.statusText)
+        const parsed: ResponseById<AddressI> = await result.json()
+        if (!result.ok) {
+          if (parsed.errors) throw new Error(parsed.errors[0])
+          throw new Error("Failed to edit address")
         }
         toast.success("Success add new address", { duration: 2000 })
       }
