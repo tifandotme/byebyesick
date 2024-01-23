@@ -197,3 +197,16 @@ export const usersRoleIds = {
   3: "doctor",
   4: "user",
 } as const
+
+export const consultationSessionStatusIds = {
+  1: "Ongoing",
+  2: "Ended",
+} as const
+
+export const alertMessages = {
+  sickLeaveIssued: "Sick leave certificate has been issued",
+  sickLeaveUpdated: "Sick leave certificate has been updated",
+  prescriptionIssued: "Prescription has been issued",
+  prescriptionUpdated: "Prescription has been updated",
+  chatEnded: "Chat has been ended",
+} as const
