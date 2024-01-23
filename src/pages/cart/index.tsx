@@ -60,10 +60,11 @@ export default function CartPage() {
 
   const totalCheckedItems = Object.values(checkedItems).filter(Boolean).length
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const checkedIds = Object.keys(checkedItems).filter(
       (id) => checkedItems[id],
     )
+
     if (checkedIds.length === 0) {
       toast.warning("Please select at least one item")
       return
@@ -75,6 +76,7 @@ export default function CartPage() {
       toast.warning("Please select address")
       return
     }
+
     router.push(
       `/checkout?ids=${encodeURIComponent(idsString)}&address=${encodeURIComponent(selectedAddressId)}`,
     )
@@ -157,7 +159,6 @@ export default function CartPage() {
                                 size={"sm"}
                                 onClick={() => {
                                   setSelectedAddress(address.id)
-                                  console.log(cartdata)
                                 }}
                               >
                                 Choose

@@ -134,7 +134,7 @@ export function OrderRequestsTable({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[130px]">
-                    {status !== 2 && (
+                    {status === 1 && (
                       <>
                         <DropdownMenuItem
                           onClick={() => {
@@ -183,48 +183,54 @@ export function OrderRequestsTable({
                       </>
                     )}
 
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const handleApproval = async () => {
-                          const { success } = await updatePharmacyAdminOrder(
-                            row.original.id,
-                            "cancel",
-                          )
+                    {status === 2 && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "cancel",
+                                )
 
-                          if (!success) throw new Error()
-                          await mutate()
-                        }
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                        toast.promise(handleApproval(), {
-                          loading: "Canceling request...",
-                          success: "Request canceled",
-                          error: "Failed to cancel request",
-                        })
-                      }}
-                    >
-                      Cancel
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        const handleApproval = async () => {
-                          const { success } = await updatePharmacyAdminOrder(
-                            row.original.id,
-                            "ship",
-                          )
+                            toast.promise(handleApproval(), {
+                              loading: "Canceling request...",
+                              success: "Request canceled",
+                              error: "Failed to cancel request",
+                            })
+                          }}
+                        >
+                          Cancel
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "ship",
+                                )
 
-                          if (!success) throw new Error()
-                          await mutate()
-                        }
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                        toast.promise(handleApproval(), {
-                          loading: "Canceling Shipping...",
-                          success: "Request Shipped",
-                          error: "Failed to cancel Shipping",
-                        })
-                      }}
-                    >
-                      Ship
-                    </DropdownMenuItem>
+                            toast.promise(handleApproval(), {
+                              loading: "Canceling Shipping...",
+                              success: "Request Shipped",
+                              error: "Failed to cancel Shipping",
+                            })
+                          }}
+                        >
+                          Ship
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
