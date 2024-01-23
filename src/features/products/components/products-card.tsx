@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { imageLoader } from "@/components/image-loader"
 import { PlaceholderImage } from "@/components/image-placeholer"
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,12 +53,10 @@ export function ProductCard({
       <Link aria-label={product.name} href={`/products/${product.id}`}>
         <CardHeader className="border-b p-0">
           <AspectRatio ratio={4 / 3}>
-            {product.image?.length ? (
+            {product.image ? (
               <Image
-                src={
-                  product.image ||
-                  `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.webp`
-                }
+                loader={imageLoader}
+                src={product.image}
                 loading="lazy"
                 className="object-cover"
                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"

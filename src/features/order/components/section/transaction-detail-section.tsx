@@ -31,7 +31,7 @@ function TransactionDetailSection(transaction: ITransaction) {
       case 1:
         return <Badge variant={"destructive"}>Unpaid</Badge>
       case 2:
-        return <Badge className="bg-orange-500">Waiting for Payment</Badge>
+        return <Badge className="bg-orange-500">Waiting for Confirmation</Badge>
       case 3:
         return <Badge className="bg-yellow-500">Payment Rejected</Badge>
       case 4:
