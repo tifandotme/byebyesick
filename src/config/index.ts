@@ -114,7 +114,7 @@ export const siteConfig = {
         title: "Orders",
         href: "/dashboard/orders",
         icon: "Transactions",
-        role: "pharmacyAdmin",
+        role: ["pharmacyAdmin"],
       },
     ] satisfies NavItemRequiredWithRole[],
   },
@@ -275,7 +275,7 @@ export const PAYMENT_STATUS = {
 
 export const PAYMENT_STATUS_OPTION: Option[] = [
   {
-    value: "0",
+    value: "",
     label: "All",
   },
   { value: "1", label: "Unpaid" },

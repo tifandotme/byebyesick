@@ -63,8 +63,8 @@ function TransactionListPage() {
         <div className="self-center text-3xl font-bold ">Transaction List</div>
         <div className="flex items-center gap-5">
           <DropdownFilter
-            title="Order Status"
-            buttonOpener={mapStatus(orderStatus).label || "Order Status"}
+            title="Transactions Status"
+            buttonOpener={mapStatus(orderStatus).label || "Transactions Status"}
             setFilter={setOrderStatus}
             filter={orderStatus ?? ""}
             options={PAYMENT_STATUS_OPTION}
