@@ -1,160 +1,182 @@
-/* eslint-disable @next/next/no-img-element */
-
 import React from "react"
-import { Loader2 } from "lucide-react"
+import Image from "next/image"
+import useSWR from "swr"
 
-import type { IProduct } from "@/types/api"
-import { categories, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
-import { useAddressMain, useProductData } from "@/lib/fetchers"
-import { useDebounce } from "@/hooks/use-debounce"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import type { Option } from "@/types"
+import type { IProduct, ResponseGetAll } from "@/types/api"
+import { DrugClassConfig, SortByConfig, SortConfig } from "@/config"
+import { useAddressMain } from "@/lib/fetchers"
+import ChartLoader from "@/components/chart/chartLoader"
 import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
+import PaginationComponent from "@/features/products/components/pagination-product"
 import { ProductCard } from "@/features/products/components/products-card"
+import Search from "@/features/sales-report/components/search/search"
 
 export default function SeeAllAroundYourDistrict() {
-  const { addressData, addressIsLoading } = useAddressMain()
+  const { addressData } = useAddressMain()
 
-  const [sortBy, setSortBy] = React.useState("desc")
-  const [sort, setSort] = React.useState("date")
-  const [search, setSearch] = React.useState("")
-  const debouncedSearch = useDebounce(search, 500)
-  const [drugClass, setDrugClass] = React.useState<keyof typeof categories>()
+  const [sortBy, setSortBy] = React.useState("name")
+  const [sort, setSort] = React.useState("desc")
+  const [search, setSearch] = React.useState<string>("")
+  const [page, setPage] = React.useState<number>(1)
+  const [drugClass, setDrugClass] = React.useState<number>()
 
-  let url = ""
-  if (addressData?.data.latitude && addressData?.data.longitude) {
-    url = `/v1/products?latitude=${addressData?.data.latitude}&longitude=${addressData?.data.longitude}&`
+  const { data, isLoading, error } = useSWR<ResponseGetAll<IProduct[]>>(() => {
+    const params = new URLSearchParams()
+    if (search) params.set("search", search)
+    if (drugClass) params.set("drug_class", String(drugClass))
+    if (sort) params.set("sort", sort)
+    if (sortBy) params.set("sort_by", sortBy)
+    if (page) params.set("page", page.toString())
+    return `/v1/products?${params.toString()}&latitude=${addressData?.data.latitude}&longitude=${addressData?.data.longitude}`
+  })
+
+  const drugsMap = (id: string): Option => {
+    const output = DrugClassConfig.find((status) => status.value === id)
+    if (output) return output
+    return {
+      label: "",
+      value: "",
+    }
   }
-  const { data, error, isLoading, resetFilters } = useProductData<IProduct[]>(
-    {
-      drug_class: drugClass,
-      search: debouncedSearch,
-      sort_by: sortBy,
-      sort: sort,
-    },
-    url,
-  )
 
-  if (addressIsLoading)
-    return (
-      <div className="mt-8 flex items-center justify-center">
-        <Loader2 className="animate-spin" /> searching products around you....
-      </div>
-    )
+  const sortByMap = (id: string): Option => {
+    const output = SortByConfig.find((status) => status.value === id)
+    if (output) return output
+    return {
+      label: "",
+      value: "",
+    }
+  }
 
-  if (!addressData?.data.latitude && !addressData?.data.longitude)
-    return (
-      <div className="mt-8 flex items-center justify-center ">
-        <p className="text-center">
-          Failed to get latitude and longitude, please refresh this page
-        </p>
-      </div>
-    )
-
-  if (isLoading)
-    return (
-      <div className="mt-8 flex items-center justify-center">
-        <Loader2 className="animate-spin" />
-      </div>
-    )
-
-  const handleResetFilters = () => {
-    resetFilters()
-    setSearch("")
-    setSortBy("")
-    setSort("desc")
+  const sortMap = (id: string): Option => {
+    const output = SortConfig.find((status) => status.value === id)
+    if (output) return output
+    return {
+      label: "",
+      value: "",
+    }
   }
 
   return (
     <>
       <div>
-        <div className="w-full bg-[#f0fdf4]">
+        <div className="w-full bg-primary">
           <div className="container flex max-w-6xl justify-between ">
             <div className="mb-9 mt-8 md:mt-auto ">
-              <h2 className="text-3xl font-semibold md:text-5xl">
-                Around {addressData.data.sub_district}
+              <h2 className="text-3xl font-bold text-white md:text-5xl">
+                Around {addressData?.data.sub_district}
               </h2>
-              <p className="text-sm text-muted-foreground">
-                Get drugs around {addressData.data.sub_district} location now
+              <p className="text-sm text-white">
+                Get drugs around {addressData?.data.sub_district} location now
               </p>
             </div>
 
-            <div className="mt-auto">
-              <img
+            <div className="mt-auto hidden md:block">
+              <Image
                 src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/around-me.svg`}
                 alt=""
-                width="300px"
-                height="300px"
-                className="hidden scale-125 object-fill md:block"
+                width={300}
+                height={300}
+                className="hidden scale-100 object-fill md:block"
               />
+              {/* <HeroSection /> */}
             </div>
           </div>
         </div>
       </div>
 
-      {data?.data.total_items === 0 && (
-        <div>
-          <p>There are no products around you</p>
-        </div>
-      )}
-
       {error && (
         <p className="text-center">Something wrong, please try again.</p>
       )}
 
-      {!error && (
+      {!addressData && (
+        <div className="flex flex-col items-center justify-center">
+          <Image
+            src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/no-location.svg`}
+            className=""
+            width={450}
+            height={450}
+            alt=""
+          />
+          <p className="py-8 text-center">
+            Please allow location permission to see products
+          </p>
+        </div>
+      )}
+
+      {!error && addressData && (
         <>
-          <div className="container max-w-6xl">
-            <Input
-              type="text"
-              placeholder="Search products here..."
-              onChange={(e) => setSearch(e.target.value)}
-              className="mt-4"
-            />
+          <div className="container mt-4 max-w-6xl">
+            <Search setValue={setSearch} placeholder="Search Drugs..." />
           </div>
 
           <div className="container mr-auto mt-2 flex max-w-6xl space-x-2">
             <DropdownFilter
-              filter={sortBy}
-              setFilter={setSortBy}
-              options={SortConfig}
-              title="Sort"
-              buttonOpener="Sort"
-            />
-            <DropdownFilter
               filter={sort}
               setFilter={setSort}
-              options={SortByConfig}
+              options={SortConfig}
               title="Sort By"
-              buttonOpener="Sort By"
+              buttonOpener={sort ? sortMap(String(sort)).label : "Sort"}
             />
-
             <DropdownFilter
-              filter={drugClass!}
+              filter={sortBy}
+              setFilter={setSortBy}
+              title="Sort By"
+              options={SortByConfig}
+              buttonOpener={
+                sortBy ? sortByMap(String(sortBy)).label : "Sort By"
+              }
+            />
+            <DropdownFilter
+              filter={String(drugClass) ?? ""}
               setFilter={setDrugClass}
               options={DrugClassConfig}
               title=" Type"
-              buttonOpener=" Type"
+              buttonOpener={
+                drugClass ? drugsMap(String(drugClass)).label : "Type"
+              }
             />
-
-            <Button
-              className="rounded-full border-dashed border-red-300 text-xs text-red-600 hover:border-none hover:bg-red-600 hover:text-white"
-              variant={"outline"}
-              size={"sm"}
-              onClick={handleResetFilters}
-            >
-              Reset Filter
-            </Button>
           </div>
 
           <div className="container max-w-6xl">
             <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-              {data?.data.items.map((cat) => (
-                <div key={cat.id}>
-                  <ProductCard product={cat} />
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <ChartLoader />
                 </div>
-              ))}
+              ) : (
+                data &&
+                data?.data.items.map((around) => (
+                  <div key={around.id}>
+                    <ProductCard product={around} />
+                  </div>
+                ))
+              )}
+            </div>
+
+            {!isLoading && data && data.data.items.length === 0 && (
+              <div className="flex py-9 ">
+                <div className="flex w-full max-w-6xl flex-col items-center justify-center">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/empty-order.svg`}
+                    className=""
+                    width={600}
+                    height={600}
+                    alt=""
+                  />
+                  <div className="self-center text-center text-3xl font-bold">
+                    No Product Found
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="py-5">
+              <PaginationComponent
+                page={data?.data.current_page || 1}
+                setCurrentPage={setPage}
+              />
             </div>
           </div>
         </>

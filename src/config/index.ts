@@ -206,17 +206,29 @@ export const siteConfig = {
   ] satisfies FooterItem[],
 }
 
-export const SortConfig = [
+export const SortByConfig: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
   { value: "date", label: "Date" },
   { value: "name", label: "Name" },
 ]
 
-export const SortByConfig = [
+export const SortConfig: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
   { value: "asc", label: "Ascending" },
   { value: "desc", label: "Descending" },
 ]
 
-export const DrugClassConfig = [
+export const DrugClassConfig: Option[] = [
+  {
+    value: "",
+    label: "All",
+  },
   { value: "1", label: "Obat Bebas" },
   { value: "2", label: "Obat Keras" },
   { value: "3", label: "Obat Bebas Terbatas" },

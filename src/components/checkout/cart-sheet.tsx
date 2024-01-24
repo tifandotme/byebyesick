@@ -22,6 +22,8 @@ import { Icons } from "../icons"
 
 export default function CartSheet() {
   const { cartdata } = useCartList()
+  const [isOpen, setIsOpen] = React.useState(false)
+
   const { y } = useWindowScroll()
   const isScrolled = y > 100
   if (!cartdata) return <Loader2 />
