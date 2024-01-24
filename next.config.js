@@ -18,6 +18,7 @@ const config = {
     ]
   },
   images: {
+    unoptimized: true,
     dangerouslyAllowSVG: true,
     remotePatterns: [
       {

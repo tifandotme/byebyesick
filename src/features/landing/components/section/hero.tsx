@@ -3,7 +3,6 @@
 import React from "react"
 import Autoplay from "embla-carousel-autoplay"
 
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -37,32 +36,7 @@ function Hero() {
   return (
     <>
       <div className="pt-0 md:pt-0 ">
-        <section className="mx-auto mt-8 w-full items-center justify-center gap-4 text-center md:mt-0 md:flex md:min-h-screen">
-          <div className="flex flex-col">
-            <h1 className="text-pretty bg-gradient-to-r from-green-600 via-green-300 to-green-600 bg-clip-text text-center text-4xl font-bold text-transparent md:text-left md:text-6xl lg:text-6xl">
-              Your One Stop Health Solutions
-            </h1>
-            <p className="mt-6 text-center text-lg leading-relaxed text-muted-foreground sm:text-lg sm:leading-8 md:text-left">
-              Chat with doctors, visit hospitals, buy medicine, check labs and
-              updates Information about health can all be found at ByeByeSick!
-            </p>
-            <div className="mt-5 flex items-center justify-center space-x-2 md:justify-start ">
-              <Button>Buy Now</Button>
-              <Button variant="outline" className="hover:bg-apple-200">
-                Chat Doctors
-              </Button>
-            </div>
-          </div>
-
-          <img
-            src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/doctor-homepage.svg`}
-            className=""
-            width="600px"
-            height="600px"
-            alt=""
-          />
-        </section>
-        <div className="">
+        <div className="container max-w-6xl">
           <Carousel
             className="w-full"
             opts={{
