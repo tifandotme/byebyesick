@@ -59,6 +59,7 @@
     "react-leaflet": "^4.2.1",
     "react-resizable-panels": "0.0.55",
     "react-use-websocket": "^4.5.0",
+    "react-to-print": "^2.14.15",
     "sonner": "^1.3.1",
     "swr": "^2.2.4",
     "tailwind-merge": "^2.2.1",

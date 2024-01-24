@@ -33,8 +33,6 @@ import {
 import { CertificateForm } from "@/features/consultation/components/forms/certificate"
 import { PrescriptionForm } from "@/features/consultation/components/forms/prescription"
 
-import AddToCart from "./forms/add-to-cart"
-
 const END_CHAT_COUNTDOWN = 30
 
 interface ConsultationSidebarProps {
