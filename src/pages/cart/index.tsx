@@ -120,7 +120,19 @@ export default function CartPage() {
                   <DialogContent className="">
                     <DialogHeader>
                       <DialogTitle>Address List</DialogTitle>
-                      <DialogDescription>Change Address here</DialogDescription>
+                      <DialogDescription className="space-y-6">
+                        <span>Change Address here</span>
+                        <Button
+                          className="w-full border-primary"
+                          size={"sm"}
+                          variant={"outline"}
+                          onClick={() => {
+                            router.push("/user/address")
+                          }}
+                        >
+                          Add New Address
+                        </Button>
+                      </DialogDescription>
                     </DialogHeader>
                     <>
                       {addressError && (
@@ -140,7 +152,7 @@ export default function CartPage() {
                                       Main Address
                                     </Badge>
                                   ) : (
-                                    <div></div>
+                                    <></>
                                   )}
                                 </h2>
                               </div>

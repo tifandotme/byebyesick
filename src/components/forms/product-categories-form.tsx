@@ -83,7 +83,7 @@ export default function ProductCategoriesForm({
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isLoading} className="w-fit">
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && <Loader2 className="mr-2 size-4 animate-spin" />}
                 {toSentenceCase(mode)} product category
               </Button>
             </div>
