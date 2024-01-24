@@ -43,17 +43,6 @@ function TransactionDetailSection(transaction: ITransaction) {
         return <Badge variant={"default"}>Unknown</Badge>
     }
   }
-  console.log(
-    "Orders:",
-    transaction.orders.map((order) => ({
-      ...order,
-      totalOrderPrice: order.order_details.reduce(
-        (total, detail) =>
-          total + Number(detail.price) * Number(detail.quantity),
-        0,
-      ),
-    })),
-  )
 
   const totalPrice = transaction.orders.reduce(
     (total, order) =>
@@ -90,7 +79,7 @@ function TransactionDetailSection(transaction: ITransaction) {
               {formatDate(
                 new Date(
                   new Date(transaction.date).setDate(
-                    new Date(transaction.date).getDate() + 3,
+                    new Date(transaction.date).getDate() + 4,
                   ),
                 ),
               )}

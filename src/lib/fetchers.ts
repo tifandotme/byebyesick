@@ -678,13 +678,18 @@ export async function addToCart(payload: CartInputs): Promise<Response> {
     const res = await fetch(url, options)
 
     if (!res.ok) {
-      throw new Error("Failed adding item to cart")
+      const errorResponse = await res.json()
+      throw new Error(
+        errorResponse
+          ? "Sorry, the product is out of stock"
+          : "Something went wrong please try again",
+      )
     }
 
     mutate(url)
     return {
       success: true,
-      message: `Cart Added`,
+      message: `Product added to cart`,
     }
   } catch (error) {
     return {
@@ -716,7 +721,7 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
 
     return {
       success: true,
-      message: "Cart deleted",
+      message: "Product deleted from cart",
     }
   } catch (error) {
     return {
