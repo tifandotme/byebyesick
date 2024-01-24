@@ -9,7 +9,7 @@ function SalesReportPage() {
   return (
     <>
       <SalesGraphicSection />
-      <AnalyticTableSection />
+      {/* <AnalyticTableSection /> */}
     </>
   )
 }
