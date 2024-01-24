@@ -1,8 +1,9 @@
 import Head from "next/head"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
 
-import { siteConfig } from "@/config"
+import { siteConfig, usersRoleIds } from "@/config"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Icons } from "@/components/icons"
@@ -38,9 +39,8 @@ export function DashboardLayout({ children }: React.PropsWithChildren) {
 export function Sidebar() {
   const pathname = useRouter().pathname
 
-  // TODO remove when ready
-  // const { data: session } = useSession()
-  // const role = session ? usersRoleIds[session.user.user_role_id] : null
+  const { data: session } = useSession()
+  const role = session ? usersRoleIds[session.user.user_role_id] : null
 
   return (
     <div className="flex w-full flex-col gap-2 p-1">
@@ -66,8 +66,7 @@ export function Sidebar() {
         Admin Panel
       </h3>
       {siteConfig.dashboardNav.byRole
-        // TODO: uncomment when ready
-        // .filter((item) => item.role === role)
+        .filter((item) => role && item.role.includes(role))
         .map((item) => {
           const Icon = Icons[item.icon]
           return (
