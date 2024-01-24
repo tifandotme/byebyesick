@@ -1,7 +1,6 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Clock10Icon } from "lucide-react"
 
 import type { ITransaction } from "@/types/api"
 import { formatDate, formatPrice } from "@/lib/utils"

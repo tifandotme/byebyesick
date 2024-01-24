@@ -997,3 +997,85 @@ export async function updatePharmacyAdminOrder(
     }
   }
 }
+
+export async function updateDoctorSpecs(
+  mode: "add" | "edit",
+  payload: ManufacturersInput,
+  id?: number,
+): Promise<Response> {
+  try {
+    const formData = new FormData()
+    formData.append("name", payload.name)
+
+    if (payload.image instanceof Blob || payload.image instanceof File) {
+      formData.append("image", payload.image, "image.png")
+    }
+
+    const url = new URL(
+      `${mode === "edit" ? `/v1/doctor-specs/${id}` : "/v1/doctor-specs"}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        accept: "application/json",
+      },
+      body: formData,
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to update a doctor specs")
+    }
+
+    if (mode === "edit") {
+      mutate(url)
+    }
+
+    return {
+      success: true,
+      message: `Doctor Specialization ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function deleteDoctorSpecs(id: number): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/doctor-specs/${id}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: "DELETE",
+    }
+
+    const res = await fetch(url, options)
+
+    if (!res.ok) {
+      throw new Error("Failed to delete a Doctor Specialization")
+    }
+
+    return {
+      success: true,
+      message: "Doctor Specialization deleted",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        err instanceof Error
+          ? err.message
+          : "Something went wrong please try again",
+    }
+  }
+}

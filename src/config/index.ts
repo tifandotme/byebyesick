@@ -116,6 +116,18 @@ export const siteConfig = {
         icon: "Transactions",
         role: ["pharmacyAdmin"],
       },
+      {
+        title: "Orders",
+        href: "/dashboard/orders",
+        icon: "Transactions",
+        role: ["superAdmin"],
+      },
+      {
+        title: "Doctor Specs",
+        href: "/dashboard/doctor-specs",
+        icon: "Gear",
+        role: ["superAdmin"],
+      },
     ] satisfies NavItemRequiredWithRole[],
   },
   footerNav: [
