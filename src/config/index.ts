@@ -32,9 +32,9 @@ export const siteConfig = {
           items: [],
         },
         {
-          title: "Enlist your pharmacy",
-          href: "#",
-          description: "Register your pharmacy",
+          title: "Doctors List",
+          href: "/doctors",
+          description: "List of doctors.",
           items: [],
         },
         {
