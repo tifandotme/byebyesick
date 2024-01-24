@@ -14,7 +14,6 @@ const secret = process.env.NEXTAUTH_SECRET
 export default async function middleware(req: NextRequestWithAuth) {
   const { pathname } = req.nextUrl
   const token = await getToken({ req, secret })
-  console.log(pathname)
   const doctorPath = "/doctor"
   const consultationPath = "/consultation"
   const profilePath = "/profile"
