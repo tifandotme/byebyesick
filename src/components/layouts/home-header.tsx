@@ -3,8 +3,6 @@ import Link from "next/link"
 import { siteConfig } from "@/config"
 import { cn } from "@/lib/utils"
 import { useWindowScroll } from "@/hooks/use-window-scroll"
-import { Button } from "@/components/ui/button"
-import { Icons } from "@/components/icons"
 import { AvatarDropdown } from "@/components/layouts/avatar-dropdown"
 import { MainNav } from "@/components/layouts/main-nav"
 import { MobileNav } from "@/components/layouts/mobile-nav"
@@ -44,7 +42,7 @@ export function HomeHeader() {
             className={cn(
               "text-[0.95rem]",
               !isScrolled &&
-                "!bg-transparent font-bold text-background drop-shadow-lg hover:text-background/70 dark:text-white hover:dark:text-white/70",
+                "!bg-transparent font-bold text-background drop-shadow-lg hover:text-background/70 focus:text-background active:text-background dark:text-white hover:dark:text-white/70",
             )}
           />
         </div>
@@ -63,24 +61,6 @@ export function HomeHeader() {
             !isScrolled && "space-x-4",
           )}
         >
-          <Button
-            size="icon"
-            variant="outline"
-            className={cn(
-              "size-9 rounded-md bg-transparent",
-              !isScrolled &&
-                "border-0 text-background drop-shadow-md hover:text-background/70",
-            )}
-          >
-            <Icons.Cart
-              className={cn(
-                "size-4 transition-[height,_width]",
-                !isScrolled && "size-5",
-              )}
-              aria-hidden="true"
-            />
-          </Button>
-
           <AvatarDropdown className={cn(!isScrolled && "size-12")} />
         </div>
       </div>

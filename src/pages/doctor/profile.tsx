@@ -32,14 +32,16 @@ function DoctorProfilePage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>,
 ) {
   return (
-    <div className="py-7">
-      <ProfileLayout title="Profile" desc="User Profile Management">
-        <Head>
-          <title>ByeByeSick | Doctor Profile</title>
-        </Head>
-        <DoctorProfileForm userProfile={props.userProfile.data} />
-        <ResetPassword {...props.userProfile.data} />
-      </ProfileLayout>
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-6xl">
+        <ProfileLayout title="Profile" desc="User Profile Management">
+          <Head>
+            <title>ByeByeSick | Doctor Profile</title>
+          </Head>
+          <DoctorProfileForm userProfile={props.userProfile.data} />
+          <ResetPassword {...props.userProfile.data} />
+        </ProfileLayout>
+      </div>
     </div>
   )
 }

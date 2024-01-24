@@ -143,6 +143,7 @@ export function IncomingRequestsTable({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem
+                disabled={row.original.statusId !== 1}
                 onClick={() => {
                   const handleApproval = async () => {
                     const { success } = await updateStockMutationRequestStatus(
@@ -166,6 +167,7 @@ export function IncomingRequestsTable({
                 Accept
               </DropdownMenuItem>
               <DropdownMenuItem
+                disabled={row.original.statusId !== 1}
                 onClick={() => {
                   const handleApproval = async () => {
                     const { success } = await updateStockMutationRequestStatus(

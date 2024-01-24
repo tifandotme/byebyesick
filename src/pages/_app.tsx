@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         basePath={`${process.env.NEXT_PUBLIC_SITE_PATH}/api/auth`}
       >
         <SWRConfigWrapper>
-          <ThemeProvider attribute="class">
+          <ThemeProvider attribute="class" defaultTheme="light">
             {getLayout(<Component {...pageProps} />)}
 
             <Toaster richColors />
