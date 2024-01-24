@@ -68,7 +68,7 @@ const ImagePicker = ({
           <p className="text-primary">Drop Here</p>
         ) : (
           <div className="flex flex-col items-center">
-            <p className="text-primary">
+            <p className="text-secondary-foreground">
               <span className="text-blue-500 ">Drop </span> your files here or{" "}
               <span className="font-medium text-blue-500">
                 <label className="cursor-pointer" htmlFor="image">

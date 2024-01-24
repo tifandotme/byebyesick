@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { UploadCloudIcon } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
@@ -47,23 +48,31 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
   }>()
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files) return
-    const file = files[0]
+    if (!e.target.files) return
+    const file = e.target.files[0]
     if (!file) return
+    const temp = URL.createObjectURL(file)
+    if (file.size > 500000) {
+      toast.error("File size must be less than 500Kb")
+      return
+    }
     setImage({
-      url: URL.createObjectURL(file),
+      url: temp,
       image: file,
     })
   }
 
   const handleChangeCertificate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files) return
-    const file = files[0]
+    if (!e.target.files) return
+    const file = e.target.files[0]
     if (!file) return
+    const temp = URL.createObjectURL(file)
+    if (file.size > 500000) {
+      toast.error("File size must be less than 500Kb")
+      return
+    }
     setCertificate({
-      url: URL.createObjectURL(file),
+      url: temp,
       file: file,
     })
   }
@@ -87,7 +96,6 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
       if (!result?.ok) {
         throw new Error(result.statusText)
       }
-      setCertificate(undefined)
       const userData: ResponseById<IProfileDoctor> = await result.json()
 
       await update({
@@ -184,9 +192,7 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
         <div className="flex flex-col gap-4">
           <FormLabel>Certificate</FormLabel>
           {certificate ? (
-            <div className="w-full rounded-md border p-2 text-center">
-              {certificate?.file.name}
-            </div>
+            <img src={certificate.url} alt="" />
           ) : (
             userProfile?.doctor_certificate && (
               <a
@@ -194,28 +200,31 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
                 className="w-full rounded-md border p-2 text-center"
                 target="_blank"
               >
-                {truncate(
-                  40,
-                  userProfile?.doctor_certificate.slice(52, 100) as string,
-                )}
+                <img src={userProfile.doctor_certificate} alt="" />
               </a>
             )
           )}
-          <label
-            htmlFor="certificate"
-            className="cursor-pointer text-blue-500 hover:text-blue-300"
-          >
-            {userProfile?.doctor_certificate
-              ? "Change Certificate"
-              : "Upload Certificate"}
-            <input
-              type="file"
-              className="hidden"
-              accept="image/png,image/jpg,image/jpeg,application/pdf"
-              id="certificate"
-              onChange={handleChangeCertificate}
-            />
+          <label htmlFor="certificate" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full cursor-pointer font-medium"
+              asChild
+            >
+              <div>
+                <UploadCloudIcon className="mr-1.5 size-3.5 translate-y-[-1px] stroke-foreground stroke-[0.6px]" />
+                {userProfile?.doctor_certificate
+                  ? "Change Certificate"
+                  : "Upload Certificate"}
+              </div>
+            </Button>
           </label>
+          <input
+            type="file"
+            className="hidden"
+            accept="image/png,image/jpg,image/jpeg,application/pdf"
+            id="certificate"
+            onChange={handleChangeCertificate}
+          />
         </div>
         <div className="flex">
           <Button type="submit" variant={"default"}>

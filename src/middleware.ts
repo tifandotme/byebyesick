@@ -151,7 +151,6 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.rewrite(url)
     }
   } else if (profileBranchingPath) {
-    console.log(profileBranchingPath)
     if (!isAuthenticated) {
       const url = new URL(
         process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
