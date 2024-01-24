@@ -6,7 +6,7 @@ import useSWR from "swr"
 
 import type { Option } from "@/types"
 import type { IProduct, ResponseGetAll } from "@/types/api"
-import { categories, DrugClassConfig, SortByConfig, SortConfig } from "@/config"
+import { categories, SortByConfig, SortConfig } from "@/config"
 import { unslugify } from "@/lib/utils"
 import ChartLoader from "@/components/chart/chartLoader"
 import { imageLoader } from "@/components/image-loader"
@@ -45,7 +45,7 @@ export default function CategoriesPage({
   const [sort, setSort] = React.useState("desc")
   const [search, setSearch] = React.useState<string>("")
   const [page, setCurrentPage] = useState<number>(1)
-  const [drugClass, setDrugClass] = React.useState(categories[category])
+  const [drugClass] = React.useState(categories[category])
 
   const { data, isLoading, error } = useSWR<ResponseGetAll<IProduct[]>>(() => {
     const params = new URLSearchParams()
@@ -56,15 +56,6 @@ export default function CategoriesPage({
     if (page) params.set("page", page.toString())
     return `/v1/products?${params.toString()}`
   })
-
-  const drugsMap = (id: string): Option => {
-    const output = DrugClassConfig.find((status) => status.value === id)
-    if (output) return output
-    return {
-      label: "",
-      value: "",
-    }
-  }
 
   const sortByMap = (id: string): Option => {
     const output = SortByConfig.find((status) => status.value === id)

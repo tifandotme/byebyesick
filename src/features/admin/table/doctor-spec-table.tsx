@@ -27,29 +27,32 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = IManufacturer[]> {
+interface DoctorSpecsProps<TData = IManufacturer[]> {
   data: TData
   mutate: KeyedMutator<ResponseGetAll<TData>>
   pageCount: number
+  current_page: number
 }
 
-export function ProductManufacturersTable({
+export function DoctorSpecsTable({
   data,
   mutate,
   pageCount,
-}: ProductsTableProps) {
-  const productscategories = data.map((m, index) => ({
+  current_page,
+}: DoctorSpecsProps) {
+  const doctorSpecs = data.map((m, index) => ({
     id: index + 1,
+    num: (current_page - 1) * 10 + (index + 1),
     name: m.name,
     image: m.image,
   }))
 
-  type Data = (typeof productscategories)[number]
+  type Data = (typeof doctorSpecs)[number]
 
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "num",
         minSize: 200,
         maxSize: 200,
         header: ({ column }) => (
@@ -148,10 +151,6 @@ export function ProductManufacturersTable({
   )
 
   return (
-    <DataTable
-      columns={columns}
-      data={productscategories}
-      pageCount={pageCount}
-    />
+    <DataTable columns={columns} data={doctorSpecs} pageCount={pageCount} />
   )
 }
