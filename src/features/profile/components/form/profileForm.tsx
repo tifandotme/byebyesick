@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { addDays, addYears, format } from "date-fns"
+import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
@@ -29,13 +29,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { imageLoader } from "@/components/image-loader"
 import { updateProfile } from "@/features/profile/api/updateProfile"
 
@@ -48,10 +41,7 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
   for (let x = minOffset; x <= maxOffset; x++) {
     allYears.push(thisYear - x)
   }
-  const yearFilter = allYears.map((year) => ({
-    label: year.toString(),
-    value: year.toString(),
-  }))
+
   const form = useForm<UserProfileFormSchemaType>({
     resolver: zodResolver(userProfileFormSchema),
     defaultValues: {
