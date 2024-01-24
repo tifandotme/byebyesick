@@ -2,13 +2,27 @@
 
 import React from "react"
 import Link from "next/link"
-import useSWR from "swr"
+import { toast } from "sonner"
+import useSWR, { mutate } from "swr"
 
 import type { Option } from "@/types"
 import type { ITransaction, ResponseGetAll } from "@/types/api"
 import { PAYMENT_STATUS_OPTION } from "@/config"
+import { updatePayment } from "@/lib/fetchers"
 import { formatDate, formatPrice } from "@/lib/utils"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import ChartLoader from "@/components/chart/chartLoader"
@@ -75,49 +89,99 @@ function TransactionListPage() {
             <ChartLoader />
           ) : (
             data &&
-            data.data.items.map((order) => (
-              <Card key={order.id}>
-                <CardHeader>
-                  <div className="flex justify-between">
-                    <div>
-                      <div className="text-base text-gray-500 dark:text-gray-400">
-                        Transaction ID: {order.id}
+            data.data.items
+              .map((order) => (
+                <Card key={order.id}>
+                  <CardHeader>
+                    <div className="flex justify-between">
+                      <div>
+                        <div className="text-base text-gray-500 dark:text-gray-400">
+                          Transaction ID: {order.id}
+                        </div>
+                        <h3 className="text-base md:text-lg">
+                          {order?.address}
+                        </h3>
                       </div>
-                      <h3 className="text-lg font-semibold md:text-xl">
-                        {order?.address}
-                      </h3>
+                      <div className="flex items-center justify-center rounded-md p-2 text-xl font-medium">
+                        {renderBadge(order.transaction_status.id)}
+                      </div>
                     </div>
-                    <div className="flex items-center justify-center rounded-md p-2 text-xl font-medium">
-                      {renderBadge(order.transaction_status.id)}
+                    <Separator />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-2">
+                      <div className="text-lg font-medium">
+                        {order.payment_method}
+                      </div>
                     </div>
-                  </div>
-                  <Separator />
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2">
-                    <div className="text-lg font-medium">
-                      {order.payment_method}
+                    <div className="text-lg text-gray-500 dark:text-gray-400">
+                      Order Date: {formatDate(order?.date)}
                     </div>
-                  </div>
-                  <div className="text-lg text-gray-500 dark:text-gray-400">
-                    Order Date: {formatDate(order?.date)}
-                  </div>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold text-apple-500">
-                      {formatPrice(order.total_payment)}
-                    </span>
-                  </div>
-                  <Link
-                    href={`/order/transaction-detail/${order.id}`}
-                    className="text-blue-500"
-                  >
-                    View Detail
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))
+                  </CardContent>
+                  <CardFooter className="flex justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl font-bold text-apple-500">
+                        {formatPrice(order.total_payment)}
+                      </span>
+                    </div>
+
+                    <div className="flex space-x-2">
+                      {order.transaction_status.id === 1 && (
+                        <AlertDialog>
+                          <AlertDialogTrigger
+                            className="w-full text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                            asChild
+                          >
+                            <Button variant={"outline"}>
+                              Cancel Transaction
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Cancel Payment
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                You are about to cancel this payment. This
+                                action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                className="bg-red-500"
+                                onClick={() => {
+                                  const handleAccept = async () => {
+                                    const { success, message } =
+                                      await updatePayment(order.id, "cancel")
+
+                                    if (!success) throw new Error(message)
+                                  }
+                                  toast.promise(handleAccept(), {
+                                    loading: "Canceling payment...",
+                                    success: "Payment canceled successfully",
+                                    error: (err) => `${err.message}`,
+                                  })
+                                }}
+                              >
+                                Cancel Payment
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                      <Link
+                        href={`/order/transaction-detail/${order.id}`}
+                        className="text-blue-500"
+                      >
+                        <Button>View Detail</Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))
+              .reverse()
           )}
           {!isLoading && data && data.data.items.length === 0 && (
             <div className="flex py-9">

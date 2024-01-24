@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -116,7 +117,11 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="OBH Combi" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your product name"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -129,7 +134,11 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Generic Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="OBH Combi" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your generic product name"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +151,11 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Content</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="paracetamol" {...field} rows={5} />
+                    <Textarea
+                      placeholder="Your product's ingredients"
+                      {...field}
+                      rows={5}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,7 +207,7 @@ export default function ProductForm({
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Obat ini dapat digunakan untuk sakit kepala"
+                      placeholder="Description for your product"
                       {...field}
                       rows={5}
                     />
@@ -284,7 +297,11 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Drug Form</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Capsule" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your product's form"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -297,7 +314,11 @@ export default function ProductForm({
                 <FormItem>
                   <FormLabel>Unit in Pack</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="10" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your product's unit in a pack"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -308,9 +329,13 @@ export default function ProductForm({
               name="selling_unit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Drug Form</FormLabel>
+                  <FormLabel>Selling Unit</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Bottle" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your selling unit product. Ex: Bottle"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -318,57 +343,61 @@ export default function ProductForm({
             />
 
             <div className="flex space-x-2">
-              <div className="">
-                <div>
-                  <FormField
-                    control={form.control}
-                    name="weight"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Weight</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="in grams"
-                            {...field}
-                            onChange={(event) => {
-                              const numericValue = +event.target.value
-                              field.onChange(
-                                isNaN(numericValue) ? 0 : numericValue,
-                              )
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="length"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Product Length</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="in cm"
-                            {...field}
-                            onChange={(event) => {
-                              const numericValue = +event.target.value
-                              field.onChange(
-                                isNaN(numericValue) ? 0 : numericValue,
-                              )
-                            }}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="w-full">
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Weight</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="in grams"
+                          {...field}
+                          onChange={(event) => {
+                            const numericValue = +event.target.value
+                            field.onChange(
+                              isNaN(numericValue) ? 0 : numericValue,
+                            )
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-sm text-primary">
+                        *Please input in grams
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="length"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Product Length</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          placeholder="in cm"
+                          {...field}
+                          onChange={(event) => {
+                            const numericValue = +event.target.value
+                            field.onChange(
+                              isNaN(numericValue) ? 0 : numericValue,
+                            )
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-sm text-primary">
+                        *Please input in cm
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="">
+              <div className="w-full">
                 <FormField
                   control={form.control}
                   name="width"
@@ -388,6 +417,9 @@ export default function ProductForm({
                           }}
                         />
                       </FormControl>
+                      <FormDescription className="text-sm text-primary">
+                        *Please input in cm
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -411,6 +443,9 @@ export default function ProductForm({
                           }}
                         />
                       </FormControl>
+                      <FormDescription className="text-sm text-primary">
+                        *Please input in cm
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -459,25 +494,35 @@ export default function ProductForm({
                           </label>
                         </>
                       </FormControl>
-
+                    </div>
+                    <div className="mt-8">
                       {mode === "add" &&
-                        form.getFieldState("image").isDirty && (
+                        form.getFieldState("image").isDirty &&
+                        field.value.type.startsWith("image/") && (
                           <img
                             src={URL.createObjectURL(field.value)}
                             alt={"Image preview"}
                           />
                         )}
-                      {mode === "edit" && initialProductData && (
-                        <img
-                          src={
-                            form.getFieldState("image").isDirty
-                              ? URL.createObjectURL(field.value)
-                              : initialProductData.data.image
-                          }
-                          alt={initialProductData.data.name}
-                        />
-                      )}
+                      {mode === "edit" &&
+                        initialProductData &&
+                        form.getFieldState("image").isDirty &&
+                        field.value.type.startsWith("image/") && (
+                          <img
+                            src={URL.createObjectURL(field.value)}
+                            alt={initialProductData.data.name}
+                          />
+                        )}
+                      {mode === "edit" &&
+                        initialProductData &&
+                        !form.getFieldState("image").isDirty && (
+                          <img
+                            src={initialProductData.data.image}
+                            alt={initialProductData.data.name}
+                          />
+                        )}
                     </div>
+
                     <UncontrolledFormMessage
                       message={form.formState.errors.image?.message?.toString()}
                     />
