@@ -11,7 +11,6 @@ import ProductCategoriesLayout from "@/features/productcategories/components/lay
 export default function ProductCategoriesTablePage() {
   const router = useRouter()
 
-  // const { data, isLoading, mutate } = useProductData({})
   const { page, per_page, search, sort } = router.query
 
   const { data, isLoading, mutate } = useSWR<
@@ -30,12 +29,15 @@ export default function ProductCategoriesTablePage() {
   return (
     <>
       <div className="space-y-6 overflow-auto">
-        {isLoading && <DataTableSkeleton columnCount={5} />}
+        {isLoading && !data && (
+          <DataTableSkeleton columnCount={5} filterableFieldCount={0} />
+        )}{" "}
         {data && (
           <ProductCategoriesTable
             data={data.data.items}
             mutate={mutate}
             pageCount={data?.data.total_pages}
+            current_page={parseInt(page as string) ?? 1}
           />
         )}
       </div>

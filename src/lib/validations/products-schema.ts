@@ -67,7 +67,7 @@ export const productSchema = z.object({
         return true
       },
       {
-        message: "Image must be a .png file and cannot exceed 500 KB",
+        message: "Image must be a valid image file and cannot exceed 500 KB",
       },
     ),
   ),

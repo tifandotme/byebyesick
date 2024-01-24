@@ -90,16 +90,6 @@ export function ProductManufacturersTable({
             <DropdownMenuContent align="end" className="w-[130px]">
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/${row.original.id}`}
-                  target="_blank"
-                  className="flex justify-between"
-                >
-                  View
-                  <ExternalLinkIcon className="ml-1.5 size-3.5" />
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
                   href={`/dashboard/productcategories/edit/${row.original.id}`}
                 >
                   Edit

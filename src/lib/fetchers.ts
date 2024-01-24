@@ -572,7 +572,12 @@ export async function updateProductCategory(
     const res = await fetch(url, options)
 
     if (!res.ok) {
-      throw new Error("Failed to update a product category")
+      const errorResponse = await res.json()
+      throw new Error(
+        errorResponse
+          ? "Sorry, this category name is already taken"
+          : "Something went wrong please try again",
+      )
     }
 
     if (mode === "edit") {
@@ -921,7 +926,7 @@ export async function createTransactions(
 
 export async function updatePayment(
   id: number,
-  mode: "reject" | "accept",
+  mode: "reject" | "accept" | "cancel",
 ): Promise<Response> {
   try {
     const url = new URL(

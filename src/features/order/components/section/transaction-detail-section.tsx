@@ -62,7 +62,7 @@ function TransactionDetailSection(transaction: ITransaction) {
         <header className="flex flex-col items-center gap-4">
           <SiteLogo />
           <div className="text-center">
-            <h1 className="text-2xl font-bold">ByeByeSick Inc.</h1>
+            <h1 className="text-2xl font-bold">ByeByeSick</h1>
             <p>Sopo Del Building, The Sky, L30, Lot 10.1-6</p>
             <p>(123) 456-7890</p>
             <p>byebyesick@gmail.com</p>
@@ -75,7 +75,7 @@ function TransactionDetailSection(transaction: ITransaction) {
             <p>{transaction.payment_method}</p>
             {renderBadge(transaction.transaction_status.id)}
             <p className="text-orange-500">
-              <Clock10Icon className="mr-1 inline-block " />
+              Pay before:{" "}
               {formatDate(
                 new Date(
                   new Date(transaction.date).setDate(
