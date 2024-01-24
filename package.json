@@ -34,20 +34,20 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@tanstack/react-table": "^8.11.6",
+    "@tanstack/react-table": "^8.11.7",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
-    "date-fns": "^3.2.0",
+    "date-fns": "^3.3.1",
     "embla-carousel-autoplay": "^8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc19",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
-    "ldrs": "^1.0.1",
     "leaflet": "^1.9.4",
-    "lucide-react": "^0.312.0",
-    "next": "14.0.4",
+    "lucide-react": "^0.314.0",
+    "next": "14.1.0",
     "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "react": "^18",
@@ -57,15 +57,18 @@
     "react-hook-form": "^7.49.3",
     "react-icons": "^5.0.1",
     "react-leaflet": "^4.2.1",
+    "react-resizable-panels": "0.0.55",
+    "react-use-websocket": "^4.5.0",
     "sonner": "^1.3.1",
     "swr": "^2.2.4",
-    "tailwind-merge": "^2.2.0",
+    "tailwind-merge": "^2.2.1",
     "zod": "^3.22.4",
-    "zustand": "^4.4.7"
+    "zustand": "^4.5.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^18.4.4",
+    "@commitlint/cli": "^18.5.0",
     "@commitlint/types": "^18.4.4",
+    "@faker-js/faker": "^8.3.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/js-cookie": "^3.0.6",
@@ -75,7 +78,7 @@
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4",
+    "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-tailwindcss": "^3.14.0",
     "husky": "^8.0.3",
@@ -86,5 +89,8 @@
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3"
-  }
+  },
+  "//": [
+    "Do not update `react-resizeable-panels` as shadcn-ui hasn't yet supported the latest version."
+  ]
 }

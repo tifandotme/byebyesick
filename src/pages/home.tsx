@@ -6,7 +6,7 @@ import { Gradient } from "@/lib/gradient.js"
 import { Badge } from "@/components/ui/badge"
 import { HomeLayout } from "@/components/layouts/home"
 
-export default function HomePage() {
+export default function HomePages() {
   const { theme } = useTheme()
 
   React.useEffect(() => {
@@ -40,12 +40,10 @@ export default function HomePage() {
           </h2>
         </div>
       </div>
-
-      <div className="container h-[500px] max-w-6xl bg-blue-100">test</div>
     </div>
   )
 }
 
-HomePage.getLayout = function getLayout(page: React.ReactElement) {
+HomePages.getLayout = function getLayout(page: React.ReactElement) {
   return <HomeLayout>{page}</HomeLayout>
 }

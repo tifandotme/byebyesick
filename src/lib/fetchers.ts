@@ -27,7 +27,10 @@ import type {
   ITransaction,
   Pharmacy,
   PharmacyProduct,
+  Prescription,
+  PrescriptionProduct,
   ResponseGetAll,
+  SickLeaveForm,
 } from "@/types/api"
 import { handleFailedRequest } from "@/lib/utils"
 
@@ -306,6 +309,105 @@ export async function updatePharmacyProduct(
     return {
       success: true,
       message: `Pharmacy product ${mode === "add" ? "added" : "updated"}`,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updateCertificate(
+  mode: "add" | "edit",
+  payload: Pick<
+    SickLeaveForm,
+    "session_id" | "starting_date" | "ending_date" | "description"
+  >,
+  id?: number,
+): Promise<Response> {
+  try {
+    const { session_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/sick-leave-forms" : `/v1/sick-leave-forms/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { session_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Sick leave certificate is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function updatePrescription(
+  mode: "add" | "edit",
+  payload: Pick<Prescription, "session_id" | "symptoms" | "diagnosis"> & {
+    prescription_products: Pick<PrescriptionProduct, "product_id" | "note">[]
+  },
+  id?: number,
+): Promise<Response> {
+  try {
+    const { session_id, ...data } = payload
+
+    const endpoint =
+      mode === "add" ? "/v1/prescriptions" : `/v1/prescriptions/${id}`
+    const options: RequestInit = {
+      method: mode === "add" ? "POST" : "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(mode === "add" ? { session_id } : {}),
+        ...data,
+      } satisfies Partial<typeof payload>),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Prescription is updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function endChatRoom(id: number): Promise<Response> {
+  try {
+    const endpoint = `/v1/chats/${id}`
+    const options: RequestInit = {
+      method: "PUT",
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Chat room is ended",
     }
   } catch (err) {
     return {
@@ -612,8 +714,6 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
       throw new Error("Failed to delete a product")
     }
 
-    mutate(url)
-
     return {
       success: true,
       message: "Cart deleted",
@@ -839,6 +939,43 @@ export async function updatePayment(
     return {
       success: true,
       message: `Payment ${mode === "accept" ? "accepted" : "rejected"}`,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function updatePharmacyAdminOrder(
+  id: number,
+  mode: "reject" | "accept" | "cancel" | "ship",
+): Promise<Response> {
+  try {
+    const url = new URL(
+      `/v1/orders/${id}/${mode}`,
+      process.env.NEXT_PUBLIC_DB_URL,
+    )
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    const res = await fetch(url, options)
+    if (!res.ok) {
+      const errorResponse = await res.json()
+      throw new Error(errorResponse.errors || "An error occurred")
+    }
+
+    return {
+      success: true,
+      message: `Orders ${mode === "accept" ? "accepted" : "rejected"}`,
     }
   } catch (error) {
     return {

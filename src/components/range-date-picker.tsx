@@ -88,7 +88,7 @@ export function RangeDatePicker({
             onClick={() => setDate(undefined)}
           >
             Reset
-            <Cross2Icon className="ml-2 h-4 w-4" />
+            <Cross2Icon className="ml-2 size-4" />
           </Button>
         )}
         <PopoverTrigger asChild>
@@ -100,7 +100,7 @@ export function RangeDatePicker({
               !date && "text-muted-foreground",
             )}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="mr-2 size-4" />
             {date?.from ? (
               date.to ? (
                 <>

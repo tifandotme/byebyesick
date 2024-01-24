@@ -10,10 +10,12 @@ import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
 import { useAddressMain } from "@/lib/fetchers"
 import useGeolocation from "@/hooks/use-geolocation"
 import { Button } from "@/components/ui/button"
-import { MainLayout } from "@/components/layouts/main"
+import { HomeLayout } from "@/components/layouts/home"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
 import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
+
+import HomePages from "./home"
 
 export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -82,12 +84,13 @@ export default function HomePage({
     )
 
   return (
-    <div className="container flex justify-center">
-      <div className="container max-w-6xl">
+    <div className="">
+      <div className="">
         <Head>
           <title>ByeByeSick | Home</title>
         </Head>
 
+        <HomePages />
         <Hero />
         {error && (
           <div>
@@ -100,13 +103,15 @@ export default function HomePage({
               <p>No Product Yet</p>
             </div>
           ) : (
-            <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {data &&
-                data.data.items.map((cat) => (
-                  <div key={cat.id}>
-                    <CategoryCard category={cat.name} icon={<Tablets />} />
-                  </div>
-                ))}
+            <div className="container max-w-6xl">
+              <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {data &&
+                  data.data.items.map((cat) => (
+                    <div key={cat.id}>
+                      <CategoryCard category={cat.name} icon={<Tablets />} />
+                    </div>
+                  ))}
+              </div>
             </div>
           )}
         </div>
@@ -116,15 +121,17 @@ export default function HomePage({
           </div>
         )}
         <>
-          <div className="mt-5 flex justify-between text-2xl font-semibold">
-            <h2 className="mt-5 flex items-center">
-              <MapPin className="mr-2" /> Around You
-            </h2>
-            <Link href="/products/around-you">
-              <Button variant={"link"}>
-                See All <ArrowRight className="ml-2 size-4" />
-              </Button>
-            </Link>
+          <div className="container max-w-6xl">
+            <div className="mt-5 flex justify-between text-2xl font-semibold">
+              <h2 className="mt-5 flex items-center">
+                <MapPin className="mr-2" /> Around You
+              </h2>
+              <Link href="/products/around-you">
+                <Button variant={"link"}>
+                  See All <ArrowRight className="ml-2 size-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {loadingAround && (
@@ -159,25 +166,29 @@ export default function HomePage({
             </div>
           )}
 
-          <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            {around?.data.items.slice(0, 6).map((cat) => (
-              <div key={cat.id} className="flex justify-center">
-                <ProductCard product={cat} />
-              </div>
-            ))}
+          <div className="container max-w-6xl">
+            <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+              {around?.data.items.slice(0, 6).map((cat) => (
+                <div key={cat.id} className="flex justify-center">
+                  <ProductCard product={cat} />
+                </div>
+              ))}
+            </div>
           </div>
 
           {addressData && (
-            <div className="mt-5 flex justify-between text-2xl font-semibold">
-              <h2 className="mt-5 flex items-center">
-                <MapPin className="mr-2" /> Around{" "}
-                {addressData?.data.sub_district}
-              </h2>
-              <Link href="/products/around-your-district">
-                <Button variant={"link"}>
-                  See All <ArrowRight className="ml-2 size-4" />
-                </Button>
-              </Link>
+            <div className="container max-w-6xl">
+              <div className="mt-5 flex justify-between text-2xl font-semibold">
+                <h2 className="mt-5 flex items-center">
+                  <MapPin className="mr-2" /> Around{" "}
+                  {addressData?.data.sub_district}
+                </h2>
+                <Link href="/products/around-your-district">
+                  <Button variant={"link"}>
+                    See All <ArrowRight className="ml-2 size-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
 
@@ -188,12 +199,15 @@ export default function HomePage({
               </p>
             </div>
           )}
-          <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-            {productByAddress?.data.items.slice(0, 6).map((cat) => (
-              <div key={cat.id}>
-                <ProductCard product={cat} />
-              </div>
-            ))}
+
+          <div className="container max-w-6xl">
+            <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+              {productByAddress?.data.items.slice(0, 6).map((cat) => (
+                <div key={cat.id}>
+                  <ProductCard product={cat} />
+                </div>
+              ))}
+            </div>
           </div>
         </>
       </div>
@@ -202,5 +216,5 @@ export default function HomePage({
 }
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
-  return <MainLayout>{page}</MainLayout>
+  return <HomeLayout>{page}</HomeLayout>
 }
