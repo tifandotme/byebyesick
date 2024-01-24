@@ -32,9 +32,9 @@ export const siteConfig = {
           items: [],
         },
         {
-          title: "Enlist your pharmacy",
-          href: "#",
-          description: "Register your pharmacy",
+          title: "Doctors List",
+          href: "/doctors",
+          description: "List of doctors.",
           items: [],
         },
         {
@@ -48,6 +48,10 @@ export const siteConfig = {
     {
       title: "Consultation",
       href: "/consultation",
+    },
+    {
+      title: "Profile",
+      href: "/profile",
     },
   ] satisfies MainNavItem[],
   dashboardNav: {
@@ -68,43 +72,43 @@ export const siteConfig = {
         title: "Users",
         href: "/dashboard/users",
         icon: "Person",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Products",
         href: "/dashboard/products",
         icon: "Product",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Manufacturers",
         href: "/dashboard/manufacturers",
         icon: "Manufacturers",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Categories",
         href: "/dashboard/productcategories",
         icon: "ProductCategory",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Pharmacies",
         href: "/dashboard/pharmacies",
         icon: "Pharmacies",
-        role: "pharmacyAdmin",
+        role: ["pharmacyAdmin"],
       },
       {
         title: "Sales Report",
         href: "/dashboard/sales-report",
         icon: "PieChart",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Transactions",
         href: "/dashboard/transactions",
         icon: "Transactions",
-        role: "superAdmin",
+        role: ["superAdmin"],
       },
       {
         title: "Orders",

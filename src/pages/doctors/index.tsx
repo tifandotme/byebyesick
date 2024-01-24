@@ -27,9 +27,9 @@ function DoctorListPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className="flex w-full justify-center py-9">
-      <div className="max-w-6xl">
+      <div className="w-full max-w-6xl">
         <Head>
-          <title>ByeByeSick | Consultation</title>
+          <title>ByeByeSick | Doctor List</title>
         </Head>
         <DoctorCategory category={category} />
       </div>

@@ -1,16 +1,20 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { IProfileUser, ResponseById } from "@/types/api"
+import { cn } from "@/lib/utils"
 import {
   userProfileFormSchema,
   type UserProfileFormSchemaType,
 } from "@/lib/validations/profile"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Form,
   FormControl,
@@ -20,16 +24,31 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { imageLoader } from "@/components/image-loader"
 import { updateProfile } from "@/features/profile/api/updateProfile"
 
 function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
   const { data: session, update } = useSession()
+  const minOffset = 0,
+    maxOffset = 20
+  const thisYear = new Date().getFullYear()
+  const allYears = []
+  for (let x = minOffset; x <= maxOffset; x++) {
+    allYears.push(thisYear - x)
+  }
+
   const form = useForm<UserProfileFormSchemaType>({
     resolver: zodResolver(userProfileFormSchema),
     defaultValues: {
       name: userProfile?.name,
-      date: userProfile?.date_of_birth,
+      date: userProfile?.date_of_birth
+        ? format(userProfile?.date_of_birth, "yyyy-MM-dd")
+        : format(new Date("2000-1-1"), "yyyy-MM-dd"),
     },
   })
 
@@ -118,19 +137,55 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="date"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date Of Birth</FormLabel>
+            <FormItem className="flex flex-col">
+              <FormLabel>Birth Date</FormLabel>
               <FormControl>
-                <Input type="date" {...field} min="1945-01-01" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        " justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="z-4 mr-2" />
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      defaultMonth={new Date(field.value)}
+                      initialFocus
+                      selected={field.value ? new Date(field.value) : undefined}
+                      captionLayout="dropdown-buttons"
+                      onSelect={(date) => {
+                        field.onChange(date ? format(date, "yyyy-MM-dd") : "")
+                      }}
+                      fromYear={1960}
+                      toYear={2030}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <div className="flex">
           <Button type="submit" variant={"default"}>
             Edit Profile

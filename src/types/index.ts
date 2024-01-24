@@ -1,6 +1,5 @@
 import type { z } from "zod"
 
-import type { usersRoleIds } from "@/config"
 import type { addressSchema } from "@/lib/validations/address"
 import type cartSchema from "@/lib/validations/cart-schema"
 import type {
@@ -67,7 +66,7 @@ export interface NavItem {
 export type NavItemRequired = Required<Omit<NavItem, "description">>
 
 export interface NavItemRequiredWithRole extends NavItemRequired {
-  role: (typeof usersRoleIds)[keyof typeof usersRoleIds]
+  role: string[]
 }
 
 export interface NavItemWithOptionalChildren extends NavItem {
