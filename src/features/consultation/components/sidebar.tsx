@@ -68,9 +68,11 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
                 <li key={product.id} className="flex flex-col">
                   <span className="font-bold">{product.product.name}</span>
                   <span>Note: {product.note}</span>
-                  <button className="w-fit font-semibold text-primary hover:underline">
-                    Add to cart
-                  </button>
+                  {as === "patient" && (
+                    <button className="w-fit font-semibold text-primary hover:underline">
+                      Add to cart
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -90,7 +92,7 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
                   "mt-3 w-full",
                 )}
               >
-                View Certificate
+                View Perscription
                 <ExternalLinkIcon className="ml-2 size-3.5" />
               </Link>
             )}

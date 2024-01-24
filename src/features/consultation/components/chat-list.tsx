@@ -126,7 +126,7 @@ export function ChatList({ status, as }: ChatListProps) {
                             <AvatarImage
                               src={profile.profile_photo ?? undefined}
                               className="object-cover object-center"
-                              alt="foo"
+                              alt={profile.name ?? undefined}
                             />
                             {chat.doctor.name ? (
                               <AvatarFallback>
