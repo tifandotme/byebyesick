@@ -467,7 +467,12 @@ export default function DoctorChatRoomPage({
                         control={form.control}
                         name="image"
                         render={({ field }) => (
-                          <label>
+                          <label
+                            className={cn(
+                              data?.data.consultation_session_status_id !== 1 &&
+                                "pointer-events-none opacity-50",
+                            )}
+                          >
                             <Input
                               className="hidden"
                               type="file"
@@ -487,8 +492,6 @@ export default function DoctorChatRoomPage({
                               className={cn(
                                 buttonVariants({ variant: "ghost" }),
                                 "cursor-pointer p-3",
-                                data?.data.consultation_session_status_id !==
-                                  1 && "pointer-events-none opacity-50",
                               )}
                             >
                               <ImageIcon className="size-5" />
@@ -503,7 +506,12 @@ export default function DoctorChatRoomPage({
                         control={form.control}
                         name="pdf"
                         render={({ field }) => (
-                          <label>
+                          <label
+                            className={cn(
+                              data?.data.consultation_session_status_id !== 1 &&
+                                "pointer-events-none opacity-50",
+                            )}
+                          >
                             <Input
                               className="hidden"
                               type="file"
@@ -523,8 +531,6 @@ export default function DoctorChatRoomPage({
                               className={cn(
                                 buttonVariants({ variant: "ghost" }),
                                 "cursor-pointer p-3",
-                                data?.data.consultation_session_status_id !==
-                                  1 && "pointer-events-none opacity-50",
                               )}
                             >
                               <FileIcon className="size-5" />
