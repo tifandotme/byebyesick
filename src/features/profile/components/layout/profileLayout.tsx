@@ -5,6 +5,7 @@ import { useRouter } from "next/router"
 import { MapPinIcon, UserIcon } from "lucide-react"
 import { useSession } from "next-auth/react"
 
+import { DOCTOR_ROLE, PATIENT_ROLE } from "@/config"
 import {
   Card,
   CardContent,
@@ -49,9 +50,17 @@ function ProfileLayout({
         <CardContent>
           <div className="mt-3 flex w-full flex-row gap-2 p-1 md:flex-col">
             <Link
-              href={"/user/profile"}
+              href={
+                session?.user.user_role_id == DOCTOR_ROLE
+                  ? "doctor/profile"
+                  : "/user/profile"
+              }
               className={`${
                 pathname === "/user/profile"
+                  ? "bg-secondary text-secondary-foreground"
+                  : "text-primary"
+              } ${
+                pathname === "/doctor/profile"
                   ? "bg-secondary text-secondary-foreground"
                   : "text-primary"
               } rounded-md py-2 hover:bg-muted hover:text-foreground`}
@@ -67,7 +76,7 @@ function ProfileLayout({
                 <span>Profile</span>
               </span>
             </Link>
-            {session?.user.user_role_id === 4 && (
+            {session?.user.user_role_id == PATIENT_ROLE && (
               <Link
                 href={"/user/address"}
                 className={`${

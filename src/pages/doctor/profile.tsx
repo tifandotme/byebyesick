@@ -34,7 +34,7 @@ function DoctorProfilePage(
   return (
     <div className="flex items-center justify-center">
       <div className="w-full max-w-6xl">
-        <ProfileLayout title="Profile" desc="User Profile Management">
+        <ProfileLayout title="Doctor Profile" desc="Doctor Profile Management">
           <Head>
             <title>ByeByeSick | Doctor Profile</title>
           </Head>

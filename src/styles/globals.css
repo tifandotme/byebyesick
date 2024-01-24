@@ -79,6 +79,10 @@
   }
 }
 
+.rdp-vhidden {
+  @apply hidden;
+}
+
 @media (max-width: 640px) {
   .container {
     @apply px-4;
