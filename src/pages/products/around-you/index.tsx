@@ -175,12 +175,14 @@ export default function SeeAllAroundYou() {
                 </div>
               </div>
             )}
-            <div className="py-5">
-              <PaginationComponent
-                page={data?.data.current_page || 1}
-                setCurrentPage={setPage}
-              />
-            </div>
+            {data && data?.data.items.length >= 10 && (
+              <div className="py-5">
+                <PaginationComponent
+                  page={data?.data.current_page || 1}
+                  setCurrentPage={setPage}
+                />
+              </div>
+            )}
           </div>
         </>
       )}

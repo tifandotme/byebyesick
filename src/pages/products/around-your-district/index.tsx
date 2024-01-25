@@ -172,12 +172,14 @@ export default function SeeAllAroundYourDistrict() {
                 </div>
               </div>
             )}
-            <div className="py-5">
-              <PaginationComponent
-                page={data?.data.current_page || 1}
-                setCurrentPage={setPage}
-              />
-            </div>
+            {data && data?.data.current_page_total_items >= 10 && (
+              <div className="py-5">
+                <PaginationComponent
+                  page={data?.data.current_page || 1}
+                  setCurrentPage={setPage}
+                />
+              </div>
+            )}
           </div>
         </>
       )}
