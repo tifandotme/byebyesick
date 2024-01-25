@@ -24,7 +24,6 @@ export default async function middleware(req: NextRequestWithAuth) {
     "/dashboard/productcategories",
     "/dashboard/manufacturers",
     "/dashboard/transactions",
-    "/dashboard/orders",
     "/dashboard/doctor-specs",
   ]
   const adminAndPharmacyAdminPath = [
