@@ -110,7 +110,6 @@ export const siteConfig = {
         icon: "Transactions",
         role: ["superAdmin"],
       },
-
       {
         title: "Orders",
         href: "/dashboard/orders",

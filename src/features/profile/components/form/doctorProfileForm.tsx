@@ -33,13 +33,14 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
   const form = useForm<DoctorProfileFormSchemaType>({
     resolver: zodResolver(doctorProfileFormSchema),
     defaultValues: {
-      name: userProfile?.name,
-      starting_year: userProfile?.starting_year,
-      consultation_fee: userProfile?.consultation_fee,
+      name: userProfile?.name ?? "",
+      starting_year: userProfile?.starting_year ?? 0,
+      consultation_fee: userProfile?.consultation_fee ?? "",
       doctor_specialization_id:
         userProfile?.doctor_specialization.id?.toString() ?? "0",
     },
   })
+
   const [image, setImage] = useState<{
     image: File
     url: string
@@ -116,6 +117,7 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
     }
   }
 
+  console.log(form.watch())
   return (
     <Form {...form}>
       <form
@@ -166,7 +168,13 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
             <FormItem>
               <FormLabel>Consultation Fee</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" type="text" {...field} />
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(Number(e.target.value).toString())
+                  }
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

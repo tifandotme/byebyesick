@@ -18,6 +18,14 @@ export const loginFormSchema = z
   })
   .required()
 
+const MAX_FILE_SIZE = 500000
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/pdf",
+]
+
 export const verifyFormSchema = z
   .object({
     role: z.string({ invalid_type_error: "Please select your role" }).min(1, {
@@ -33,7 +41,13 @@ export const verifyFormSchema = z
       .string()
       .min(1, { message: "Confirmation Password Required" })
       .transform((e) => (e === "" ? undefined : e)),
-    image: z.any(),
+    image: z
+      .instanceof(File)
+      .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 500KB`) // this should be greater than or equals (>=) not less that or equals (<=)
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        ".jpg, .jpeg, .png and .pdf files are accepted.",
+      ),
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Password don't match",
@@ -45,7 +59,7 @@ export const verifyFormSchema = z
       return true
     },
     {
-      message: "Certificate Required",
+      message: "Certificate is required",
       path: ["image"],
     },
   )

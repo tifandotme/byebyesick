@@ -41,11 +41,9 @@ function VerifyForm({ data }: RegisterToken) {
   })
 
   const [isDoctor, setIsDoctor] = React.useState<boolean>(false)
-  const [loading, setIsLoading] = React.useState<boolean>(false)
 
   const onSubmit: SubmitHandler<VerifyFormSchemaType> = async (formData) => {
     try {
-      setIsLoading(true)
       const signup = await verify(
         {
           ...formData,
@@ -62,11 +60,10 @@ function VerifyForm({ data }: RegisterToken) {
     } catch (error) {
       const err = error as Error
       toast.error(err.message, { duration: 2000 })
-    } finally {
-      setIsLoading(false)
     }
   }
 
+  console.log("image watch", form.watch("image"))
   return (
     <Form {...form}>
       <form
@@ -196,12 +193,13 @@ function VerifyForm({ data }: RegisterToken) {
                   <Input
                     type="file"
                     accept="image/*,application/pdf"
-                    {...field}
-                    onChange={(event) => {
-                      const files = event.target.files
+                    onChange={(e) => {
+                      const files = e.target.files
                       if (!files) return
+
                       const file = files[0]
                       if (!file) return
+
                       field.onChange(file)
                     }}
                   />
@@ -211,7 +209,11 @@ function VerifyForm({ data }: RegisterToken) {
             )}
           />
         )}
-        <Button className="w-full" type="submit" disabled={loading}>
+        <Button
+          className="w-full"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
           Submit
         </Button>
       </form>
