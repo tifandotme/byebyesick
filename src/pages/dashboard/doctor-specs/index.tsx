@@ -19,22 +19,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import ManufacturerLayout from "@/features/manufacturers/layout"
+import DoctorSpecsLayout from "@/features/doctor-specs/layout"
 import { ManufacturersCard } from "@/features/manufacturers/manufacturers-card"
 import { PharmacyCardSkeleton } from "@/features/pharmacies/components/pharmacy-card-skeleton"
 
-export default function ManufacturersPage() {
+export default function DoctorSpecsPage() {
   const router = useRouter()
 
-  const { search, sort } = router.query
+  const { search, sort, limit, page } = router.query
 
   const { data, isLoading } = useSWR<ResponseGetAll<IManufacturer[]>>(() => {
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (sort) params.set("sort_by", sort.split(".")[0] as string)
     if (sort) params.set("sort", sort.split(".")[1] as string)
+    if (limit) params.set("limit", limit as string)
+    if (page) params.set("page", page as string)
 
-    return `/v1/manufacturers?${params.toString()}`
+    return `/v1/doctor-specs?${params.toString()}`
   })
 
   return (
@@ -56,7 +58,7 @@ export default function ManufacturersPage() {
           <ManufacturersCard
             key={manufacturer.id}
             manufacturer={manufacturer}
-            href={`/dashboard/manufacturers/edit/${manufacturer.id}`}
+            href={`/dashboard/doctor-specs/edit/${manufacturer.id}`}
           />
         ))}
       </section>
@@ -139,7 +141,7 @@ function ManufacturersToolbar() {
   return (
     <div className="flex gap-2">
       <Input
-        placeholder="Search manufacturers..."
+        placeholder="Search Specializations..."
         onChange={(e) => setQuery(e.target.value)}
         value={query}
         className="h-8 w-fit"
@@ -204,10 +206,10 @@ function ManufacturersToolbar() {
   )
 }
 
-ManufacturersPage.getLayout = function getLayout(page: React.ReactElement) {
+DoctorSpecsPage.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <DashboardLayout>
-      <ManufacturerLayout>{page}</ManufacturerLayout>
+      <DoctorSpecsLayout>{page}</DoctorSpecsLayout>
     </DashboardLayout>
   )
 }

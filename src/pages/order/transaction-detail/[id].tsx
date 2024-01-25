@@ -35,7 +35,6 @@ export const getServerSideProps: GetServerSideProps<{
 function TransactionDetailPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // console.log(props)
   return <TransactionDetailSection {...props} />
 }
 

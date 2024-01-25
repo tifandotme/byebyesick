@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadCloudIcon } from "lucide-react"
@@ -6,7 +8,6 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { IProfileDoctor, ResponseById } from "@/types/api"
-import { truncate } from "@/lib/truncate"
 import {
   doctorProfileFormSchema,
   type DoctorProfileFormSchemaType,
