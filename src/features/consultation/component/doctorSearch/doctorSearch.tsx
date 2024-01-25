@@ -27,12 +27,14 @@ function DoctorSearch({
         </Button>
         <h1 className="text-2xl font-semibold capitalize">{title}</h1>
       </div>
-      {DoctorList && DoctorList?.length > 0 && (
-        <div className="flex w-full font-semibold">No Doctor Available</div>
+      {DoctorList && DoctorList?.length === 0 && (
+        <div className="flex w-full bg-black font-semibold">
+          No Doctor Available
+        </div>
       )}
       <div className="grid grid-cols-1 gap-5 px-2  md:grid-cols-2">
         {DoctorList &&
-          DoctorList?.length === 0 &&
+          DoctorList?.length > 0 &&
           DoctorList.map((doctor) => {
             return <DoctorCard key={doctor.name} {...doctor} />
           })}
