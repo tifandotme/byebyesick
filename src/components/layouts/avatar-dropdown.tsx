@@ -43,9 +43,7 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
       )}
       {status === "authenticated" && session && (
         <>
-          {status === "authenticated" && session.user.user_role_id === 4 && (
-            <CartSheet />
-          )}
+          {session.user.user_role_id === 4 && <CartSheet />}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

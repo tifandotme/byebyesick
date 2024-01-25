@@ -23,7 +23,7 @@ export default function ProductTablePage() {
     if (sort) params.set("sort", sort.split(".")[1] as string)
     if (not_added) params.set("not_added", not_added)
 
-    return `/v1/products/admin?${params.toString()}`
+    return `/v1/products/global?${params.toString()}`
   })
 
   return (

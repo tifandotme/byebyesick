@@ -80,6 +80,7 @@ export default function DoctorChatRoomPage({
     `/v1/chats/${sessionId}`,
     {
       onSuccess: (data) => {
+        if (!data) return
         // Set initial message history
         setMessageHistory((prev) => {
           if (prev.length) return prev
@@ -94,7 +95,7 @@ export default function DoctorChatRoomPage({
   const { sendJsonMessage, lastJsonMessage, readyState } =
     useWebSocket<Message>(
       session?.user.token
-        ? `ws://${new URL(process.env.NEXT_PUBLIC_DB_URL as string).host}/v1/chats/${sessionId}/join`
+        ? `${process.env.NEXT_PUBLIC_WS_URL as string}/v1/chats/${sessionId}/join`
         : null,
       {
         queryParams: session?.user.token
@@ -325,7 +326,13 @@ export default function DoctorChatRoomPage({
                                 >
                                   {message.attachment &&
                                     (() => {
-                                      if (message.attachment.includes("pdf")) {
+                                      console.log(message.attachment)
+                                      if (
+                                        message.attachment.startsWith(
+                                          "data:application/pdf",
+                                        ) ||
+                                        message.attachment.endsWith(".pdf")
+                                      ) {
                                         return (
                                           <PdfPreview
                                             src={message.attachment}

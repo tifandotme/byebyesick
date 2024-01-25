@@ -1,7 +1,10 @@
 // @ts-nocheck
-
 /*
- * Generated with whatamesh.vercel.app
+ *   Stripe WebGl Gradient Animation
+ *   All Credits to Stripe.com
+ *   ScrollObserver functionality to disable animation when not scrolled into view has been disabled and
+ *   commented out for now.
+ *   https://kevinhufnagl.com
  */
 
 //Converting colors to proper format
@@ -81,20 +84,8 @@ class MiniGl {
 
               const prefix =
                 "\n              precision highp float;\n            "
-              ;(material.vertexSource = `\n              ${prefix}\n              attribute vec4 position;\n              attribute vec2 uv;\n              attribute vec2 uvNorm;\n              ${getUniformVariableDeclarations(
-                _miniGl.commonUniforms,
-                "vertex",
-              )}\n              ${getUniformVariableDeclarations(
-                uniforms,
-                "vertex",
-              )}\n              ${vertexShaders}\n            `),
-                (material.Source = `\n              ${prefix}\n              ${getUniformVariableDeclarations(
-                  _miniGl.commonUniforms,
-                  "fragment",
-                )}\n              ${getUniformVariableDeclarations(
-                  uniforms,
-                  "fragment",
-                )}\n              ${fragments}\n            `),
+              ;(material.vertexSource = `\n              ${prefix}\n              attribute vec4 position;\n              attribute vec2 uv;\n              attribute vec2 uvNorm;\n              ${getUniformVariableDeclarations(_miniGl.commonUniforms, "vertex")}\n              ${getUniformVariableDeclarations(uniforms, "vertex")}\n              ${vertexShaders}\n            `),
+                (material.Source = `\n              ${prefix}\n              ${getUniformVariableDeclarations(_miniGl.commonUniforms, "fragment")}\n              ${getUniformVariableDeclarations(uniforms, "fragment")}\n              ${fragments}\n            `),
                 (material.vertexShader = getShaderByType(
                   context.VERTEX_SHADER,
                   material.vertexSource,
@@ -179,7 +170,7 @@ class MiniGl {
               if (uniform.excludeFrom !== type) {
                 if ("array" === uniform.type)
                   return (
-                    uniform.value[0].getDeclaration(
+                    uniform.value[0]?.getDeclaration(
                       name,
                       type,
                       uniform.value.length,
@@ -203,9 +194,7 @@ class MiniGl {
                       `\n} ${name}${length > 0 ? `[${length}]` : ""};`
                   )
                 }
-                return `uniform ${uniform.type} ${name}${
-                  length > 0 ? `[${length}]` : ""
-                };`
+                return `uniform ${uniform.type} ${name}${length > 0 ? `[${length}]` : ""};`
               }
             }
           },
@@ -578,11 +567,8 @@ class Gradient {
             this.minigl.render()
         }
         if (0 !== this.last && this.isStatic)
-          return (
-            this.minigl.render(), void this.disconnect()
-            /*this.isIntersecting && */
-          )
-        ;(this.conf.playing || this.isMouseDown) &&
+          return this.minigl.render(), void this.disconnect()
+        /*this.isIntersecting && */ ;(this.conf.playing || this.isMouseDown) &&
           requestAnimationFrame(this.animate)
       }),
       e(this, "addIsLoadedClass", () => {
