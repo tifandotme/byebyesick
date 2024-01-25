@@ -75,6 +75,7 @@ function OrderDetailPage(
       if (error instanceof Error) toast.error(error.message)
     }
   }
+
   return (
     <div className="flex w-full justify-center">
       <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-5 p-4 py-9">
@@ -210,12 +211,11 @@ function OrderDetailPage(
             <div className="flex w-full items-end justify-between text-base md:text-2xl">
               <div>Total Payment</div>
               <div className="font-bold text-apple-400">
-                {formatPrice(50000)}
+                {formatPrice(subTotal + parseInt(props.props.shipping_cost))}
               </div>
             </div>
           </CardFooter>
         </Card>
-        {/* <p>{JSON.stringify(props)}</p> */}
       </div>
     </div>
   )
