@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import type { ApiResponse } from "@/types/api"
 import {
   registerFormSchema,
   type RegisterFormSchemaType,
@@ -36,9 +35,13 @@ export default function RegisterForm() {
     try {
       setLoading(true)
       const signup = await register(data.email)
-      const decoded: ApiResponse<{ email: string }> = await signup.json()
       if (!signup.ok) {
-        throw new Error(decoded.errors[0] ?? "Something went wrong")
+        switch (signup.status) {
+          case 400:
+            throw new Error("Email is already registered")
+          default:
+            throw new Error("Something went wrong")
+        }
       }
       toast.success(`Verification email has been sent to ${data.email}`)
     } catch (error) {
