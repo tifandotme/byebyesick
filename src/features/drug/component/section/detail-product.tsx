@@ -70,7 +70,7 @@ function DetailProduct(data: IProduct) {
               {data.name}
             </h1>
             <p>{data.generic_name}</p>
-            <div className="flex items-center gap-4 font-semibold">
+            <div className="flex items-center gap-4 text-2xl font-bold text-primary">
               {formatPrice(data.minimum_price)} -{" "}
               {formatPrice(data.maximum_price)}
             </div>

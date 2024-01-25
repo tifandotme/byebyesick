@@ -100,9 +100,9 @@ export const siteConfig = {
       },
       {
         title: "Sales Report",
-        href: "/dashboard/sales-report",
+        href: "/dashboard/sales-report/drug",
         icon: "PieChart",
-        role: ["superAdmin"],
+        role: ["superAdmin", "pharmacyAdmin"],
       },
       {
         title: "Transactions",
@@ -110,11 +110,18 @@ export const siteConfig = {
         icon: "Transactions",
         role: ["superAdmin"],
       },
+
       {
         title: "Orders",
         href: "/dashboard/orders",
         icon: "Transactions",
-        role: "pharmacyAdmin",
+        role: ["superAdmin", "pharmacyAdmin"],
+      },
+      {
+        title: "Doctor Specs",
+        href: "/dashboard/doctor-specs",
+        icon: "Gear",
+        role: ["superAdmin"],
       },
     ] satisfies NavItemRequiredWithRole[],
   },
@@ -210,17 +217,29 @@ export const siteConfig = {
   ] satisfies FooterItem[],
 }
 
-export const SortConfig = [
+export const SortByConfig: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
   { value: "date", label: "Date" },
   { value: "name", label: "Name" },
 ]
 
-export const SortByConfig = [
+export const SortConfig: Option[] = [
+  {
+    value: "0",
+    label: "All",
+  },
   { value: "asc", label: "Ascending" },
   { value: "desc", label: "Descending" },
 ]
 
-export const DrugClassConfig = [
+export const DrugClassConfig: Option[] = [
+  {
+    value: "",
+    label: "All",
+  },
   { value: "1", label: "Obat Bebas" },
   { value: "2", label: "Obat Keras" },
   { value: "3", label: "Obat Bebas Terbatas" },
@@ -263,7 +282,7 @@ export const PAYMENT_STATUS = {
 
 export const PAYMENT_STATUS_OPTION: Option[] = [
   {
-    value: "0",
+    value: "",
     label: "All",
   },
   { value: "1", label: "Unpaid" },

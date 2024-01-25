@@ -38,8 +38,8 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
   const product = data.map((m, index) => ({
     id: index + 1,
     name: m.name,
-    generic_name: m.generic_name,
-    drug_class: m.drug_classification_id,
+    genericName: m.generic_name,
+    drugClass: m.drug_classification_id,
     product_category_id: m.product_category_id,
   }))
 
@@ -63,7 +63,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
         ),
       },
       {
-        accessorKey: "generic_name",
+        accessorKey: "genericName",
         minSize: 250,
         maxSize: 250,
         header: ({ column }) => (
@@ -72,7 +72,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
       },
 
       {
-        accessorKey: "drug_class",
+        accessorKey: "drugClass",
         minSize: 250,
         maxSize: 250,
         header: ({ column }) => (
@@ -181,7 +181,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
       includeSearch={true}
       filterableColumns={[
         {
-          id: "drug_class",
+          id: "drugClass",
           title: "Classification",
           options: [
             { label: "Obat Bebas", value: "1" },

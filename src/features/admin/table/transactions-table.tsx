@@ -44,7 +44,8 @@ export function TransactionTable({
   current_page,
 }: TransactionsTableProps) {
   const transaction = data.map((m, index) => ({
-    id: (current_page - 1) * 10 + (index + 1),
+    id: m.id,
+    num: (current_page - 1) * 10 + (index + 1),
     payment_method: m.payment_method,
     total_payment: m.total_payment,
     date: m.date,
@@ -57,7 +58,7 @@ export function TransactionTable({
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "num",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),

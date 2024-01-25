@@ -33,7 +33,7 @@ export function ManufacturersCard({
                 src={manufacturer.image}
                 fill
                 alt={manufacturer.name}
-                className="text h-full w-full object-cover"
+                className="text size-full object-cover"
               />
             )}
           </div>

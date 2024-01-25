@@ -1,6 +1,5 @@
 import React from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import { BASE_URL } from "@/pages"
 import { getSession } from "next-auth/react"
 
 import type { ITransactionConfirmation, ResponseById } from "@/types/api"
@@ -14,7 +13,8 @@ export const getServerSideProps: GetServerSideProps<{
   const session = await getSession(context)
 
   const url =
-    BASE_URL + `/v1/transactions/${context.query.transactionId}/total-payment`
+    process.env.NEXT_PUBLIC_DB_URL +
+    `/v1/transactions/${context.query.transactionId}/total-payment`
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
@@ -48,7 +48,6 @@ export const getServerSideProps: GetServerSideProps<{
 function TransactionConfirmationPage({
   props,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(props)
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 py-6">
       <TransacrionConfirmationSection {...props} />

@@ -1,5 +1,6 @@
 import React, { type ReactElement } from "react"
 import Head from "next/head"
+
 import RegisterForm from "@/features/auth/components/form/registerForm"
 import AuthLayout from "@/features/auth/components/layout/layout"
 

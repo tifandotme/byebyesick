@@ -2,9 +2,11 @@
 
 import React from "react"
 import { useRouter } from "next/router"
+import { useSession } from "next-auth/react"
 import useSWR from "swr"
 
 import type { IOrderResponse, ResponseGetAll } from "@/types/api"
+import { SUPER_ADMIN_ROLE } from "@/config"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
 import { PageHeaderDescription } from "@/components/page-header"
@@ -13,6 +15,7 @@ import { OrderRequestsTable } from "@/features/pharmacies/components/tables/orde
 export default function OrderRequestsPage() {
   const router = useRouter()
   const { page, per_page, sort } = router.query
+  const { data: session } = useSession()
 
   const { data, isLoading, mutate } = useSWR<ResponseGetAll<IOrderResponse[]>>(
     () => {
@@ -21,8 +24,9 @@ export default function OrderRequestsPage() {
       if (per_page) params.set("limit", per_page)
       if (sort) params.set("sort_by", sort.split(".")[0] as string)
       if (sort) params.set("sort", sort.split(".")[1] as string)
-
-      return `/v1/orders/pharmacy-admin?${params.toString()}`
+      if (session?.user.user_role_id === SUPER_ADMIN_ROLE)
+        return `/v1/orders/admin?${params.toString()}`
+      else return `/v1/orders/pharmacy-admin?${params.toString()}`
     },
   )
 
@@ -53,8 +57,19 @@ export default function OrderRequestsPage() {
           mutate={mutate}
         />
       ) : (
-        <div>
-          <img src="/images/empty-order" width="600px" height="600px" alt="" />
+        <div className="flex py-9">
+          <div className="flex w-full max-w-6xl flex-col items-center justify-center gap-3">
+            <img
+              src={`${process.env.NEXT_PUBLIC_SITE_PATH}/images/empty-order.svg`}
+              className=""
+              width="600px"
+              height="600px"
+              alt=""
+            />
+            <div className="self-center text-3xl font-bold ">
+              No Order Found
+            </div>
+          </div>
         </div>
       )}
     </div>

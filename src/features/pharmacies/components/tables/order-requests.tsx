@@ -1,6 +1,7 @@
 import React from "react"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
@@ -39,6 +40,7 @@ export function OrderRequestsTable({
     amount: request.total_payment,
     date: request.date,
   }))
+  const { data: session } = useSession()
 
   type Data = (typeof data)[number]
 
@@ -124,15 +126,17 @@ export function OrderRequestsTable({
             <>
               {status !== 3 && (
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      aria-label="Open menu"
-                      variant="ghost"
-                      className="flex size-8 p-0 data-[state=open]:bg-muted"
-                    >
-                      <DotsHorizontalIcon className="size-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                  {session?.user.user_role_id !== 1 && (
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        aria-label="Open menu"
+                        variant="ghost"
+                        className="flex size-8 p-0 data-[state=open]:bg-muted"
+                      >
+                        <DotsHorizontalIcon className="size-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  )}
                   <DropdownMenuContent align="end" className="w-[130px]">
                     {status === 1 && (
                       <>
@@ -239,7 +243,7 @@ export function OrderRequestsTable({
         },
       },
     ],
-    [mutate],
+    [mutate, session?.user.user_role_id],
   )
 
   return (
