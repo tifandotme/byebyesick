@@ -56,7 +56,7 @@ export default function DoctorDetailPage({
             </Avatar>
           </div>
           <div className="w-full space-y-4">
-            <div className="!mb-7 flex gap-4">
+            <div className="!mb-7 flex flex-wrap gap-4 whitespace-break-spaces">
               <h2 className="text-3xl font-bold leading-none">
                 {doctor.data.name}
               </h2>

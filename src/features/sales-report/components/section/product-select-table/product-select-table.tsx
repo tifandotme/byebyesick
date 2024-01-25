@@ -77,7 +77,7 @@ export function ProductSelectTable({ data, pageCount }: ProductsTableProps) {
         id: "actions",
         cell: ({ row }) => (
           <Link
-            href={`/dashboard/sales-report?product_id=${row.original.id}&product_name=${row.original.generic_name}`}
+            href={`/dashboard/sales-report/drug?product_id=${row.original.id}&product_name=${row.original.generic_name}`}
           >
             <Button variant="ghost" className="text-gray-500" size="icon">
               <MousePointerSquareIcon />

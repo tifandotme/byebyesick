@@ -18,6 +18,7 @@ export default async function middleware(req: NextRequestWithAuth) {
   const consultationPath = "/consultation"
   const profilePath = "/profile"
   const pharmaciesAdminPath = "/dashboard/pharmacies"
+  const patientAdminPath = "/order"
   const superAdminPath = [
     "/dashboard/products",
     "/dashboard/users",
@@ -30,6 +31,7 @@ export default async function middleware(req: NextRequestWithAuth) {
     "/dashboard/sales-report",
     "/dashboard/orders",
   ]
+  const patientAdminProtectedPath = pathname.startsWith(patientAdminPath)
   const doctorProtectedPath =
     pathname.startsWith(doctorPath) && !pathname.startsWith("/doctors")
   const pharmaciesAdminProtectedPath = pathname.startsWith(pharmaciesAdminPath)
@@ -78,6 +80,19 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.redirect(url)
     }
     if (token.user_role_id !== SUPER_ADMIN_ROLE) {
+      const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
+      return NextResponse.rewrite(url)
+    }
+  } else if (patientAdminProtectedPath) {
+    if (!isAuthenticated) {
+      const url = new URL(
+        process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
+        req.url,
+      )
+      url.searchParams.set("callbackUrl", req.nextUrl.pathname)
+      return NextResponse.redirect(url)
+    }
+    if (token.user_role_id === DOCTOR_ROLE) {
       const url = new URL(process.env.NEXT_PUBLIC_SITE_PATH + `/403`, req.url)
       return NextResponse.rewrite(url)
     }
