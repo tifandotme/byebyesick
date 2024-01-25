@@ -144,7 +144,7 @@ function OrderListPage() {
             </div>
           )}
         </div>
-        {!isLoading && data && data.data.items.length > limit && (
+        {!isLoading && data && data.data.total_items > limit && (
           <PaginationComponent
             page={data?.data.current_page || 1}
             setCurrentPage={setCurrentPage}

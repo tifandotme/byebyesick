@@ -11,7 +11,7 @@ import Search from "@/features/sales-report/components/search/search"
 function DoctorCategory({ category }: { category: Specialization[] }) {
   const [search, setSearch] = React.useState("")
   const [page, setPage] = React.useState(1)
-  const limit = 10
+  const limit = 6
   const { doctorIsLoading, doctorList } = useDoctorList(
     search,
     page,
@@ -49,9 +49,6 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
               {doctorListData.map((doctor: doctorI) => {
                 return <DoctorCard key={doctor.name} {...doctor} />
               })}
-              {doctorListData.length >= limit && (
-                <PaginationComponent page={page} setCurrentPage={setPage} />
-              )}
             </>
           ) : (
             <div className="flex justify-center font-semibold">
@@ -59,6 +56,9 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
             </div>
           )}
         </div>
+        {doctorList && doctorList.data.total_items > limit && (
+          <PaginationComponent page={page} setCurrentPage={setPage} />
+        )}
       </div>
     </div>
   )

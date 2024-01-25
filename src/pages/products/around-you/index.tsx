@@ -22,6 +22,7 @@ export default function SeeAllAroundYou() {
   const [page, setPage] = React.useState<number>(1)
   const [drugClass, setDrugClass] = React.useState<number>()
 
+  const limit = 10
   const { data, isLoading, error } = useSWR<ResponseGetAll<IProduct[]>>(() => {
     if (!location.latitude || !location.longitude) return null
 
@@ -29,7 +30,6 @@ export default function SeeAllAroundYou() {
     if (search) params.set("search", search)
     if (drugClass) params.set("drug_class", String(drugClass))
     if (sort) params.set("sort", sort)
-
     if (sortBy) params.set("sort_by", sortBy)
     if (page) params.set("page", page.toString())
     return `/v1/products?${params.toString()}&latitude=${location.latitude}&longitude=${location.longitude}`
@@ -83,7 +83,6 @@ export default function SeeAllAroundYou() {
               height={300}
               className="hidden scale-100 object-fill md:block"
             />
-            {/* <HeroSection /> */}
           </div>
         </div>
       </div>
@@ -176,10 +175,12 @@ export default function SeeAllAroundYou() {
               </div>
             )}
             <div className="py-5">
-              <PaginationComponent
-                page={data?.data.current_page || 1}
-                setCurrentPage={setPage}
-              />
+              {data && data.data && data?.data.total_items > limit && (
+                <PaginationComponent
+                  page={data?.data.current_page || 1}
+                  setCurrentPage={setPage}
+                />
+              )}
             </div>
           </div>
         </>

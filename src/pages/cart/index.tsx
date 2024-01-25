@@ -86,11 +86,11 @@ export default function CartPage() {
   }
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="w-full max-w-6xl">
+      <div className="container w-full max-w-6xl">
         <h1 className="mt-9 text-2xl font-semibold capitalize ">Cart Page</h1>
 
         <div className="space-y-2 md:flex md:space-x-2">
-          <div className="w-full md:w-3/4 ">
+          <div className="w-full md:w-3/4">
             <Card className="mt-3 w-full ">
               <CardHeader>
                 <CardTitle className="text-sm text-muted-foreground md:text-xl">
