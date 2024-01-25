@@ -186,7 +186,7 @@ function ProductsCombobox({
     params.set("limit", "10")
     if (debouncedQuery) params.set("search", debouncedQuery)
 
-    return `/v1/products/admin?${params.toString()}`
+    return `/v1/products/global?${params.toString()}`
   })
 
   const currProduct = React.useMemo(() => {
