@@ -15,7 +15,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
         <Image
           src={doctor}
           alt="Background"
-          className="size-full object-cover"
+          className="pointer-events-none size-full object-cover"
           width={1800}
           height={1800}
         />
