@@ -1,6 +1,6 @@
 import type { VerifyFormSchemaType } from "@/lib/validations/auth"
 
-export function verify(
+export async function verify(
   body: VerifyFormSchemaType & { email: string },
   token: string | string[] | undefined,
 ) {
@@ -11,10 +11,11 @@ export function verify(
   formData.append("user_role_id", body.role)
   formData.append("certificate", body.image)
 
-  var requestOptions = {
+  const requestOptions = {
     method: "POST",
     body: formData,
   }
+
   return fetch(
     `${process.env.NEXT_PUBLIC_DB_URL}/v1/auth/register?token=${token}`,
     requestOptions,
