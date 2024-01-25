@@ -86,27 +86,31 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuGroup></DropdownMenuGroup>
-              <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link href="/user/profile" className="cursor-pointer">
-                    <Icons.Avatar className="mr-2 size-4" />
-                    Account
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/transactions" className="cursor-pointer">
-                    <Icons.Transactions className="mr-2 size-4" />
-                    My Transactions
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/order" className="cursor-pointer">
-                    <Icons.ShoppingBag className="mr-2 size-4" />
-                    My Order
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              {session.user.user_role_id === 4 && (
+                <>
+                  <DropdownMenuGroup></DropdownMenuGroup>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link href="/user/profile" className="cursor-pointer">
+                        <Icons.Avatar className="mr-2 size-4" />
+                        Account
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/transactions" className="cursor-pointer">
+                        <Icons.Transactions className="mr-2 size-4" />
+                        My Transactions
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/order" className="cursor-pointer">
+                        <Icons.ShoppingBag className="mr-2 size-4" />
+                        My Order
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <button onClick={onLogout} className="w-full cursor-pointer">
