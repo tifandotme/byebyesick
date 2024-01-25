@@ -1,11 +1,9 @@
-import React from "react"
 import { useRouter } from "next/router"
 import { ArrowLeft } from "lucide-react"
 
 import type { doctorI } from "@/types/api"
 import { Button } from "@/components/ui/button"
-
-import DoctorCard from "../doctorCard/doctorCard"
+import { DoctorCard } from "@/features/consultation/components/doctor-card"
 
 function DoctorSearch({
   title,

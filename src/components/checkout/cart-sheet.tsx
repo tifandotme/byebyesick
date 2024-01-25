@@ -1,7 +1,7 @@
-import React from "react"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { Separator } from "@radix-ui/react-dropdown-menu"
-import { Loader2, ShoppingCart } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 
 import { useCartList } from "@/lib/fetchers"
 import { cn } from "@/lib/utils"
@@ -21,11 +21,13 @@ import { CartLineItems } from "@/components/checkout/cart-items"
 import { Icons } from "../icons"
 
 export default function CartSheet() {
+  const router = useRouter()
+  const { y } = useWindowScroll()
+  const isHomePage = router.pathname === "/"
+  const isScrolled = y > 100
+
   const { cartdata } = useCartList()
 
-  const { y } = useWindowScroll()
-  const isScrolled = y > 100
-  if (!cartdata) return <Loader2 />
   const itemCount = cartdata?.data?.items.length ?? 0
 
   return (
@@ -34,9 +36,11 @@ export default function CartSheet() {
         <Button
           size="icon"
           variant="outline"
+          disabled={!cartdata}
           className={cn(
-            "relative size-9 rounded-md bg-transparent",
-            !isScrolled &&
+            "relative size-9 rounded-md bg-transparent text-foreground",
+            isHomePage &&
+              !isScrolled &&
               "border-0 text-background drop-shadow-md hover:bg-transparent hover:text-background/70",
           )}
         >
@@ -51,7 +55,7 @@ export default function CartSheet() {
           <Icons.Cart
             className={cn(
               "size-4 transition-[height,_width]",
-              !isScrolled && "size-5",
+              isHomePage && !isScrolled && "size-5",
             )}
             aria-hidden="true"
           />
@@ -65,11 +69,13 @@ export default function CartSheet() {
         </SheetHeader>
         {itemCount > 0 ? (
           <>
-            <CartLineItems
-              items={cartdata}
-              className="flex-1"
-              isCheckable={false}
-            />
+            {cartdata && (
+              <CartLineItems
+                items={cartdata}
+                className="flex-1"
+                isCheckable={false}
+              />
+            )}
             <div className="space-y-4 pr-6">
               <Separator />
 
@@ -90,27 +96,28 @@ export default function CartSheet() {
             </div>
           </>
         ) : (
-          <div className="flex h-full flex-col items-center justify-center space-y-1">
-            <ShoppingCart
-              className="mb-4 size-16 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <div className="text-xl font-medium text-muted-foreground">
-              Your cart is empty
+          <div className="flex h-full flex-col items-center justify-center">
+            <div className="flex select-none flex-col items-center">
+              <ShoppingCart
+                className="mb-4 size-16 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <div className="text-xl font-medium text-muted-foreground">
+                Your cart is empty
+              </div>
             </div>
             <SheetTrigger asChild>
               <Link
-                aria-label="Add items to your cart to checkout"
-                href="/products"
+                href="/products/around-you"
                 className={cn(
                   buttonVariants({
                     variant: "link",
                     size: "sm",
-                    className: "text-sm text-muted-foreground",
+                    className: "mt-10 text-sm",
                   }),
                 )}
               >
-                Add items to your cart to checkout
+                Browse for products
               </Link>
             </SheetTrigger>
           </div>
