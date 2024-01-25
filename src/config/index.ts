@@ -110,17 +110,12 @@ export const siteConfig = {
         icon: "Transactions",
         role: ["superAdmin"],
       },
+
       {
         title: "Orders",
         href: "/dashboard/orders",
         icon: "Transactions",
-        role: ["pharmacyAdmin"],
-      },
-      {
-        title: "Orders",
-        href: "/dashboard/orders",
-        icon: "Transactions",
-        role: ["superAdmin"],
+        role: ["superAdmin", "pharmacyAdmin"],
       },
       {
         title: "Doctor Specs",
