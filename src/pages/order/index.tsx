@@ -81,17 +81,17 @@ function OrderListPage() {
             data.data.items.map((order) => (
               <Card key={order.id}>
                 <CardHeader>
-                  <div className="flex justify-between">
+                  <div className="flex w-full items-start justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold md:text-xl">
+                      <h3 className="text-xs font-semibold md:text-xl">
                         {order?.Pharmacy.name}
                       </h3>
-                      <div className="text-base text-gray-500 dark:text-gray-400">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 md:text-base">
                         Transaction ID: {order.transaction_id}
                       </div>
                     </div>
                     <div
-                      className={`flex items-center justify-center rounded-md p-2 text-xl font-medium ${setTextColor(order.Status.id)}`}
+                      className={`flex items-center justify-center rounded-md text-xs font-medium md:text-xl ${setTextColor(order.Status.id)}`}
                     >
                       {order.Status.name}
                     </div>
@@ -100,26 +100,26 @@ function OrderListPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2">
-                    <div className="text-lg font-medium">
+                    <div className="text-sm font-medium md:text-lg">
                       Total Item: {order.no_of_items}
                     </div>
                   </div>
-                  <div className="text-lg text-gray-500 dark:text-gray-400">
+                  <div className="text-sm text-gray-500 dark:text-gray-400 md:text-lg">
                     Order Date: {formatDate(order?.date)}
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-between">
+                <CardFooter className="flex justify-between p-4 md:p-6">
                   <div className="flex items-center gap-2">
-                    <div className="text-2xl">
+                    <div className="text-sm md:text-2xl">
                       Total Payment:{" "}
-                      <span className="text-3xl font-bold text-apple-500">
+                      <span className="text-sm font-bold text-apple-500 md:text-3xl">
                         {formatPrice(order.total_payment)}
                       </span>
                     </div>
                   </div>
                   <Link
                     href={`/order/detail/${order.id}`}
-                    className="text-blue-500"
+                    className="text-sm text-blue-500 md:text-base"
                   >
                     View Detail
                   </Link>

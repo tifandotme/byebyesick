@@ -155,9 +155,11 @@ function OrderDetailPage(
         <Card className="w-full">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div className="text-lg font-bold">{item.pharmacy.name}</div>
+              <div className="text-xs font-bold md:text-lg">
+                {item.pharmacy.name}
+              </div>
               <div
-                className={`${setTextColor(item.order_status.id)} font-bold`}
+                className={`${setTextColor(item.order_status.id)} text-xs font-bold md:text-base`}
               >
                 {item.order_status.name}
               </div>
@@ -170,10 +172,13 @@ function OrderDetailPage(
                 key={product.name}
                 className="flex items-center justify-between"
               >
-                <div className="flex gap-5">
+                <div className="mb-2 flex gap-5">
                   <img
                     className="size-20 rounded-md border object-contain"
-                    src={product.image}
+                    src={
+                      product.image ??
+                      `${process.env.NEXT_PUBLIC_SITE_PATH}/images/product-placeholder.png`
+                    }
                     alt=""
                   />
                   <div>
