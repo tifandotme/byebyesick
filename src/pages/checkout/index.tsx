@@ -276,7 +276,7 @@ export default function CheckoutPage() {
               <CardFooter>
                 <Button
                   className={`w-full ${Object.keys(selectedShippingMethods).length ? "bg-primary" : "cursor-not-allowed bg-gray-500"}`}
-                  onClick={() => {
+                  onClick={async () => {
                     if (Object.keys(selectedShippingMethods).length) {
                       const totalPayment =
                         (checkoutItems?.items.reduce(
@@ -290,6 +290,11 @@ export default function CheckoutPage() {
                             accumulator + Number(method.cost),
                           0,
                         ) || 0)
+
+                      const idsToDelete =
+                        checkoutItems?.items.map((item) => item.product.id) ||
+                        []
+                      await deleteCart(idsToDelete)
 
                       const doTransaction = async () => {
                         const response = await createTransactions({
@@ -315,7 +320,8 @@ export default function CheckoutPage() {
                         })
                         if (response.success) {
                           const transactionId = response.data?.data.id
-                          await deleteCart(ids.map((id) => Number(id)))
+
+                          console.log(ids)
                           cartMutate()
                           router.push(
                             `/order/transaction-confirmation/${transactionId}`,

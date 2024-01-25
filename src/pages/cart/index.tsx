@@ -79,6 +79,7 @@ export default function CartPage() {
       toast.warning("Please select address")
       return
     }
+
     router.push(
       `/checkout?ids=${encodeURIComponent(idsString)}&address=${encodeURIComponent(selectedAddressId)}`,
     )
