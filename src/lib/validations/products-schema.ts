@@ -60,14 +60,26 @@ export const productSchema = z.object({
           return false
         }
 
-        if (!file.name.endsWith(".png")) {
+        const allowedExtensions = ["png", "jpg", "jpeg"]
+        const fileExtension = file.name.split(".").pop()?.toLowerCase()
+
+        if (fileExtension) {
+          if (!allowedExtensions.includes(fileExtension)) {
+            return false
+          }
+        } else {
+          return false
+        }
+
+        if (!allowedExtensions.includes(fileExtension)) {
           return false
         }
 
         return true
       },
       {
-        message: "Image must be a valid image file and cannot exceed 500 KB",
+        message:
+          "Image must be a valid image file (png, jpg, jpeg) and cannot exceed 500 KB",
       },
     ),
   ),

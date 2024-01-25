@@ -9,12 +9,12 @@ import type { IOrderResponse, ResponseGetAll } from "@/types/api"
 import { SUPER_ADMIN_ROLE } from "@/config"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { PageHeaderDescription } from "@/components/page-header"
+import OrderLayout from "@/features/order/layout"
 import { OrderRequestsTable } from "@/features/pharmacies/components/tables/order-requests"
 
 export default function OrderRequestsPage() {
   const router = useRouter()
-  const { page, per_page, sort } = router.query
+  const { page, per_page, sort, order_status_id } = router.query
   const { data: session } = useSession()
 
   const { data, isLoading, mutate } = useSWR<ResponseGetAll<IOrderResponse[]>>(
@@ -24,6 +24,7 @@ export default function OrderRequestsPage() {
       if (per_page) params.set("limit", per_page)
       if (sort) params.set("sort_by", sort.split(".")[0] as string)
       if (sort) params.set("sort", sort.split(".")[1] as string)
+      if (order_status_id) params.set("order_status_id", order_status_id)
       if (session?.user.user_role_id === SUPER_ADMIN_ROLE)
         return `/v1/orders/admin?${params.toString()}`
       else return `/v1/orders/pharmacy-admin?${params.toString()}`
@@ -32,17 +33,6 @@ export default function OrderRequestsPage() {
 
   return (
     <div className="space-y-6 overflow-auto">
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
-          <h3 className="mt-10 text-2xl font-bold leading-10 tracking-tight">
-            Order Requests
-          </h3>
-        </div>
-        <PageHeaderDescription size="sm">
-          Manage my orders
-        </PageHeaderDescription>
-      </div>
-
       {isLoading && !data && (
         <DataTableSkeleton
           columnCount={6}
@@ -50,7 +40,7 @@ export default function OrderRequestsPage() {
           isSearchable={false}
         />
       )}
-      {data && data.data.items.length > 0 ? (
+      {data ? (
         <OrderRequestsTable
           data={data.data.items}
           pageCount={data.data.total_pages}
@@ -77,5 +67,9 @@ export default function OrderRequestsPage() {
 }
 
 OrderRequestsPage.getLayout = function getLayout(page: React.ReactElement) {
-  return <DashboardLayout>{page}</DashboardLayout>
+  return (
+    <DashboardLayout>
+      <OrderLayout>{page}</OrderLayout>
+    </DashboardLayout>
+  )
 }
