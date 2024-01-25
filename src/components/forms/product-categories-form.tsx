@@ -74,7 +74,11 @@ export default function ProductCategoriesForm({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Obat" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Your product category. Ex: Obat"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
