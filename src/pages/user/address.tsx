@@ -13,7 +13,7 @@ function AddressPage() {
   const { addressList, addressError, addressIsLoading } = useAdressList()
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center px-1 sm:px-5">
       <ProfileLayout
         title="My Address"
         desc="User Address Management"
