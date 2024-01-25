@@ -108,22 +108,31 @@ export default function DoctorSpecsForm({
                         </>
                       </FormControl>
                     </div>
-                    {mode === "add" && form.getFieldState("image").isDirty && (
-                      <img
-                        src={URL.createObjectURL(field.value)}
-                        alt={"Image preview"}
-                      />
-                    )}
-                    {mode === "edit" && initialProductData && (
-                      <img
-                        src={
-                          form.getFieldState("image").isDirty
-                            ? URL.createObjectURL(field.value)
-                            : initialProductData.data.image
-                        }
-                        alt={initialProductData.data.name}
-                      />
-                    )}
+                    {mode === "add" &&
+                      form.getFieldState("image").isDirty &&
+                      field.value.type.startsWith("image/") && (
+                        <img
+                          src={URL.createObjectURL(field.value)}
+                          alt={"Image preview"}
+                        />
+                      )}
+                    {mode === "edit" &&
+                      initialProductData &&
+                      form.getFieldState("image").isDirty &&
+                      field.value.type.startsWith("image/") && (
+                        <img
+                          src={URL.createObjectURL(field.value)}
+                          alt={initialProductData.data.name}
+                        />
+                      )}
+                    {mode === "edit" &&
+                      initialProductData &&
+                      !form.getFieldState("image").isDirty && (
+                        <img
+                          src={initialProductData.data.image}
+                          alt={initialProductData.data.name}
+                        />
+                      )}
                     <UncontrolledFormMessage
                       message={form.formState.errors.image?.message?.toString()}
                     />

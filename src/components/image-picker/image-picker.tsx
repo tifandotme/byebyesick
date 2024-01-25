@@ -43,14 +43,16 @@ const ImagePicker = ({
       onDrop={onDrop}
     >
       {image ? (
-        <Image
-          src={image}
-          alt={image}
-          width={500}
-          height={500}
-          className="max-h-44 object-contain"
-          loader={imageLoader}
-        />
+        <>
+          <Image
+            src={image}
+            alt={image}
+            width={500}
+            height={500}
+            className="max-h-44 object-contain"
+            loader={imageLoader}
+          />
+        </>
       ) : (
         <></>
       )}
