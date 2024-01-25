@@ -9,7 +9,6 @@ import type { IOrderResponse, ResponseGetAll } from "@/types/api"
 import { SUPER_ADMIN_ROLE } from "@/config"
 import { DataTableSkeleton } from "@/components/ui/data-table/data-table-skeleton"
 import { DashboardLayout } from "@/components/layouts/dashboard"
-import { PageHeaderDescription } from "@/components/page-header"
 import OrderLayout from "@/features/order/layout"
 import { OrderRequestsTable } from "@/features/pharmacies/components/tables/order-requests"
 

@@ -113,115 +113,126 @@ export function TransactionTable({
 
       {
         id: "actions",
-        cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="flex size-8 p-0 data-[state=open]:bg-muted"
-              >
-                <DotsHorizontalIcon className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/order/transaction-detail/${row.original.id}`}
-                  target="_blank"
-                  className="flex justify-between"
-                >
-                  View
-                  <ExternalLinkIcon className="ml-1.5 size-3.5" />
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger
-                    className="w-full text-sm"
-                    onClick={(e) => e.stopPropagation()}
-                    asChild
-                  >
-                    <span>Accept</span>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Accept</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        You are about to accept this payment. This action cannot
-                        be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => {
-                          const handleAccept = async () => {
-                            const { success, message } = await updatePayment(
-                              row.original.id,
-                              "accept",
-                            )
-                            if (!success) throw new Error(message)
-                            await mutate()
-                          }
-                          toast.promise(handleAccept(), {
-                            loading: "Accepting payment...",
-                            success: "Payment accepted successfully",
-                            error: (err) => `${err.message}`,
-                          })
-                        }}
+        cell: ({ row }) => {
+          const status = row.getValue(
+            "transaction_status_id",
+          ) as Data["transaction_status_id"]
+          return (
+            <>
+              {status === 2 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      aria-label="Open menu"
+                      variant="ghost"
+                      className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                      <DotsHorizontalIcon className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[130px]">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/order/transaction-detail/${row.original.id}`}
+                        target="_blank"
+                        className="flex justify-between"
                       >
-                        Accept
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <AlertDialog>
-                  <AlertDialogTrigger
-                    className="w-full text-sm"
-                    onClick={(e) => e.stopPropagation()}
-                    asChild
-                  >
-                    <span>Reject</span>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Reject</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        You are about to reject this payment. This action cannot
-                        be undone.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => {
-                          const handleReject = async () => {
-                            const { success, message } = await updatePayment(
-                              row.original.id,
-                              "reject",
-                            )
-                            if (!success) throw new Error(message)
-                            await mutate()
-                          }
-                          toast.promise(handleReject(), {
-                            loading: "Rejecting payment...",
-                            success: "Payment rejected successfully",
-                            error: (err) => `${err.message}`,
-                          })
-                        }}
-                      >
-                        Reject
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ),
+                        View
+                        <ExternalLinkIcon className="ml-1.5 size-3.5" />
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          className="w-full text-sm"
+                          onClick={(e) => e.stopPropagation()}
+                          asChild
+                        >
+                          <span>Accept</span>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Accept</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              You are about to accept this payment. This action
+                              cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => {
+                                const handleAccept = async () => {
+                                  const { success, message } =
+                                    await updatePayment(
+                                      row.original.id,
+                                      "accept",
+                                    )
+                                  if (!success) throw new Error(message)
+                                  await mutate()
+                                }
+                                toast.promise(handleAccept(), {
+                                  loading: "Accepting payment...",
+                                  success: "Payment accepted successfully",
+                                  error: (err) => `${err.message}`,
+                                })
+                              }}
+                            >
+                              Accept
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          className="w-full text-sm"
+                          onClick={(e) => e.stopPropagation()}
+                          asChild
+                        >
+                          <span>Reject</span>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Reject</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              You are about to reject this payment. This action
+                              cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => {
+                                const handleReject = async () => {
+                                  const { success, message } =
+                                    await updatePayment(
+                                      row.original.id,
+                                      "reject",
+                                    )
+                                  if (!success) throw new Error(message)
+                                  await mutate()
+                                }
+                                toast.promise(handleReject(), {
+                                  loading: "Rejecting payment...",
+                                  success: "Payment rejected successfully",
+                                  error: (err) => `${err.message}`,
+                                })
+                              }}
+                            >
+                              Reject
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </>
+          )
+        },
       },
     ],
     [mutate],
