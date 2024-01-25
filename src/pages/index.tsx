@@ -46,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }
   }
 }
+
 export default function HomePage({
   data,
   error,

@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { LoaderIcon } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { mutate } from "swr"
 
@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Icons } from "@/components/icons"
 import { imageLoader } from "@/components/image-loader"
 import { PlaceholderImage } from "@/components/image-placeholer"
 
@@ -31,6 +32,7 @@ export function ProductCard({
   className,
   ...props
 }: ProductCardProps) {
+  const { status } = useSession()
   const [isLoading, setIsLoading] = React.useState(false)
   const { cartMutate } = useCartList()
 
@@ -96,9 +98,11 @@ export function ProductCard({
                 handleFailedRequest(Error)
               }
             }}
-            disabled={isLoading}
+            disabled={isLoading || status === "unauthenticated"}
           >
-            {isLoading && <LoaderIcon className="" />}
+            {isLoading && (
+              <Icons.Spinner className="mr-2 size-4 animate-spin" />
+            )}
             Add to cart
           </Button>
         </div>

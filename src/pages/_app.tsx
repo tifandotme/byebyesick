@@ -79,6 +79,10 @@ function SWRConfigWrapper({ children }: React.PropsWithChildren) {
         },
       })
     }
+
+    return () => {
+      window.fetch = originalFetch
+    }
   }, [session?.user.token])
 
   const middleware: Middleware = (useSWRNext) => {
