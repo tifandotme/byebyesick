@@ -33,7 +33,7 @@ import PaginationComponent from "@/features/products/components/pagination-produ
 function TransactionListPage() {
   const [orderStatus, setOrderStatus] = React.useState<string>("")
   const [page, setCurrentPage] = React.useState<number>(1)
-  const limit = 10
+  const limit = 5
   const { data, isLoading, mutate } = useSWR<
     ResponseGetAll<Omit<ITransaction[], "orders">>
   >(() => {
@@ -194,10 +194,12 @@ function TransactionListPage() {
             </div>
           )}
         </div>
-        <PaginationComponent
-          page={data?.data.current_page || 1}
-          setCurrentPage={setCurrentPage}
-        />
+        {data && data.data && data?.data?.total_items > limit && (
+          <PaginationComponent
+            page={data?.data.current_page || 1}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   )

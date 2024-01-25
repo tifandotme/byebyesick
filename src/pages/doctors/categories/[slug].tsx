@@ -62,7 +62,7 @@ function DoctorsByCategoryPage({
                   title={category[0]?.name}
                   DoctorList={doctorList?.data.items}
                 />
-                {doctorList && doctorList?.data.items.length > limit && (
+                {doctorList && doctorList?.data.total_items > limit && (
                   <PaginationComponent page={page} setCurrentPage={setPage} />
                 )}
               </>
