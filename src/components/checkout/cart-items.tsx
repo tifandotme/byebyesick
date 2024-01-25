@@ -14,6 +14,7 @@ interface CartLineItemsProps extends React.HTMLAttributes<HTMLDivElement> {
   isScrollable?: boolean
   isCheckable?: boolean
   checkedItems?: Record<number, boolean>
+
   onChecked?: (id: string, isChecked: boolean) => void
 }
 
@@ -35,10 +36,9 @@ export function CartLineItems({
             <div className="flex items-center space-x-4">
               {isCheckable && (
                 <Checkbox
-                  checked={checkedItems?.[item.product_id] || false}
+                  checked={checkedItems?.[item.id] || false}
                   onCheckedChange={(isChecked) => {
-                    onChecked &&
-                      onChecked(String(item.product_id), Boolean(isChecked))
+                    onChecked && onChecked(String(item.id), Boolean(isChecked))
                   }}
                   className="shrink-0"
                 />
