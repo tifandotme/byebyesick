@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "next/link"
-import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
@@ -31,15 +31,18 @@ interface ProductsTableProps<TData = IProductCategory[]> {
   data: TData
   mutate: KeyedMutator<ResponseGetAll<TData>>
   pageCount: number
+  current_page: number
 }
 
 export function ProductCategoriesTable({
   data,
   mutate,
   pageCount,
+  current_page,
 }: ProductsTableProps) {
   const productscategories = data.map((m, index) => ({
-    id: index + 1,
+    id: m.id,
+    num: (current_page - 1) * 10 + (index + 1),
     name: m.name,
   }))
 
@@ -48,7 +51,7 @@ export function ProductCategoriesTable({
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "num",
         minSize: 200,
         maxSize: 200,
         header: ({ column }) => (
@@ -73,22 +76,12 @@ export function ProductCategoriesTable({
               <Button
                 aria-label="Open menu"
                 variant="ghost"
-                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+                className="flex size-8 p-0 data-[state=open]:bg-muted"
               >
-                <DotsHorizontalIcon className="h-4 w-4" />
+                <DotsHorizontalIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/${row.original.id}`}
-                  target="_blank"
-                  className="flex justify-between"
-                >
-                  View
-                  <ExternalLinkIcon className="ml-1.5 h-3.5 w-3.5" />
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
                   href={`/dashboard/productcategories/edit/${row.original.id}`}
@@ -108,8 +101,7 @@ export function ProductCategoriesTable({
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        delete this category.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

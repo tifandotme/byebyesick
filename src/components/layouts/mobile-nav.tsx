@@ -80,10 +80,13 @@ export function MobileNav({
               className="w-full"
             >
               {items?.map((item, idx) => (
+                // @ts-ignore
                 <AccordionItem value={item.title} key={idx}>
+                  {/* @ts-ignore */}
                   <AccordionTrigger className="text-sm font-bold capitalize">
                     {item.title}
                   </AccordionTrigger>
+                  {/* @ts-ignore */}
                   <AccordionContent>
                     <div className="flex flex-col space-y-2">
                       {item.items?.map((subItem, index) =>

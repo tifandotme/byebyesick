@@ -50,7 +50,7 @@ function UserAddress(address: AddressIForm) {
       <div className="flex gap-5">
         <Popover>
           <PopoverTrigger>
-            <MoreVerticalIcon className="h-4 w-4" />
+            <MoreVerticalIcon className="size-4" />
           </PopoverTrigger>
           <PopoverContent align="start" className="w-fit p-1">
             {address.status == 1 ? (

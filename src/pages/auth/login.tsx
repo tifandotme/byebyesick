@@ -1,4 +1,4 @@
-import React, { type ReactElement } from "react"
+import { type ReactElement } from "react"
 import Head from "next/head"
 
 import LoginForm from "@/features/auth/components/form/loginForm"

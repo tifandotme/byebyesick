@@ -1,5 +1,4 @@
 import type { ReactElement } from "react"
-import React from "react"
 import type { GetServerSideProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
@@ -10,17 +9,17 @@ import type { IDrugClassification, IProduct, ResponseGetAll } from "@/types/api"
 import { useAddressMain } from "@/lib/fetchers"
 import useGeolocation from "@/hooks/use-geolocation"
 import { Button } from "@/components/ui/button"
+import { HomePageHero } from "@/components/homepage-hero"
 import { HomeLayout } from "@/components/layouts/home"
+import { CarouselSection } from "@/features/landing/components/carousel-section"
 import { CategoryCard } from "@/features/landing/components/categories/category-card"
-import Hero from "@/features/landing/components/section/hero"
 import { ProductCard } from "@/features/products/components/products-card"
 
-import HomePages from "./home"
-
-export const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const url = BASE_URL + "/v1/drug-classifications/no-params"
+    const url =
+      (process.env.NEXT_PUBLIC_DB_URL as string) +
+      "/v1/drug-classifications/no-params"
 
     const response = await fetch(url)
 
@@ -84,132 +83,116 @@ export default function HomePage({
     )
 
   return (
-    <div className="">
-      <div className="">
-        <Head>
-          <title>ByeByeSick | Home</title>
-        </Head>
+    <div className="overflow-hidden">
+      <Head>
+        <title>ByeByeSick | Home</title>
+      </Head>
 
-        <HomePages />
-        <Hero />
+      <HomePageHero />
+      <CarouselSection />
+
+      <div className="container relative mb-16 max-w-6xl">
         {error && (
           <div>
             <p>An error occured please try again</p>
           </div>
         )}
-        <div>
-          {data?.data.current_page_total_items == 0 ? (
-            <div>
-              <p>No Product Yet</p>
-            </div>
-          ) : (
-            <div className="container max-w-6xl">
-              <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {data &&
-                  data.data.items.map((cat) => (
-                    <div key={cat.id}>
-                      <CategoryCard category={cat.name} icon={<Tablets />} />
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-        </div>
+
+        {data?.data.current_page_total_items == 0 ? (
+          <div>
+            <p>No Product Yet</p>
+          </div>
+        ) : (
+          <div className="mt-8 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {data &&
+              data.data.items.map((cat) => (
+                <div key={cat.id}>
+                  <CategoryCard category={cat.name} icon={<Tablets />} />
+                </div>
+              ))}
+          </div>
+        )}
         {error && (
           <div>
             <p>An error occured please try again later</p>
           </div>
         )}
-        <>
-          <div className="container max-w-6xl">
-            <div className="mt-5 flex justify-between text-2xl font-semibold">
-              <h2 className="mt-5 flex items-center">
-                <MapPin className="mr-2" /> Around You
-              </h2>
-              <Link href="/products/around-you">
-                <Button variant={"link"}>
-                  See All <ArrowRight className="ml-2 size-4" />
-                </Button>
-              </Link>
-            </div>
+        <div className="mt-20 flex justify-between text-2xl font-semibold">
+          <h2 className="mt-5 flex items-center">
+            <MapPin className="mr-2" /> Around You
+          </h2>
+          <Link href="/products/around-you">
+            <Button variant={"link"}>
+              See All <ArrowRight className="ml-2 size-4" />
+            </Button>
+          </Link>
+        </div>
+
+        {loadingAround && (
+          <div className="">
+            <Loader2 className="animate-spin" />
+            searching products around you....
           </div>
+        )}
 
-          {loadingAround && (
-            <div className="">
-              <Loader2 className="animate-spin" />
-              searching products around you....
-            </div>
-          )}
-
-          {aroundError && (
-            <div>
-              {/* PUT ILLUSTRATION HERE */}
-              <p>Sorry, an error occured. Please try to refresh this page</p>
-            </div>
-          )}
-
-          {around?.data.total_items === 0 && (
-            <div>
-              {/* PUT ILLUSTRATION HERE */}
-
-              <p>There are no products around you</p>
-            </div>
-          )}
-
-          {locationError && (
-            <div>
-              <p>
-                {" "}
-                {locationError}, please allow location permission to see
-                products
-              </p>
-            </div>
-          )}
-
-          <div className="container max-w-6xl">
-            <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-              {around?.data.items.slice(0, 6).map((cat) => (
-                <div key={cat.id} className="flex justify-center">
-                  <ProductCard product={cat} />
-                </div>
-              ))}
-            </div>
+        {aroundError && (
+          <div>
+            {/* PUT ILLUSTRATION HERE */}
+            <p>Sorry, an error occured. Please try to refresh this page</p>
           </div>
+        )}
 
-          {addressData && (
-            <div className="container max-w-6xl">
-              <div className="mt-5 flex justify-between text-2xl font-semibold">
-                <h2 className="mt-5 flex items-center">
-                  <MapPin className="mr-2" /> Around{" "}
-                  {addressData?.data.sub_district}
-                </h2>
-                <Link href="/products/around-your-district">
-                  <Button variant={"link"}>
-                    See All <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {productByAddress?.data.total_items === 0 && (
-            <div>
-              <p>
-                There are no products around {addressData?.data.sub_district}
-              </p>
-            </div>
-          )}
-
-          <div className="container max-w-6xl">
-            <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {productByAddress?.data.items.slice(0, 6).map((cat) => (
-                <div key={cat.id}>
-                  <ProductCard product={cat} />
-                </div>
-              ))}
-            </div>
+        {around?.data.total_items === 0 && (
+          <div>
+            {/* PUT ILLUSTRATION HERE */}
+            <p>There are no products around you</p>
           </div>
-        </>
+        )}
+
+        {locationError && (
+          <div>
+            <p>
+              {" "}
+              {locationError}, please allow location permission to see products
+            </p>
+          </div>
+        )}
+
+        <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          {around?.data.items.slice(0, 6).map((cat) => (
+            <div key={cat.id} className="flex justify-center">
+              <ProductCard product={cat} />
+            </div>
+          ))}
+        </div>
+
+        {addressData && (
+          <div className="mt-5 flex justify-between text-2xl font-semibold">
+            <h2 className="mt-5 flex items-center">
+              <MapPin className="mr-2" /> Around{" "}
+              {addressData?.data.sub_district}
+            </h2>
+            <Link href="/products/around-your-district">
+              <Button variant={"link"}>
+                See All <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </Link>
+          </div>
+        )}
+
+        {productByAddress?.data.total_items === 0 && (
+          <div>
+            <p>There are no products around {addressData?.data.sub_district}</p>
+          </div>
+        )}
+
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          {productByAddress?.data.items.slice(0, 6).map((cat) => (
+            <div key={cat.id}>
+              <ProductCard product={cat} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

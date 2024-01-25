@@ -80,6 +80,7 @@ export default function DoctorChatRoomPage({
     `/v1/chats/${sessionId}`,
     {
       onSuccess: (data) => {
+        if (!data) return
         // Set initial message history
         setMessageHistory((prev) => {
           if (prev.length) return prev
@@ -94,7 +95,7 @@ export default function DoctorChatRoomPage({
   const { sendJsonMessage, lastJsonMessage, readyState } =
     useWebSocket<Message>(
       session?.user.token
-        ? `ws://${new URL(process.env.NEXT_PUBLIC_DB_URL as string).host}/v1/chats/${sessionId}/join`
+        ? `${process.env.NEXT_PUBLIC_WS_URL as string}/v1/chats/${sessionId}/join`
         : null,
       {
         queryParams: session?.user.token
@@ -102,12 +103,21 @@ export default function DoctorChatRoomPage({
               token: session.user.token,
             }
           : undefined,
-        onOpen: () => {
-          console.log("WS connection opened")
-        },
       },
       data?.data.consultation_session_status_id === 1,
     )
+
+  React.useEffect(() => {
+    const connectionStatus = {
+      [ReadyState.CONNECTING]: "Connecting",
+      [ReadyState.OPEN]: "Open",
+      [ReadyState.CLOSING]: "Closing",
+      [ReadyState.CLOSED]: "Closed",
+      [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+    }[readyState]
+
+    console.log("WS connection status: ", connectionStatus)
+  }, [readyState])
 
   // #region Form
   const form = useForm<chatRoomInputs>({
@@ -325,7 +335,12 @@ export default function DoctorChatRoomPage({
                                 >
                                   {message.attachment &&
                                     (() => {
-                                      if (message.attachment.includes("pdf")) {
+                                      if (
+                                        message.attachment.startsWith(
+                                          "data:application/pdf",
+                                        ) ||
+                                        message.attachment.endsWith(".pdf")
+                                      ) {
                                         return (
                                           <PdfPreview
                                             src={message.attachment}

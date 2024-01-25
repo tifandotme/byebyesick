@@ -29,8 +29,11 @@ export const HomePageHero = React.memo(function HomePageHero() {
     gradient.initGradient("#gradient-canvas")
   }, [theme])
 
+  // Hide when logged in user is a doctor
+  const showCTA = session?.user.user_role_id !== 3
+
   return (
-    <div className="relative mx-auto mb-[50px] h-[600px] sm:mb-[150px]">
+    <div className="relative mx-auto mb-[50px] h-[700px] sm:mb-[150px] md:h-[600px]">
       <canvas
         className="gradient absolute top-0 -z-10 size-full"
         id="gradient-canvas"
@@ -54,10 +57,10 @@ export const HomePageHero = React.memo(function HomePageHero() {
           One-stop solution for all your healthcare needs. Shop for medicines,
           consult doctors online.
         </p>
-        {session?.user.user_role_id === 4 && (
-          <div className="!mt-8 flex gap-2">
+        {showCTA && (
+          <div className="!mt-8 flex flex-col gap-2 sm:flex-row">
             <Link
-              href="/doctors"
+              href="/products/around-you"
               className={cn(
                 buttonVariants({ size: "sm" }),
                 "h-8 px-4 font-bold",

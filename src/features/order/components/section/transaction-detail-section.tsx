@@ -1,7 +1,6 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Clock10Icon } from "lucide-react"
 
 import type { ITransaction } from "@/types/api"
 import { formatDate, formatPrice } from "@/lib/utils"
@@ -25,8 +24,6 @@ import {
 import { SiteLogo } from "@/components/site-logo"
 
 function TransactionDetailSection(transaction: ITransaction) {
-  console.log(transaction)
-
   const renderBadge = (status: number) => {
     switch (status) {
       case 1:
@@ -43,17 +40,6 @@ function TransactionDetailSection(transaction: ITransaction) {
         return <Badge variant={"default"}>Unknown</Badge>
     }
   }
-  console.log(
-    "Orders:",
-    transaction.orders.map((order) => ({
-      ...order,
-      totalOrderPrice: order.order_details.reduce(
-        (total, detail) =>
-          total + Number(detail.price) * Number(detail.quantity),
-        0,
-      ),
-    })),
-  )
 
   const totalPrice = transaction.orders.reduce(
     (total, order) =>
@@ -73,7 +59,7 @@ function TransactionDetailSection(transaction: ITransaction) {
         <header className="flex flex-col items-center gap-4">
           <SiteLogo />
           <div className="text-center">
-            <h1 className="text-2xl font-bold">ByeByeSick Inc.</h1>
+            <h1 className="text-2xl font-bold">ByeByeSick</h1>
             <p>Sopo Del Building, The Sky, L30, Lot 10.1-6</p>
             <p>(123) 456-7890</p>
             <p>byebyesick@gmail.com</p>
@@ -86,11 +72,11 @@ function TransactionDetailSection(transaction: ITransaction) {
             <p>{transaction.payment_method}</p>
             {renderBadge(transaction.transaction_status.id)}
             <p className="text-orange-500">
-              <Clock10Icon className="mr-1 inline-block " />
+              Pay before:{" "}
               {formatDate(
                 new Date(
                   new Date(transaction.date).setDate(
-                    new Date(transaction.date).getDate() + 3,
+                    new Date(transaction.date).getDate() + 4,
                   ),
                 ),
               )}

@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "next/link"
-import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
@@ -88,16 +88,6 @@ export function ProductManufacturersTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/${row.original.id}`}
-                  target="_blank"
-                  className="flex justify-between"
-                >
-                  View
-                  <ExternalLinkIcon className="ml-1.5 size-3.5" />
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
                   href={`/dashboard/productcategories/edit/${row.original.id}`}

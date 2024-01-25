@@ -28,7 +28,7 @@ function ProductCard(props: {
         </h3>
         <Button size={"sm"} className="flex items-center gap-2 text-xs">
           <span>
-            <PlusIcon className="h-3 w-3" />
+            <PlusIcon className="size-3" />
           </span>
           Add To Cart
         </Button>
