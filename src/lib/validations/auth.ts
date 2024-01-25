@@ -47,7 +47,8 @@ export const verifyFormSchema = z
       .refine(
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
         ".jpg, .jpeg, .png and .pdf files are accepted.",
-      ),
+      )
+      .nullable(),
   })
   .refine((data) => data.confirmPassword === data.password, {
     message: "Password don't match",
@@ -55,7 +56,7 @@ export const verifyFormSchema = z
   })
   .refine(
     (data) => {
-      if (data.role === DOCTOR_ROLE_ID && data.image === undefined) return false
+      if (data.role === DOCTOR_ROLE_ID && !data.image) return false
       return true
     },
     {

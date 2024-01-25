@@ -9,7 +9,7 @@ export async function verify(
   formData.append("email", body.email)
   formData.append("password", body.password)
   formData.append("user_role_id", body.role)
-  formData.append("certificate", body.image)
+  formData.append("certificate", body.image as File)
 
   const requestOptions = {
     method: "POST",

@@ -36,7 +36,7 @@ function VerifyForm({ data }: RegisterToken) {
       name: "",
       password: "",
       confirmPassword: "",
-      image: undefined,
+      image: null,
     },
   })
 
@@ -44,6 +44,8 @@ function VerifyForm({ data }: RegisterToken) {
 
   const onSubmit: SubmitHandler<VerifyFormSchemaType> = async (formData) => {
     try {
+      if (!formData.image) return
+
       const signup = await verify(
         {
           ...formData,
@@ -52,9 +54,11 @@ function VerifyForm({ data }: RegisterToken) {
         router.query.token,
       )
       const decoded: ApiResponse<UserI> = await signup.json()
+
       if (!signup.ok) {
         throw new Error(decoded.errors[0] ?? "Something went wrong")
       }
+
       toast.success("Account successfully registred", { duration: 1000 })
       router.replace("/auth/login")
     } catch (error) {
@@ -63,7 +67,6 @@ function VerifyForm({ data }: RegisterToken) {
     }
   }
 
-  console.log("image watch", form.watch("image"))
   return (
     <Form {...form}>
       <form
@@ -115,7 +118,7 @@ function VerifyForm({ data }: RegisterToken) {
                         value="4"
                         onClick={() => {
                           setIsDoctor(false)
-                          form.setValue("image", undefined)
+                          form.setValue("image", null)
                         }}
                         {...form.register("role")}
                         id="patient"
@@ -199,6 +202,18 @@ function VerifyForm({ data }: RegisterToken) {
 
                       const file = files[0]
                       if (!file) return
+
+                      const allowedTypes = [
+                        "image/png",
+                        "image/jpeg",
+                        "image/jpg",
+                        "application/pdf",
+                      ]
+
+                      if (!allowedTypes.includes(file.type)) {
+                        toast.error("Only image and pdf is allowed")
+                        return
+                      }
 
                       field.onChange(file)
                     }}

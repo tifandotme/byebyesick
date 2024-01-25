@@ -90,9 +90,8 @@ export function DoctorCard({
 
               if (!success) throw new Error()
 
-              if (data?.errors?.pop() === "chat still ongoing") {
-                toast.error("Chat still ongoing")
-                return
+              if (data?.errors?.[0] === "chat still ongoing") {
+                throw new Error("Chat still ongoing")
               }
 
               if (data) router.push("/consultation/as-patient/" + data.data.id)
@@ -101,7 +100,7 @@ export function DoctorCard({
             toast.promise(handleStartChat(), {
               loading: "Starting consultation...",
               success: "Consultation started",
-              error: "Failed to start consultation",
+              error: (error) => error.message,
             })
           }}
           size="sm"
