@@ -11,7 +11,7 @@ import { ChevronRight } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useTheme } from "next-themes"
 
-import { Gradient } from "@/lib/gradient"
+import { Gradient } from "@/lib/gradient.js"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"

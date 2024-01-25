@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react"
+import { getSession, useSession } from "next-auth/react"
 import useSWR, { mutate } from "swr"
 
 import type {
@@ -741,8 +741,11 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
 }
 
 export const useCartList = () => {
-  const { data, isLoading, error, mutate } =
-    useSWR<ResponseGetAll<ICart[]>>("/v1/cart-items")
+  const { status } = useSession()
+
+  const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<ICart[]>>(
+    status === "authenticated" ? "/v1/cart-items" : null,
+  )
 
   return {
     cartdata: data,
@@ -766,9 +769,11 @@ export const useAdressList = () => {
 }
 
 export const useAddressMain = () => {
+  const { status } = useSession()
+
   const { data, isLoading, error, mutate } = useSWR<
     AddressResponse<AddressIForm>
-  >(`/v1/profile/addresses/main`)
+  >(status === "authenticated" ? "/v1/profile/addresses/main" : null)
 
   return {
     addressData: data,
