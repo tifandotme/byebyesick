@@ -43,6 +43,8 @@ export function OrderRequestsTable({
   }))
   const { data: session } = useSession()
 
+  console.log(session?.user.user_role_id)
+
   type Data = (typeof data)[number]
 
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
@@ -121,13 +123,16 @@ export function OrderRequestsTable({
       {
         id: "actions",
         cell: ({ row }) => {
-          const status = row.getValue("status") as Data["status"]
+          const status = row.getValue(
+            "order_status_id",
+          ) as Data["order_status_id"]
 
           return (
             <>
-              {status !== 3 && (
-                <DropdownMenu>
-                  {session?.user.user_role_id !== 1 && (
+              {status !== 3 &&
+                status !== 5 &&
+                session?.user.user_role_id !== 1 && (
+                  <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
                         aria-label="Open menu"
@@ -137,114 +142,114 @@ export function OrderRequestsTable({
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                  )}
-                  <DropdownMenuContent align="end" className="w-[130px]">
-                    {status === 1 && (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "accept",
-                                )
+                    <DropdownMenuContent align="end" className="w-[130px]">
+                      {status === 1 && (
+                        <>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const handleApproval = async () => {
+                                const { success } =
+                                  await updatePharmacyAdminOrder(
+                                    row.original.id,
+                                    "accept",
+                                  )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                if (!success) throw new Error()
+                                await mutate()
+                              }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Approving request...",
-                              success: "Request approved",
-                              error: "Failed to approve request",
-                            })
-                          }}
-                        >
-                          Accept
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "reject",
-                                )
+                              toast.promise(handleApproval(), {
+                                loading: "Approving request...",
+                                success: "Request approved",
+                                error: "Failed to approve request",
+                              })
+                            }}
+                          >
+                            Accept
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const handleApproval = async () => {
+                                const { success } =
+                                  await updatePharmacyAdminOrder(
+                                    row.original.id,
+                                    "reject",
+                                  )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                if (!success) throw new Error()
+                                await mutate()
+                              }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Rejecting request...",
-                              success: "Request rejected",
-                              error: "Failed to reject request",
-                            })
-                          }}
-                        >
-                          Reject
-                        </DropdownMenuItem>
-                      </>
-                    )}
+                              toast.promise(handleApproval(), {
+                                loading: "Rejecting request...",
+                                success: "Request rejected",
+                                error: "Failed to reject request",
+                              })
+                            }}
+                          >
+                            Reject
+                          </DropdownMenuItem>
+                        </>
+                      )}
 
-                    {status === 2 && (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "cancel",
-                                )
+                      {status === 2 && (
+                        <>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const handleApproval = async () => {
+                                const { success } =
+                                  await updatePharmacyAdminOrder(
+                                    row.original.id,
+                                    "cancel",
+                                  )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                if (!success) throw new Error()
+                                await mutate()
+                              }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Canceling request...",
-                              success: "Request canceled",
-                              error: "Failed to cancel request",
-                            })
-                          }}
-                        >
-                          Cancel
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "ship",
-                                )
+                              toast.promise(handleApproval(), {
+                                loading: "Canceling request...",
+                                success: "Request canceled",
+                                error: "Failed to cancel request",
+                              })
+                            }}
+                          >
+                            Cancel
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              const handleApproval = async () => {
+                                const { success } =
+                                  await updatePharmacyAdminOrder(
+                                    row.original.id,
+                                    "ship",
+                                  )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                if (!success) throw new Error()
+                                await mutate()
+                              }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Canceling Shipping...",
-                              success: "Request Shipped",
-                              error: "Failed to cancel Shipping",
-                            })
-                          }}
-                        >
-                          Ship
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                              toast.promise(handleApproval(), {
+                                loading: "Canceling Shipping...",
+                                success: "Request Shipped",
+                                error: "Failed to cancel Shipping",
+                              })
+                            }}
+                          >
+                            Ship
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
             </>
           )
         },
       },
     ],
-    [mutate, session?.user.user_role_id],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mutate],
   )
 
   return (
