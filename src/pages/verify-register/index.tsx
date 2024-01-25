@@ -1,4 +1,4 @@
-import React, { type ReactElement } from "react"
+import { type ReactElement } from "react"
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
 import Head from "next/head"
 
@@ -6,12 +6,11 @@ import type { RegisterToken } from "@/types/user"
 import VerifyForm from "@/features/auth/components/form/verifyForm"
 import AuthLayout from "@/features/auth/components/layout/layout"
 
-import { BASE_URL } from ".."
-
 export const getServerSideProps = (async (context) => {
   const token = context?.query?.token
 
-  const url = BASE_URL + `/v1/auth/verify-register?token=${token}`
+  const url =
+    process.env.NEXT_PUBLIC_DB_URL + `/v1/auth/verify-register?token=${token}`
   try {
     const verify = await fetch(url)
 
