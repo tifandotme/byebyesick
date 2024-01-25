@@ -136,10 +136,10 @@ export function TransactionTable({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[130px]">
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem>
                       <Dialog>
                         <DialogTrigger
-                          className="ml-2 w-full cursor-pointer text-sm"
+                          className="w-full text-sm"
                           onClick={(e) => e.stopPropagation()}
                           asChild
                         >
