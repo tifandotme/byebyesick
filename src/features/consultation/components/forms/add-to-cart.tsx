@@ -6,19 +6,8 @@ import type { CartInputs } from "@/types"
 import type { PrescriptionProduct } from "@/types/api"
 import { addToCart, useCartList } from "@/lib/fetchers"
 import { handleFailedRequest } from "@/lib/utils"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
