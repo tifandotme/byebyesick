@@ -18,6 +18,7 @@ import type {
 import type {
   AddressIForm,
   AddressResponse,
+  ChatRoom,
   doctorI,
   ICart,
   IDrugClassification,
@@ -29,6 +30,7 @@ import type {
   PharmacyProduct,
   Prescription,
   PrescriptionProduct,
+  ResponseById,
   ResponseGetAll,
   SickLeaveForm,
 } from "@/types/api"
@@ -984,6 +986,66 @@ export async function updatePharmacyAdminOrder(
         error instanceof Error
           ? error.message
           : "Something went wrong please try again",
+    }
+  }
+}
+
+export async function updateOnlineStatus(isOnline: boolean) {
+  try {
+    const endpoint = "/v1/profile/doctor/set-online"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        is_online: isOnline,
+      }),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    return {
+      success: true,
+      message: "Online status updated",
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
+    }
+  }
+}
+
+export async function startConsultation(payload: {
+  doctor_id: number
+  user_id: number
+}): Promise<Response<number>> {
+  try {
+    const endpoint = "/v1/chats"
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+
+    const res = await fetch(BASE_URL + endpoint, options)
+    if (!res.ok) await handleFailedRequest(res)
+
+    const { data } = (await res.json()) as ResponseById<ChatRoom>
+
+    return {
+      success: true,
+      message: "Consultation started",
+      data: data.id,
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : "Something went wrong",
     }
   }
 }
