@@ -72,61 +72,72 @@ function VerifyForm({ data }: RegisterToken) {
         </div>
         <div>
           <FormLabel>Register as</FormLabel>
-          <fieldset className="grid grid-cols-2 place-content-center gap-4 p-2">
-            <legend className="sr-only">Role</legend>
-            <div>
-              <input
-                type="radio"
-                value="3"
-                onClick={() => {
-                  setIsDoctor(true)
-                }}
-                {...form.register("role")}
-                id="doctor"
-                className="peer hidden"
-              />
-              <label
-                htmlFor="doctor"
-                className="flex cursor-pointer flex-col items-center rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-primary peer-checked:ring-1 peer-checked:ring-primary"
-              >
-                <Image
-                  src={doctor}
-                  alt="doctor"
-                  className="container h-20 object-fill"
-                  width={200}
-                  height={200}
-                />
-                <p className="mt-1 text-gray-900">Doctor</p>
-              </label>
-            </div>
-            <div>
-              <input
-                type="radio"
-                value="4"
-                onClick={() => {
-                  setIsDoctor(false)
-                  form.setValue("image", undefined)
-                }}
-                {...form.register("role")}
-                id="patient"
-                className="peer hidden"
-              />
-              <label
-                htmlFor="patient"
-                className="flex cursor-pointer flex-col items-center rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-primary peer-checked:ring-1 peer-checked:ring-primary"
-              >
-                <Image
-                  src={patient}
-                  alt="patient"
-                  className="container h-20 object-contain"
-                  width={200}
-                  loader={imageLoader}
-                  height={200}
-                />
-                <p className="mt-1 text-gray-900">Patient</p>
-              </label>
-            </div>
-          </fieldset>
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <fieldset className="grid grid-cols-2 place-content-center gap-4 p-2">
+                    <legend className="sr-only">Role</legend>
+                    <div>
+                      <input
+                        type="radio"
+                        value="3"
+                        onClick={() => {
+                          setIsDoctor(true)
+                        }}
+                        {...form.register("role")}
+                        id="doctor"
+                        className="peer hidden"
+                      />
+                      <label
+                        htmlFor="doctor"
+                        className="flex cursor-pointer flex-col items-center rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-primary peer-checked:ring-1 peer-checked:ring-primary"
+                      >
+                        <Image
+                          src={doctor}
+                          alt="doctor"
+                          className="container h-20 object-fill"
+                          width={200}
+                          height={200}
+                        />
+                        <p className="mt-1 text-gray-900">Doctor</p>
+                      </label>
+                    </div>
+                    <div>
+                      <input
+                        type="radio"
+                        value="4"
+                        onClick={() => {
+                          setIsDoctor(false)
+                          form.setValue("image", undefined)
+                        }}
+                        {...form.register("role")}
+                        id="patient"
+                        className="peer hidden"
+                      />
+                      <label
+                        htmlFor="patient"
+                        className="flex cursor-pointer flex-col items-center rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 peer-checked:border-primary peer-checked:ring-1 peer-checked:ring-primary"
+                      >
+                        <Image
+                          src={patient}
+                          alt="patient"
+                          className="container h-20 object-contain"
+                          width={200}
+                          loader={imageLoader}
+                          height={200}
+                        />
+                        <p className="mt-1 text-gray-900">Patient</p>
+                      </label>
+                    </div>
+                  </fieldset>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <FormField
           control={form.control}
