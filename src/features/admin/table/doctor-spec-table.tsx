@@ -5,7 +5,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
 
-import type { IProductCategory, ResponseGetAll } from "@/types/api"
+import type { IManufacturer, ResponseGetAll } from "@/types/api"
 import { deleteProductCategory } from "@/lib/fetchers"
 import {
   AlertDialog,
@@ -27,26 +27,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface ProductsTableProps<TData = IProductCategory[]> {
+interface DoctorSpecsProps<TData = IManufacturer[]> {
   data: TData
   mutate: KeyedMutator<ResponseGetAll<TData>>
   pageCount: number
   current_page: number
 }
 
-export function ProductCategoriesTable({
+export function DoctorSpecsTable({
   data,
   mutate,
   pageCount,
   current_page,
-}: ProductsTableProps) {
-  const productscategories = data.map((m, index) => ({
-    id: m.id,
+}: DoctorSpecsProps) {
+  const doctorSpecs = data.map((m, index) => ({
+    id: index + 1,
     num: (current_page - 1) * 10 + (index + 1),
     name: m.name,
+    image: m.image,
   }))
 
-  type Data = (typeof productscategories)[number]
+  type Data = (typeof doctorSpecs)[number]
 
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
@@ -65,6 +66,14 @@ export function ProductCategoriesTable({
         maxSize: 200,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
+        ),
+      },
+      {
+        accessorKey: "image",
+        minSize: 200,
+        maxSize: 200,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Image" />
         ),
       },
 
@@ -101,7 +110,8 @@ export function ProductCategoriesTable({
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete this category.
+                        delete your account and remove your data from our
+                        servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -141,10 +151,6 @@ export function ProductCategoriesTable({
   )
 
   return (
-    <DataTable
-      columns={columns}
-      data={productscategories}
-      pageCount={pageCount}
-    />
+    <DataTable columns={columns} data={doctorSpecs} pageCount={pageCount} />
   )
 }

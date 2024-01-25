@@ -194,7 +194,7 @@ export default function HomePage({
 
           {productByAddress?.data.total_items === 0 && (
             <div>
-              <p>
+              <p className="container mt-4 max-w-6xl">
                 There are no products around {addressData?.data.sub_district}
               </p>
             </div>
