@@ -114,7 +114,7 @@ export const siteConfig = {
         title: "Orders",
         href: "/dashboard/orders",
         icon: "Transactions",
-        role: "pharmacyAdmin",
+        role: ["pharmacyAdmin"],
       },
     ] satisfies NavItemRequiredWithRole[],
   },
