@@ -99,7 +99,7 @@ export function UserForm({ mode, initialData }: UserFormProps) {
             className="w-fit"
           >
             {form.formState.isSubmitting && (
-              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.Spinner className="mr-2 size-4 animate-spin" />
             )}
             {toSentenceCase(mode)} user
           </Button>

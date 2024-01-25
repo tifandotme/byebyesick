@@ -24,8 +24,6 @@ import {
 import { SiteLogo } from "@/components/site-logo"
 
 function TransactionDetailSection(transaction: ITransaction) {
-  console.log(transaction)
-
   const renderBadge = (status: number) => {
     switch (status) {
       case 1:

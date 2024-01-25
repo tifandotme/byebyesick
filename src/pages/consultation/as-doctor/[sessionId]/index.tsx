@@ -326,7 +326,6 @@ export default function DoctorChatRoomPage({
                                 >
                                   {message.attachment &&
                                     (() => {
-                                      console.log(message.attachment)
                                       if (
                                         message.attachment.startsWith(
                                           "data:application/pdf",

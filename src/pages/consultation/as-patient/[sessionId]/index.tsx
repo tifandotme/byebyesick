@@ -111,16 +111,6 @@ export default function PatientChatRoomPage({
       data?.data.consultation_session_status_id === 1,
     )
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState]
-
-  console.log("status", connectionStatus)
-
   // #region Form
   const form = useForm<chatRoomInputs>({
     resolver: zodResolver(chatRoomSchema),
