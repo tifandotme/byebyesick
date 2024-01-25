@@ -28,7 +28,7 @@ export function DoctorCard({
 }: doctorI) {
   const router = useRouter()
 
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <Card>
@@ -97,6 +97,7 @@ export function DoctorCard({
             })
           }}
           size="sm"
+          disabled={status === "unauthenticated"}
         >
           Chat Doctor
         </Button>
