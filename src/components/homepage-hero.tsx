@@ -58,12 +58,12 @@ export const HomePageHero = React.memo(function HomePageHero() {
           consult doctors online.
         </p>
         {showCTA && (
-          <div className="!mt-8 flex flex-col gap-2 sm:flex-row">
+          <div className="!mt-8 flex flex-col gap-2 xs:flex-row">
             <Link
               href="/products/around-you"
               className={cn(
                 buttonVariants({ size: "sm" }),
-                "h-8 px-4 font-bold",
+                "h-8 w-fit px-4 font-bold",
               )}
             >
               Browse Product
@@ -73,7 +73,7 @@ export const HomePageHero = React.memo(function HomePageHero() {
               href="/doctors"
               className={cn(
                 buttonVariants({ variant: "link", size: "sm" }),
-                "font-extrabold text-foreground/80",
+                "w-fit font-extrabold text-foreground/80",
               )}
             >
               Start Consultation

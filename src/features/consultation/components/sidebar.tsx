@@ -8,6 +8,7 @@ import type { ChatRoom, Prescription, SickLeaveForm } from "@/types/api"
 import type { Payload } from "@/types/websocket"
 import { alertMessages } from "@/config"
 import { endChatRoom } from "@/lib/fetchers"
+import { useStore } from "@/lib/stores/consultation"
 import { cn, formatDate } from "@/lib/utils"
 import {
   AlertDialog,
@@ -47,7 +48,8 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
   as,
   sendJsonMessage,
 }: ConsultationSidebarProps) {
-  const [countdown, setCountdown] = React.useState(0)
+  const countdown = useStore((state) => state.countdown)
+  const updateCountdown = useStore((state) => state.updateCountdown)
 
   return (
     <div className="space-y-4">
@@ -206,7 +208,7 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
               onClick={async () => {
                 if (as === "doctor") {
                   for (let i = END_CHAT_COUNTDOWN; i >= 0; i--) {
-                    setCountdown(i)
+                    updateCountdown(i)
                     await new Promise((resolve) => setTimeout(resolve, 1000))
                   }
                 }

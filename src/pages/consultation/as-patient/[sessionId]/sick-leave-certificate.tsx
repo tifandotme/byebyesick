@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const BASE_URL = process.env.NEXT_PUBLIC_DB_URL as string
   const session = await getSession(context)
   try {
-    const url = BASE_URL + `/v1/sick-leave-forms/${context.query.roomId}`
+    const url = BASE_URL + `/v1/sick-leave-forms/${context.query.sessionId}`
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${session?.user?.token}`,

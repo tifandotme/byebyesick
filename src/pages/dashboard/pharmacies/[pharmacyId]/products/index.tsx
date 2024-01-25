@@ -63,12 +63,12 @@ export default function PharmacyProductsPage({
         <div className="flex flex-col gap-2 lg:flex-row">
           <RequestCard
             title="Outgoing Request"
-            description={`You have 3 pending outgoing request(s) to other pharmacies`}
+            description={`Your request(s) to other pharmacies`}
             href={`/dashboard/pharmacies/${pharmacyId}/products/outgoing`}
           />
           <RequestCard
             title="Incoming Request"
-            description="You have 2 pending incoming request(s) from other pharmacies"
+            description="Other pharmacies requesting to you"
             href={`/dashboard/pharmacies/${pharmacyId}/products/incoming`}
           />
         </div>

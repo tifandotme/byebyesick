@@ -9,6 +9,17 @@ import type { KeyedMutator } from "swr"
 import type { IOrderResponse } from "@/types/api"
 import { updatePharmacyAdminOrder } from "@/lib/fetchers"
 import { formatDate, formatPrice } from "@/lib/utils"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
@@ -150,98 +161,190 @@ export function OrderRequestsTable({
 
                     {status === 1 && session?.user.user_role_id === 2 && (
                       <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "accept",
-                                )
+                        <DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              className="w-full text-sm"
+                              onClick={(e) => e.stopPropagation()}
+                              asChild
+                            >
+                              <span>Accept</span>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Accept</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  You are about to accept this payment. This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    const handleApproval = async () => {
+                                      const { success } =
+                                        await updatePharmacyAdminOrder(
+                                          row.original.id,
+                                          "accept",
+                                        )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                      if (!success) throw new Error()
+                                      await mutate()
+                                    }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Approving request...",
-                              success: "Request approved",
-                              error: "Failed to approve request",
-                            })
-                          }}
-                        >
-                          Accept
+                                    toast.promise(handleApproval(), {
+                                      loading: "Approving request...",
+                                      success: "Request approved",
+                                      error: "Failed to approve request",
+                                    })
+                                  }}
+                                >
+                                  Accept
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "reject",
-                                )
+                        <DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              className="w-full text-sm"
+                              onClick={(e) => e.stopPropagation()}
+                              asChild
+                            >
+                              <span>Reject</span>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Reject</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  You are about to Reject this payment. This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    const handleApproval = async () => {
+                                      const { success } =
+                                        await updatePharmacyAdminOrder(
+                                          row.original.id,
+                                          "reject",
+                                        )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                      if (!success) throw new Error()
+                                      await mutate()
+                                    }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Rejecting request...",
-                              success: "Request rejected",
-                              error: "Failed to reject request",
-                            })
-                          }}
-                        >
-                          Reject
+                                    toast.promise(handleApproval(), {
+                                      loading: "Rejecting request...",
+                                      success: "Request rejected",
+                                      error: "Failed to reject request",
+                                    })
+                                  }}
+                                >
+                                  Reject
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DropdownMenuItem>
                       </>
                     )}
 
                     {status === 2 && session?.user.user_role_id === 2 && (
                       <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "cancel",
-                                )
+                        <DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              className="w-full text-sm"
+                              onClick={(e) => e.stopPropagation()}
+                              asChild
+                            >
+                              <span>Cancel</span>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Cancel</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  You are about to Cancel this payment. This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    const handleApproval = async () => {
+                                      const { success } =
+                                        await updatePharmacyAdminOrder(
+                                          row.original.id,
+                                          "cancel",
+                                        )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                      if (!success) throw new Error()
+                                      await mutate()
+                                    }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Canceling request...",
-                              success: "Request canceled",
-                              error: "Failed to cancel request",
-                            })
-                          }}
-                        >
-                          Cancel
+                                    toast.promise(handleApproval(), {
+                                      loading: "Rejecting cancel...",
+                                      success: "Request Canceled",
+                                      error: "Failed to cancel request",
+                                    })
+                                  }}
+                                >
+                                  Cancel
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            const handleApproval = async () => {
-                              const { success } =
-                                await updatePharmacyAdminOrder(
-                                  row.original.id,
-                                  "ship",
-                                )
+                        <DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger
+                              className="w-full text-sm"
+                              onClick={(e) => e.stopPropagation()}
+                              asChild
+                            >
+                              <span>Ship</span>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Ship</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  You are about to Ship this payment. This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => {
+                                    const handleApproval = async () => {
+                                      const { success } =
+                                        await updatePharmacyAdminOrder(
+                                          row.original.id,
+                                          "ship",
+                                        )
 
-                              if (!success) throw new Error()
-                              await mutate()
-                            }
+                                      if (!success) throw new Error()
+                                      await mutate()
+                                    }
 
-                            toast.promise(handleApproval(), {
-                              loading: "Canceling Shipping...",
-                              success: "Request Shipped",
-                              error: "Failed to cancel Shipping",
-                            })
-                          }}
-                        >
-                          Ship
+                                    toast.promise(handleApproval(), {
+                                      loading: "Canceling Shipping...",
+                                      success: "Request Shipped",
+                                      error: "Failed to cancel Shipping",
+                                    })
+                                  }}
+                                >
+                                  Ship
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </DropdownMenuItem>
                       </>
                     )}
