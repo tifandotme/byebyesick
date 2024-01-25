@@ -498,6 +498,17 @@ export default function DoctorChatRoomPage({
                                 const file = files[0]
                                 if (!file) return
 
+                                const allowedTypes = [
+                                  "image/png",
+                                  "image/jpeg",
+                                  "image/jpg",
+                                ]
+
+                                if (!allowedTypes.includes(file.type)) {
+                                  toast.error("Only image is allowed")
+                                  return
+                                }
+
                                 field.onChange(URL.createObjectURL(file))
                                 form.setValue("pdf", "")
                               }}
@@ -536,6 +547,13 @@ export default function DoctorChatRoomPage({
 
                                 const file = files[0]
                                 if (!file) return
+
+                                const allowedTypes = ["application/pdf"]
+
+                                if (!allowedTypes.includes(file.type)) {
+                                  toast.error("Only pdf is allowed")
+                                  return
+                                }
 
                                 field.onChange(URL.createObjectURL(file))
                                 form.setValue("image", "")

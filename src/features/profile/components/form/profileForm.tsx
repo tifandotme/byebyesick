@@ -107,7 +107,10 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
         className="flex w-full flex-col space-y-6"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <label htmlFor="profile" className="self-center ">
+        <label
+          htmlFor="profile"
+          className="flex cursor-pointer flex-col items-center gap-2 self-center"
+        >
           <Image
             width={160}
             height={160}
@@ -127,6 +130,7 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
             id="profile"
             onChange={handleChangeImage}
           />
+          <div className="text-blue-500">Change Profile</div>
         </label>
         <FormField
           control={form.control}
