@@ -1,4 +1,5 @@
 import React from "react"
+import Link from "next/link"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
@@ -129,120 +130,124 @@ export function OrderRequestsTable({
 
           return (
             <>
-              {status !== 3 &&
-                status !== 5 &&
-                session?.user.user_role_id !== 1 && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-label="Open menu"
-                        variant="ghost"
-                        className="flex size-8 p-0 data-[state=open]:bg-muted"
-                      >
-                        <DotsHorizontalIcon className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[130px]">
-                      {status === 1 && (
-                        <>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              const handleApproval = async () => {
-                                const { success } =
-                                  await updatePharmacyAdminOrder(
-                                    row.original.id,
-                                    "accept",
-                                  )
+              {status !== 3 && status !== 5 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      aria-label="Open menu"
+                      variant="ghost"
+                      className="flex size-8 p-0 data-[state=open]:bg-muted"
+                    >
+                      <DotsHorizontalIcon className="size-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[130px]">
+                    <DropdownMenuItem>
+                      <Link href={`/order/detail/${row.original.id}`}>
+                        View
+                      </Link>
+                    </DropdownMenuItem>
 
-                                if (!success) throw new Error()
-                                await mutate()
-                              }
+                    {status === 1 && session?.user.user_role_id === 2 && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "accept",
+                                )
 
-                              toast.promise(handleApproval(), {
-                                loading: "Approving request...",
-                                success: "Request approved",
-                                error: "Failed to approve request",
-                              })
-                            }}
-                          >
-                            Accept
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              const handleApproval = async () => {
-                                const { success } =
-                                  await updatePharmacyAdminOrder(
-                                    row.original.id,
-                                    "reject",
-                                  )
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                                if (!success) throw new Error()
-                                await mutate()
-                              }
+                            toast.promise(handleApproval(), {
+                              loading: "Approving request...",
+                              success: "Request approved",
+                              error: "Failed to approve request",
+                            })
+                          }}
+                        >
+                          Accept
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "reject",
+                                )
 
-                              toast.promise(handleApproval(), {
-                                loading: "Rejecting request...",
-                                success: "Request rejected",
-                                error: "Failed to reject request",
-                              })
-                            }}
-                          >
-                            Reject
-                          </DropdownMenuItem>
-                        </>
-                      )}
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                      {status === 2 && (
-                        <>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              const handleApproval = async () => {
-                                const { success } =
-                                  await updatePharmacyAdminOrder(
-                                    row.original.id,
-                                    "cancel",
-                                  )
+                            toast.promise(handleApproval(), {
+                              loading: "Rejecting request...",
+                              success: "Request rejected",
+                              error: "Failed to reject request",
+                            })
+                          }}
+                        >
+                          Reject
+                        </DropdownMenuItem>
+                      </>
+                    )}
 
-                                if (!success) throw new Error()
-                                await mutate()
-                              }
+                    {status === 2 && session?.user.user_role_id === 2 && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "cancel",
+                                )
 
-                              toast.promise(handleApproval(), {
-                                loading: "Canceling request...",
-                                success: "Request canceled",
-                                error: "Failed to cancel request",
-                              })
-                            }}
-                          >
-                            Cancel
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => {
-                              const handleApproval = async () => {
-                                const { success } =
-                                  await updatePharmacyAdminOrder(
-                                    row.original.id,
-                                    "ship",
-                                  )
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
 
-                                if (!success) throw new Error()
-                                await mutate()
-                              }
+                            toast.promise(handleApproval(), {
+                              loading: "Canceling request...",
+                              success: "Request canceled",
+                              error: "Failed to cancel request",
+                            })
+                          }}
+                        >
+                          Cancel
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const handleApproval = async () => {
+                              const { success } =
+                                await updatePharmacyAdminOrder(
+                                  row.original.id,
+                                  "ship",
+                                )
 
-                              toast.promise(handleApproval(), {
-                                loading: "Canceling Shipping...",
-                                success: "Request Shipped",
-                                error: "Failed to cancel Shipping",
-                              })
-                            }}
-                          >
-                            Ship
-                          </DropdownMenuItem>
-                        </>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+                              if (!success) throw new Error()
+                              await mutate()
+                            }
+
+                            toast.promise(handleApproval(), {
+                              loading: "Canceling Shipping...",
+                              success: "Request Shipped",
+                              error: "Failed to cancel Shipping",
+                            })
+                          }}
+                        >
+                          Ship
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </>
           )
         },
