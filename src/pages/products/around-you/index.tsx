@@ -15,6 +15,7 @@ import Search from "@/features/sales-report/components/search/search"
 
 export default function SeeAllAroundYou() {
   const { location, locationError } = useGeolocation()
+
   const [sortBy, setSortBy] = React.useState("name")
   const [sort, setSort] = React.useState("desc")
   const [search, setSearch] = React.useState<string>("")
@@ -22,6 +23,8 @@ export default function SeeAllAroundYou() {
   const [drugClass, setDrugClass] = React.useState<number>()
 
   const { data, isLoading, error } = useSWR<ResponseGetAll<IProduct[]>>(() => {
+    if (!location.latitude || !location.longitude) return null
+
     const params = new URLSearchParams()
     if (search) params.set("search", search)
     if (drugClass) params.set("drug_class", String(drugClass))
