@@ -3,7 +3,7 @@
 import React from "react"
 import Link from "next/link"
 import { toast } from "sonner"
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 
 import type { Option } from "@/types"
 import type { ITransaction, ResponseGetAll } from "@/types/api"
@@ -34,7 +34,7 @@ function TransactionListPage() {
   const [orderStatus, setOrderStatus] = React.useState<string>("")
   const [page, setCurrentPage] = React.useState<number>(1)
   const limit = 10
-  const { data, isLoading } = useSWR<
+  const { data, isLoading, mutate } = useSWR<
     ResponseGetAll<Omit<ITransaction[], "orders">>
   >(() => {
     const params = new URLSearchParams()
@@ -126,7 +126,7 @@ function TransactionListPage() {
                     {order.transaction_status.id === 1 && (
                       <AlertDialog>
                         <AlertDialogTrigger
-                          className="w-full text-sm"
+                          className="w-full border-red-600 text-sm text-red-500"
                           onClick={(e) => e.stopPropagation()}
                           asChild
                         >
@@ -150,8 +150,7 @@ function TransactionListPage() {
                                 const handleCancel = async () => {
                                   const { success, message } =
                                     await updatePayment(order.id, "cancel")
-                                  await mutate(`/v1/transactions}`)
-
+                                  mutate()
                                   if (!success) throw new Error(message)
                                 }
                                 toast.promise(handleCancel(), {
