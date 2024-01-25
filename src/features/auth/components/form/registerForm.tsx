@@ -1,4 +1,3 @@
-import { useState } from "react"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -10,9 +9,15 @@ import {
 } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"
 import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,11 +34,8 @@ export default function RegisterForm() {
     },
   })
 
-  const [loading, setLoading] = useState<boolean>(false)
-
   async function onSubmit(data: RegisterFormSchemaType) {
     try {
-      setLoading(true)
       const signup = await register(data.email)
       if (!signup.ok) {
         switch (signup.status) {
@@ -47,46 +49,59 @@ export default function RegisterForm() {
     } catch (error) {
       const err = error as Error
       toast.error(err.message)
-    } finally {
-      setLoading(false)
     }
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-md space-y-6"
-      >
-        <h1 className="text-xl font-medium">Register Account</h1>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="johndoe@gmail.com"
-                  type="email"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>Enter valid email to register</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="w-full" disabled={loading} type="submit">
-          Register
-        </Button>
-        <div className="flex gap-2 text-sm text-apple-800 md:text-base">
-          Already have an account?{" "}
-          <Link href={"/auth/login"} className="text-apple-600">
-            Login
-          </Link>
-        </div>
-      </form>
-    </Form>
+    <div className="grid w-full max-w-md items-center gap-8 pb-8 pt-6 md:py-8">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Sign up</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="johndoe@mail.com"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-full"
+                disabled={form.formState.isSubmitting}
+                type="submit"
+              >
+                Register
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm text-muted-foreground">
+            <span className="mr-1 hidden sm:inline-block">
+              Already have an account?
+            </span>
+            <Link
+              href="/auth/login"
+              className="text-primary underline-offset-4 transition-colors hover:underline"
+            >
+              Sign in
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

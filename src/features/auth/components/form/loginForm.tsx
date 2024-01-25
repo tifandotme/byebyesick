@@ -12,6 +12,13 @@ import {
 } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"
 import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
   Form,
   FormControl,
   FormField,
@@ -33,27 +40,30 @@ export default function LoginForm() {
 
   const { data: session } = useSession()
   useEffect(() => {
+    if (!session) return
+
     const callbackUrl = router.query.callbackUrl as string
-    if (session) {
-      if (callbackUrl) {
-        router.replace(callbackUrl)
-      }
-      switch (session.user.user_role_id) {
-        case 1:
-          router.replace("/dashboard/products")
-          break
-        case 2:
-          router.replace("/dashboard/pharmacies")
-          break
-        case 3:
-          router.replace("/doctor")
-          break
-        case 4:
-          router.replace("/")
-          break
-      }
+    if (callbackUrl) {
+      router.replace(callbackUrl)
+      return
     }
-  }, [session, router])
+
+    switch (session.user.user_role_id) {
+      case 1:
+        router.replace("/dashboard/products")
+        break
+      case 2:
+        router.replace("/dashboard/pharmacies")
+        break
+      case 3:
+        router.replace("/doctor")
+        break
+      case 4:
+        router.replace("/")
+        break
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session])
 
   const onSubmit: SubmitHandler<LoginFormSchemaType> = async (data) => {
     try {
@@ -65,7 +75,7 @@ export default function LoginForm() {
       if (!result?.ok) {
         throw new Error("Invalid email or password")
       }
-      toast.success("Login Successfull", { duration: 2000 })
+      toast.success("Login Successful", { duration: 2000 })
       router.replace("/")
     } catch (error) {
       const err = error as Error
@@ -74,53 +84,74 @@ export default function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-md space-y-6"
-      >
-        <h1 className="text-2xl font-semibold">Login</h1>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="johndoe@mail.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="******" type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="w-full" type="submit">
-          Login
-        </Button>
-        <div className="flex justify-between text-sm md:text-base">
-          <div className="flex gap-2">
-            Don&apos;t have an account?{" "}
-            <Link href={"/auth/register"} className="text-apple-600">
-              Register
+    <div className="grid w-full max-w-md items-center gap-8 pb-8 pt-6 md:py-8">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Sign in</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="johndoe@mail.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="******" type="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                Login
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-sm text-muted-foreground">
+            <span className="mr-1 hidden sm:inline-block">
+              Don&apos;t have an account?
+            </span>
+            <Link
+              href="/auth/register"
+              className="text-primary underline-offset-4 transition-colors hover:underline"
+            >
+              Sign up
             </Link>
           </div>
-          <Link href={"/reset/password"} className="text-apple-600">
-            Reset Password
+          <Link
+            href="/reset/password"
+            className="text-sm text-primary underline-offset-4 transition-colors hover:underline"
+          >
+            Reset password
           </Link>
-        </div>
-      </form>
-    </Form>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

@@ -46,5 +46,3 @@ VerifyPage.getLayout = function getLayout(page: ReactElement) {
 }
 
 export default VerifyPage
-
-// http://localhost:8080/v1/auth/verify-register?token=4df68ae8-8cc4-4339-b197-b52ff7c057de
