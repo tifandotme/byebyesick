@@ -33,7 +33,7 @@ export const HomePageHero = React.memo(function HomePageHero() {
   const showCTA = session?.user.user_role_id !== 3
 
   return (
-    <div className="relative mx-auto mb-[50px] h-[600px] sm:mb-[150px]">
+    <div className="relative mx-auto mb-[50px] h-[700px] sm:mb-[150px] md:h-[600px]">
       <canvas
         className="gradient absolute top-0 -z-10 size-full"
         id="gradient-canvas"
@@ -58,7 +58,7 @@ export const HomePageHero = React.memo(function HomePageHero() {
           consult doctors online.
         </p>
         {showCTA && (
-          <div className="!mt-8 flex gap-2">
+          <div className="!mt-8 flex flex-col gap-2 sm:flex-row">
             <Link
               href="/products/around-you"
               className={cn(

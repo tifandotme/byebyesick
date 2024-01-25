@@ -18,7 +18,8 @@ import { ProductCard } from "@/features/products/components/products-card"
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const url =
-      (process.env.DB_URL as string) + "/v1/drug-classifications/no-params"
+      (process.env.NEXT_PUBLIC_DB_URL as string) +
+      "/v1/drug-classifications/no-params"
 
     const response = await fetch(url)
 
