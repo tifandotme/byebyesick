@@ -84,6 +84,7 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.rewrite(url)
     }
   } else if (patientAdminProtectedPath) {
+    console.log("koko")
     if (!isAuthenticated) {
       const url = new URL(
         process.env.NEXT_PUBLIC_SITE_PATH + `/auth/login`,
@@ -223,5 +224,6 @@ export const config = {
     "/profile",
     "/consultation",
     "/doctors",
+    "/order",
   ],
 }
