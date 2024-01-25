@@ -1,6 +1,6 @@
 import React from "react"
-import Link from "next/link"
-import { DotsHorizontalIcon, ExternalLinkIcon } from "@radix-ui/react-icons"
+import Image from "next/image"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { toast } from "sonner"
 import type { KeyedMutator } from "swr"
@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,6 +52,7 @@ export function TransactionTable({
     date: m.date,
     transaction_status_id: m.transaction_status.id,
     transaction_status: m.transaction_status,
+    proof: m.payment_proof,
   }))
 
   type Data = (typeof transaction)[number]
@@ -117,6 +119,9 @@ export function TransactionTable({
           const status = row.getValue(
             "transaction_status_id",
           ) as Data["transaction_status_id"]
+
+          const proof = row.original.proof
+
           return (
             <>
               {status === 2 && (
@@ -132,14 +137,26 @@ export function TransactionTable({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[130px]">
                     <DropdownMenuItem asChild>
-                      <Link
-                        href={`/order/transaction-detail/${row.original.id}`}
-                        target="_blank"
-                        className="flex justify-between"
-                      >
-                        View
-                        <ExternalLinkIcon className="ml-1.5 size-3.5" />
-                      </Link>
+                      <Dialog>
+                        <DialogTrigger
+                          className="ml-2 w-full cursor-pointer text-sm"
+                          onClick={(e) => e.stopPropagation()}
+                          asChild
+                        >
+                          <span>View</span>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <div className="flex size-full flex-col items-center justify-center">
+                            <Image
+                              src={proof}
+                              alt="Payment Proof"
+                              width={500}
+                              height={500}
+                              objectFit="contain"
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <AlertDialog>
