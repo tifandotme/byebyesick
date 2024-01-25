@@ -76,12 +76,12 @@ export function UsersTable({ data: users, pageCount }: UsersTableProps) {
                 aria-label="Open menu"
                 variant="ghost"
                 className={cn(
-                  "flex h-8 w-8 p-0 data-[state=open]:bg-muted",
+                  "flex size-8 p-0 data-[state=open]:bg-muted",
                   row.original.role !== "pharmacyAdmin" &&
                     "pointer-events-none invisible",
                 )}
               >
-                <DotsHorizontalIcon className="h-4 w-4" />
+                <DotsHorizontalIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[130px]">

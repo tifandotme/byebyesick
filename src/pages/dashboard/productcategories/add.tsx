@@ -1,9 +1,9 @@
 import React from "react"
-import ProductLayout from "@/features/products/components/layout"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import ProductCategoriesForm from "@/components/forms/product-categories-form"
 import { DashboardLayout } from "@/components/layouts/dashboard"
+import ProductLayout from "@/features/products/components/layout"
 
 export default function AddProductCategoriesPage() {
   return (

@@ -321,7 +321,6 @@ export default function CheckoutPage() {
                         if (response.success) {
                           const transactionId = response.data?.data.id
 
-                          console.log(ids)
                           cartMutate()
                           router.push(
                             `/order/transaction-confirmation/${transactionId}`,
