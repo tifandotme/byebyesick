@@ -724,6 +724,8 @@ export async function deleteCart(product_ids: number[]): Promise<Response> {
       throw new Error("Failed to delete a product")
     }
 
+    mutate(url)
+
     return {
       success: true,
       message: "Product deleted from cart",

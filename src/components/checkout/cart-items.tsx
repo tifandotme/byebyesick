@@ -35,10 +35,11 @@ export function CartLineItems({
             <div className="flex items-center space-x-4">
               {isCheckable && (
                 <Checkbox
-                  checked={checkedItems?.[item.id] || false}
-                  onCheckedChange={(isChecked) =>
-                    onChecked && onChecked(String(item.id), Boolean(isChecked))
-                  }
+                  checked={checkedItems?.[item.product_id] || false}
+                  onCheckedChange={(isChecked) => {
+                    onChecked &&
+                      onChecked(String(item.product_id), Boolean(isChecked))
+                  }}
                   className="shrink-0"
                 />
               )}

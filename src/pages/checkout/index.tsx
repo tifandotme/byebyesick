@@ -13,7 +13,12 @@ import {
   type IShippingMethod,
   type ResponseGetAll,
 } from "@/types/api"
-import { createTransactions, getShippingMethods } from "@/lib/fetchers"
+import {
+  createTransactions,
+  deleteCart,
+  getShippingMethods,
+  useCartList,
+} from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -39,6 +44,7 @@ import { MainLayout } from "@/components/layouts/main"
 export default function CheckoutPage() {
   const router = useRouter()
   const { isReady, query } = router
+  const { cartMutate } = useCartList()
 
   const [loadingShippingMethods, setLoadingShippingMethods] =
     React.useState(false)
@@ -268,61 +274,6 @@ export default function CheckoutPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                {/* <Button
-                  className="w-full"
-                  onClick={() => {
-                    const totalPayment =
-                      (checkoutItems?.items.reduce(
-                        (accumulator, item) =>
-                          accumulator +
-                          item.quantity * Number(item.pharmacy_product.price),
-                        0,
-                      ) || 0) +
-                      (Object.values(selectedShippingMethods).reduce(
-                        (accumulator, method) =>
-                          accumulator + Number(method.cost),
-                        0,
-                      ) || 0)
-
-                    const doTransaction = async () => {
-                      const response = await createTransactions({
-                        address_id: Number(address),
-                        total_payment: String(totalPayment),
-                        orders: Object.entries(groupedPharmacyProducts).map(
-                          ([pharmacyId, items]) => ({
-                            shipping_cost: String(
-                              selectedShippingMethods[Number(pharmacyId)]?.cost,
-                            ),
-                            shipping_method_id:
-                              selectedShippingMethods[Number(pharmacyId)]?.id!,
-                            order_details: items.map((item) => ({
-                              pharmacy_product_id: Number(
-                                item.pharmacy_product.id,
-                              ),
-                              quantity: Number(item.quantity),
-                            })),
-                          }),
-                        ),
-                      })
-                      if (response.success) {
-                        const transactionId = response.data?.data.id
-                        router.push(
-                          `/order/transaction-confirmation/${transactionId}`,
-                        )
-                      } else {
-                        throw new Error(response.message)
-                      }
-                    }
-
-                    toast.promise(doTransaction(), {
-                      success:
-                        "Transaction Created, please upload your payment proof",
-                      error: "Failed to create Transaction",
-                    })
-                  }}
-                >
-                  Pay
-                </Button> */}
                 <Button
                   className={`w-full ${Object.keys(selectedShippingMethods).length ? "bg-primary" : "cursor-not-allowed bg-gray-500"}`}
                   onClick={() => {
@@ -364,6 +315,8 @@ export default function CheckoutPage() {
                         })
                         if (response.success) {
                           const transactionId = response.data?.data.id
+                          await deleteCart(ids.map((id) => Number(id)))
+                          cartMutate()
                           router.push(
                             `/order/transaction-confirmation/${transactionId}`,
                           )

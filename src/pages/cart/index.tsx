@@ -39,9 +39,6 @@ export default function CartPage() {
   const [checkedItems, setCheckedItems] = React.useState<
     Record<string, boolean>
   >({})
-  const handleCheckChange = (itemId: string, isChecked: boolean) => {
-    setCheckedItems((prevState) => ({ ...prevState, [itemId]: isChecked }))
-  }
 
   const { addressError, addressList } = useAdressList()
   const { addressData } = useAddressMain()
@@ -52,6 +49,12 @@ export default function CartPage() {
 
   if (!cartdata) {
     return <div>No items in cart</div>
+  }
+
+  const handleCheckChange = (productId: string, isChecked: boolean) => {
+    setCheckedItems((prevState) => {
+      return { ...prevState, [productId]: isChecked }
+    })
   }
 
   const selectedAddressData = selectedAddress
@@ -76,7 +79,6 @@ export default function CartPage() {
       toast.warning("Please select address")
       return
     }
-
     router.push(
       `/checkout?ids=${encodeURIComponent(idsString)}&address=${encodeURIComponent(selectedAddressId)}`,
     )
