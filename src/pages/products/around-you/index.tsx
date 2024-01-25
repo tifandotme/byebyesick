@@ -22,7 +22,6 @@ export default function SeeAllAroundYou() {
   const [page, setPage] = React.useState<number>(1)
   const [drugClass, setDrugClass] = React.useState<number>()
 
-  const limit = 10
   const { data, isLoading, error } = useSWR<ResponseGetAll<IProduct[]>>(() => {
     if (!location.latitude || !location.longitude) return null
 
