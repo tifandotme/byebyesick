@@ -30,8 +30,8 @@ export default async function middleware(req: NextRequestWithAuth) {
     "/dashboard/sales-report",
     "/dashboard/orders",
   ]
-
-  const doctorProtectedPath = pathname.startsWith(doctorPath)
+  const doctorProtectedPath =
+    pathname.startsWith(doctorPath) && !pathname.startsWith("/doctors")
   const pharmaciesAdminProtectedPath = pathname.startsWith(pharmaciesAdminPath)
   const superAdminProtectedPath = superAdminPath.some((path) =>
     pathname.startsWith(path),
@@ -41,7 +41,6 @@ export default async function middleware(req: NextRequestWithAuth) {
   const adminAndPharmacyAdminProtectedPath = adminAndPharmacyAdminPath.some(
     (path) => pathname.startsWith(path),
   )
-
   const isAuthenticated = !!token
   if (pathname.startsWith("/auth") && isAuthenticated) {
     if (token && token.user_role_id === SUPER_ADMIN_ROLE) {
@@ -208,5 +207,6 @@ export const config = {
     "/doctor/:path*",
     "/profile",
     "/consultation",
+    "/doctors",
   ],
 }

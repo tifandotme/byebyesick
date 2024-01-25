@@ -43,12 +43,15 @@ export function DoctorCard({
       <CardContent>
         <div className="flex items-center gap-6">
           <Avatar className="size-20 bg-muted">
-            <AvatarImage
-              src={profile_photo ?? undefined}
-              className="object-cover"
-              alt={name ?? undefined}
-            />
-            <Icons.Person className="m-auto size-12 -translate-y-0.5 p-2 text-muted-foreground" />
+            {profile_photo ? (
+              <AvatarImage
+                src={profile_photo ?? undefined}
+                className="object-cover"
+                alt={name ?? undefined}
+              />
+            ) : (
+              <Icons.Person className="m-auto size-12 -translate-y-0.5 p-2 text-muted-foreground" />
+            )}
           </Avatar>
           <div className="grid w-full gap-1 text-xs md:text-base">
             <div className="text-sm font-semibold md:text-xl">
