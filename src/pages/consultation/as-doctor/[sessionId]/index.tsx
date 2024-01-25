@@ -103,12 +103,21 @@ export default function DoctorChatRoomPage({
               token: session.user.token,
             }
           : undefined,
-        onOpen: () => {
-          console.log("WS connection opened")
-        },
       },
       data?.data.consultation_session_status_id === 1,
     )
+
+  React.useEffect(() => {
+    const connectionStatus = {
+      [ReadyState.CONNECTING]: "Connecting",
+      [ReadyState.OPEN]: "Open",
+      [ReadyState.CLOSING]: "Closing",
+      [ReadyState.CLOSED]: "Closed",
+      [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+    }[readyState]
+
+    console.log("WS connection status: ", connectionStatus)
+  }, [readyState])
 
   // #region Form
   const form = useForm<chatRoomInputs>({
