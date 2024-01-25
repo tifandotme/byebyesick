@@ -30,6 +30,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import AddToCart from "@/features/consultation/components/forms/add-to-cart"
 import { CertificateForm } from "@/features/consultation/components/forms/certificate"
 import { PrescriptionForm } from "@/features/consultation/components/forms/prescription"
 
@@ -68,11 +69,7 @@ export const ConsultationSidebar = React.memo(function ConsultationSidebar({
                 <li key={product.id} className="flex flex-col">
                   <span className="font-bold">{product.product.name}</span>
                   <span>Note: {product.note}</span>
-                  {as === "patient" && (
-                    <button className="w-fit font-semibold text-primary hover:underline">
-                      Add to cart
-                    </button>
-                  )}
+                  <AddToCart {...product} />
                 </li>
               ))}
             </ul>
