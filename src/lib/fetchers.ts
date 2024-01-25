@@ -796,10 +796,14 @@ export async function updateManufacturers(
       formData.append("image", payload.image, "image.png")
     }
 
-    const url = new URL(
-      `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    // const url = new URL(
+    //   `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`,
+    //   process.env.NEXT_PUBLIC_DB_URL,
+    // )
+
+    const url =
+      BASE_URL +
+      `${mode === "edit" ? `/v1/manufacturers/${id}` : "/v1/manufacturers"}`
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
@@ -836,10 +840,12 @@ export async function updateManufacturers(
 
 export async function deleteManufacturers(id: number): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/manufacturers/${id}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    // const url = new URL(
+    //   `/v1/manufacturers/${id}`,
+    //   process.env.NEXT_PUBLIC_DB_URL,
+    // )
+
+    const url = BASE_URL + `/v1/manufacturers/${id}`
     const options: RequestInit = {
       method: "DELETE",
     }
@@ -948,10 +954,12 @@ export async function updatePayment(
   mode: "reject" | "accept" | "cancel",
 ): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/transactions/${id}/${mode}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    // const url = new URL(
+    //   `/v1/transactions/${id}/${mode}`,
+    //   process.env.NEXT_PUBLIC_DB_URL,
+    // )
+
+    const url = BASE_URL + `/v1/transactions/${id}/${mode}`
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -985,10 +993,12 @@ export async function updatePharmacyAdminOrder(
   mode: "reject" | "accept" | "cancel" | "ship",
 ): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/orders/${id}/${mode}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    // const url = new URL(
+    //   `/v1/orders/${id}/${mode}`,
+    //   process.env.NEXT_PUBLIC_DB_URL,
+    // )
+
+    const url = BASE_URL + `/v1/orders/${id}/${mode}`
     const options: RequestInit = {
       method: "POST",
       headers: {
@@ -1090,10 +1100,9 @@ export async function updateDoctorSpecs(
       formData.append("image", payload.image, "image.png")
     }
 
-    const url = new URL(
-      `${mode === "edit" ? `/v1/doctor-specs/${id}` : "/v1/doctor-specs"}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url =
+      BASE_URL +
+      `${mode === "edit" ? `/v1/doctor-specs/${id}` : "/v1/doctor-specs"}`
 
     const options: RequestInit = {
       method: mode === "add" ? "POST" : "PUT",
@@ -1130,10 +1139,7 @@ export async function updateDoctorSpecs(
 
 export async function deleteDoctorSpecs(id: number): Promise<Response> {
   try {
-    const url = new URL(
-      `/v1/doctor-specs/${id}`,
-      process.env.NEXT_PUBLIC_DB_URL,
-    )
+    const url = BASE_URL + `/v1/doctor-specs/${id}`
     const options: RequestInit = {
       method: "DELETE",
     }
