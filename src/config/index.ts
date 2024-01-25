@@ -100,9 +100,9 @@ export const siteConfig = {
       },
       {
         title: "Sales Report",
-        href: "/dashboard/sales-report",
+        href: "/dashboard/sales-report/drug",
         icon: "PieChart",
-        role: ["superAdmin"],
+        role: ["superAdmin", "pharmacyAdmin"],
       },
       {
         title: "Transactions",
@@ -114,7 +114,7 @@ export const siteConfig = {
         title: "Orders",
         href: "/dashboard/orders",
         icon: "Transactions",
-        role: "pharmacyAdmin",
+        role: ["pharmacyAdmin"],
       },
     ] satisfies NavItemRequiredWithRole[],
   },

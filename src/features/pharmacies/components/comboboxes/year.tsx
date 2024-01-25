@@ -55,7 +55,7 @@ function YearComboBox({
           <Command>
             <CommandInput placeholder="Search Year..." className="h-9" />
             <CommandEmpty>Insert another year</CommandEmpty>
-            <CommandGroup>
+            <CommandGroup className="h-[130px] overflow-auto">
               {yearFilter.map((year) => (
                 <CommandItem
                   key={year.value}
