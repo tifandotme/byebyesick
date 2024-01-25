@@ -159,7 +159,7 @@ export default function HomePage({
           </div>
         )}
 
-        <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <div className="mb-3 mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {around?.data.items.slice(0, 6).map((cat) => (
             <div key={cat.id} className="flex justify-center">
               <ProductCard product={cat} />
@@ -187,7 +187,7 @@ export default function HomePage({
           </div>
         )}
 
-        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        <div className="mb-3 mt-5 grid grid-cols-1 gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           {productByAddress?.data.items.slice(0, 6).map((cat) => (
             <div key={cat.id}>
               <ProductCard product={cat} />
