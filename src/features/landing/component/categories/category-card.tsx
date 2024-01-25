@@ -35,7 +35,7 @@ export function CategoryCard({
               <Image
                 src={background}
                 className="size-full object-cover"
-                alt={""}
+                alt={background}
                 fill
               />
             </div>

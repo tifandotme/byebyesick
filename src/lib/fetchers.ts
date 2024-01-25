@@ -860,11 +860,21 @@ export async function deleteManufacturers(id: number): Promise<Response> {
   }
 }
 
-export const useDoctorList = (search?: string) => {
-  let url = "/v1/users/doctor"
-  if (search) url += `?search=${search}`
-  const { data, isLoading, error, mutate } =
-    useSWR<ResponseGetAll<doctorI[]>>(url)
+export const useDoctorList = (
+  search?: string,
+  page?: number,
+  limit?: string,
+) => {
+  const { data, isLoading, error, mutate } = useSWR<ResponseGetAll<doctorI[]>>(
+    () => {
+      const params = new URLSearchParams()
+      const url = "/v1/users/doctor?"
+      if (search) params.set("search", search)
+      if (page) params.set("page", page.toString())
+      if (limit) params.set("limit", limit)
+      return url + params.toString()
+    },
+  )
   return {
     doctorList: data,
     doctorIsLoading: isLoading,

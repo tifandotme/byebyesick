@@ -5,12 +5,18 @@ import { useDoctorList } from "@/lib/fetchers"
 import ChartLoader from "@/components/chart/chartLoader"
 import { DoctorCard } from "@/features/consultation/components/doctor-card"
 import { CategoryCard } from "@/features/landing/component/categories/category-card"
+import PaginationComponent from "@/features/products/components/pagination-product"
 import Search from "@/features/sales-report/components/search/search"
 
 function DoctorCategory({ category }: { category: Specialization[] }) {
   const [search, setSearch] = React.useState("")
-  const { doctorIsLoading, doctorList } = useDoctorList(search)
-
+  const [page, setPage] = React.useState(1)
+  const limit = 10
+  const { doctorIsLoading, doctorList } = useDoctorList(
+    search,
+    page,
+    limit.toString(),
+  )
   const doctorListData = doctorList?.data.items
   return (
     <div className="flex w-full flex-col gap-3 px-2 sm:px-4">
@@ -25,7 +31,7 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
                 category={cat.name}
                 background={
                   cat.image ||
-                  "https://www.saarmagazine.nl/wp-content/uploads/2017/07/dokter-.jpg"
+                  `${process.env.NEXT_PUBLIC_SITE_PATH}/images/dokter_placeholder.jpg`
                 }
               />
             )
@@ -39,11 +45,16 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
         <div className="grid grid-cols-1 gap-5 px-2 md:grid-cols-2">
           {doctorIsLoading && <ChartLoader />}
           {!doctorIsLoading && doctorListData && doctorListData?.length > 0 ? (
-            doctorListData.map((doctor: doctorI) => {
-              return <DoctorCard key={doctor.name} {...doctor} />
-            })
+            <>
+              {doctorListData.map((doctor: doctorI) => {
+                return <DoctorCard key={doctor.name} {...doctor} />
+              })}
+              {doctorListData.length >= limit && (
+                <PaginationComponent page={page} setCurrentPage={setPage} />
+              )}
+            </>
           ) : (
-            <>Empty</>
+            <div className="flex justify-center font-semibold">Empty</div>
           )}
         </div>
       </div>
