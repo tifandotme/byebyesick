@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import ChartLoader from "@/components/chart/chartLoader"
 import { MainLayout } from "@/components/layouts/main"
 import DropdownFilter from "@/features/products/components/filter-sorter"
+import PaginationComponent from "@/features/products/components/pagination-product"
 import Search from "@/features/sales-report/components/search/search"
 
 export const setTextColor = (orderStatus: string): string => {
@@ -38,9 +39,13 @@ export const setTextColor = (orderStatus: string): string => {
 function OrderListPage() {
   const [search, setSearch] = React.useState<string>("")
   const [orderStatus, setOrderStatus] = React.useState<string>("")
+  const [page, setCurrentPage] = React.useState<number>(1)
+  const limit = 10
   const { data, isLoading } = useSWR<ResponseGetAll<OrderWithStatusI[]>>(() => {
     const params = new URLSearchParams()
     if (search) params.set("search", search)
+    if (limit) params.set("limit", limit.toString())
+    if (page) params.set("page", page.toString())
     if (orderStatus) params.set("order_status_id", orderStatus)
     return `/v1/orders/user?${params.toString()}`
   })
@@ -55,7 +60,7 @@ function OrderListPage() {
   }
 
   return (
-    <div className="flex justify-center py-9">
+    <div className="container flex justify-center py-9">
       <div className="flex w-full max-w-6xl flex-col gap-3">
         <div className="self-center text-3xl font-bold ">Order List</div>
         <div className="flex items-center gap-5">
@@ -139,6 +144,12 @@ function OrderListPage() {
             </div>
           )}
         </div>
+        {!isLoading && data && data.data.items.length > limit && (
+          <PaginationComponent
+            page={data?.data.current_page || 1}
+            setCurrentPage={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   )

@@ -8,7 +8,7 @@ import { SiteLogo } from "@/components/site-logo"
 function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen min-h-screen w-full flex-col overflow-y-auto lg:flex-row">
-      <Link href={"/"} className=" absolute left-5 top-5 lg:hidden">
+      <Link href={"/"} className=" ms-5 mt-5 lg:hidden">
         <SiteLogo />
       </Link>
       <div className="hidden h-1/2 flex-auto xl:block xl:h-full">
