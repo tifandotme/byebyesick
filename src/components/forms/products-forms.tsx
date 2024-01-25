@@ -79,10 +79,10 @@ export default function ProductForm({
       drug_form: initialProductData?.data.drug_form ?? "",
       unit_in_pack: initialProductData?.data.unit_in_pack ?? "",
       selling_unit: initialProductData?.data.selling_unit ?? "",
-      weight: initialProductData?.data.weight ?? 0,
-      length: initialProductData?.data.length ?? 0,
-      width: initialProductData?.data.width ?? 0,
-      height: initialProductData?.data.height ?? 0,
+      weight: initialProductData?.data.weight ?? "",
+      length: initialProductData?.data.length ?? "",
+      width: initialProductData?.data.width ?? "",
+      height: initialProductData?.data.height ?? "",
     },
   })
 
@@ -355,12 +355,9 @@ export default function ProductForm({
                           type="number"
                           placeholder="in grams"
                           {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value).toString())
+                          }
                         />
                       </FormControl>
                       <FormDescription className="text-sm text-primary">
@@ -381,12 +378,9 @@ export default function ProductForm({
                           type="number"
                           placeholder="in cm"
                           {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value).toString())
+                          }
                         />
                       </FormControl>
                       <FormDescription className="text-sm text-primary">
@@ -406,15 +400,12 @@ export default function ProductForm({
                       <FormLabel>Product Width</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
+                          type="text"
                           placeholder="in cm"
                           {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value).toString())
+                          }
                         />
                       </FormControl>
                       <FormDescription className="text-sm text-primary">
@@ -432,15 +423,12 @@ export default function ProductForm({
                       <FormLabel>Product Height</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
+                          type="text"
                           placeholder="in cm"
                           {...field}
-                          onChange={(event) => {
-                            const numericValue = +event.target.value
-                            field.onChange(
-                              isNaN(numericValue) ? 0 : numericValue,
-                            )
-                          }}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value).toString())
+                          }
                         />
                       </FormControl>
                       <FormDescription className="text-sm text-primary">

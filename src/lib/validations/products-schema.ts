@@ -44,10 +44,26 @@ export const productSchema = z.object({
     .refine((drug_form) => !/[^a-zA-Z0-9 ]/.test(drug_form), {
       message: "Drug Form can only contain alphanumeric characters and spaces",
     }),
-  weight: z.number().min(0.01, { message: "Weight must be greater than 0" }),
-  length: z.number().min(0.01, { message: "Length must be greater than 0" }),
-  width: z.number().min(0.01, { message: "Width must be greater than 0" }),
-  height: z.number().min(0.01, { message: "Height must be greater than 0" }),
+
+  weight: z.coerce
+    .number()
+    .min(0.01)
+    .pipe(z.string({ coerce: true })),
+
+  length: z.coerce
+    .number()
+    .min(0.01)
+    .pipe(z.string({ coerce: true })),
+
+  width: z.coerce
+    .number()
+    .min(0.01)
+    .pipe(z.string({ coerce: true })),
+
+  height: z.coerce
+    .number()
+    .min(0.01)
+    .pipe(z.string({ coerce: true })),
 
   image: z.string().or(
     z.any().refine(

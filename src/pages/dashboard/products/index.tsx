@@ -38,6 +38,7 @@ export default function ProductTablePage() {
             data={data.data.items}
             mutate={mutate}
             pageCount={data?.data.total_pages}
+            current_page={parseInt(page as string) ?? 1}
           />
         )}
       </div>

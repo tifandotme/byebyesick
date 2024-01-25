@@ -32,11 +32,18 @@ interface ProductsTableProps<TData = IProduct[]> {
   data: TData
   mutate: KeyedMutator<ResponseGetAll<TData>>
   pageCount: number
+  current_page: number
 }
 
-export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
+export function ProductTable({
+  data,
+  mutate,
+  pageCount,
+  current_page,
+}: ProductsTableProps) {
   const product = data.map((m, index) => ({
     id: index + 1,
+    num: (current_page - 1) * 10 + (index + 1),
     name: m.name,
     genericName: m.generic_name,
     drug_class: m.drug_classification_id,
@@ -48,7 +55,7 @@ export function ProductTable({ data, mutate, pageCount }: ProductsTableProps) {
   const columns = React.useMemo<ColumnDef<Data, unknown>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "num",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="No" />
         ),
