@@ -83,14 +83,19 @@ export function DoctorCard({
             if (!session?.user?.user_id) return
 
             const handleStartChat = async () => {
-              const { success, data: sessionId } = await startConsultation({
+              const { success, data } = await startConsultation({
                 doctor_id: id,
                 user_id: session.user.user_id,
               })
 
               if (!success) throw new Error()
 
-              router.push("/consultation/as-patient/" + sessionId)
+              if (data?.errors?.pop() === "chat still ongoing") {
+                toast.error("Chat still ongoing")
+                return
+              }
+
+              if (data) router.push("/consultation/as-patient/" + data.data.id)
             }
 
             toast.promise(handleStartChat(), {

@@ -1058,7 +1058,7 @@ export async function updateOnlineStatus(isOnline: boolean) {
 export async function startConsultation(payload: {
   doctor_id: number
   user_id: number
-}): Promise<Response<number>> {
+}): Promise<Response<ResponseById<ChatRoom>>> {
   try {
     const endpoint = "/v1/chats"
     const options: RequestInit = {
@@ -1070,14 +1070,13 @@ export async function startConsultation(payload: {
     }
 
     const res = await fetch(BASE_URL + endpoint, options)
-    if (!res.ok) await handleFailedRequest(res)
 
-    const { data } = (await res.json()) as ResponseById<ChatRoom>
+    const json = (await res.json()) as ResponseById<ChatRoom>
 
     return {
       success: true,
       message: "Consultation started",
-      data: data.id,
+      data: json,
     }
   } catch (err) {
     return {
