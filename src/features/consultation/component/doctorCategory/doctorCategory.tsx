@@ -54,7 +54,9 @@ function DoctorCategory({ category }: { category: Specialization[] }) {
               )}
             </>
           ) : (
-            <div className="flex justify-center font-semibold">Empty</div>
+            <div className="flex justify-center font-semibold">
+              No Doctor Available
+            </div>
           )}
         </div>
       </div>

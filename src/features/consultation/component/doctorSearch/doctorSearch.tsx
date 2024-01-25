@@ -33,7 +33,7 @@ function DoctorSearch({
             return <DoctorCard key={doctor.name} {...doctor} />
           })
         ) : (
-          <>Empty</>
+          <div className="flex w-full font-semibold">No Doctor Available</div>
         )}
       </div>
     </div>

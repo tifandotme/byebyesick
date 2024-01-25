@@ -88,12 +88,7 @@ export function AvatarDropdown({ className }: AvatarDropdownProps) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup></DropdownMenuGroup>
               <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link href="/user/profile" className="cursor-pointer">
-                    <Icons.Avatar className="mr-2 size-4" />
-                    Account
-                  </Link>
-                </DropdownMenuItem>
+                <DropdownMenuItem asChild></DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/transactions" className="cursor-pointer">
                     <Icons.Transactions className="mr-2 size-4" />

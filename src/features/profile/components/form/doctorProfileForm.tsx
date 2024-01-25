@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadCloudIcon } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -95,7 +96,7 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
         certificate?.file,
       )
       if (!result?.ok) {
-        throw new Error(result.statusText)
+        throw new Error("Something went wrong")
       }
       const userData: ResponseById<IProfileDoctor> = await result.json()
 
@@ -193,16 +194,28 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
         <div className="flex flex-col gap-4">
           <FormLabel>Certificate</FormLabel>
           {certificate ? (
-            <img src={certificate.url} alt="" />
+            <Button
+              type="button"
+              onClick={() => {
+                fetch(certificate.url)
+                  .then((res) => res.blob())
+                  .then((blob) => {
+                    var file = window.URL.createObjectURL(blob)
+                    window.open(file)
+                  })
+              }}
+            >
+              View Certificate
+            </Button>
           ) : (
             userProfile?.doctor_certificate && (
-              <a
+              <Link
                 href={userProfile?.doctor_certificate}
                 className="w-full rounded-md border p-2 text-center"
                 target="_blank"
               >
-                <img src={userProfile.doctor_certificate} alt="" />
-              </a>
+                View Certificate
+              </Link>
             )
           )}
           <label htmlFor="certificate" className="w-full">
