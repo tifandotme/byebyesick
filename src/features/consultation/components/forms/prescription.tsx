@@ -201,8 +201,9 @@ function ProductsCombobox({ onSubmit }: ProductsComboboxProps) {
   const [productId, setProductId] = React.useState("0")
   const [note, setNote] = React.useState("")
 
-  const { data, isLoading } =
-    useSWR<ResponseGetAll<Product[]>>("/v1/products/admin")
+  const { data, isLoading } = useSWR<ResponseGetAll<Product[]>>(
+    "/v1/products/global",
+  )
 
   const entries = data?.data.items.map((product) => ({
     label: product.name,
