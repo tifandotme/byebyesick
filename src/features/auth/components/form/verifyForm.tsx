@@ -2,7 +2,7 @@ import React from "react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm, type SubmitHandler } from "react-hook-form"
+import { useForm, type SubmitHandler } from "react-hook-form"
 import { toast } from "sonner"
 
 import type { ApiResponse } from "@/types/api"
@@ -31,6 +31,13 @@ function VerifyForm({ data }: RegisterToken) {
 
   const form = useForm<VerifyFormSchemaType>({
     resolver: zodResolver(verifyFormSchema),
+    defaultValues: {
+      role: "",
+      name: "",
+      password: "",
+      confirmPassword: "",
+      image: undefined,
+    },
   })
 
   const [isDoctor, setIsDoctor] = React.useState<boolean>(false)
@@ -75,7 +82,7 @@ function VerifyForm({ data }: RegisterToken) {
           <FormField
             control={form.control}
             name="role"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormControl>
                   <fieldset className="grid grid-cols-2 place-content-center gap-4 p-2">
@@ -179,44 +186,30 @@ function VerifyForm({ data }: RegisterToken) {
           )}
         />
         {isDoctor && (
-          <Controller
-            name="image"
+          <FormField
             control={form.control}
-            render={({ field: { onChange } }) => {
-              return (
-                <Input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(event) => {
-                    const files = event.target.files
-                    if (!files) return
-                    const file = files[0]
-                    if (!file) return
-                    onChange(file)
-                  }}
-                />
-              )
-            }}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Doctor Certificate</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    {...field}
+                    onChange={(event) => {
+                      const files = event.target.files
+                      if (!files) return
+                      const file = files[0]
+                      if (!file) return
+                      field.onChange(file)
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          // <FormField
-          //   control={form.control}
-          //   name="image"
-          //   render={({ field }) => (
-          //     <FormItem>
-          //       <FormLabel>Doctor Certificate</FormLabel>
-          //       <FormControl>
-          //         <Input type="file" accept="image/*,application/pdf" {...field} onChange={(event) => {
-          //           const files = event.target.files
-          //           if (!files) return
-          //           const file = files[0]
-          //           if (!file) return
-          //           field.onChange(file);
-          //         }} />
-          //       </FormControl>
-          //       <FormMessage />
-          //     </FormItem>
-          //   )}
-          // />
         )}
         <Button className="w-full" type="submit" disabled={loading}>
           Submit
