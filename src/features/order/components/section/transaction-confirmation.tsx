@@ -1,6 +1,6 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { CopyIcon, Trash2Icon, TrashIcon } from "lucide-react"
+import { CopyIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import type { ITransactionConfirmation } from "@/types/api"

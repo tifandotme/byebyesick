@@ -39,6 +39,7 @@ export function OrderRequestsTable({
     statusName: request.Status.name,
     amount: request.total_payment,
     date: request.date,
+    order_status_id: request.Status.id,
   }))
   const { data: session } = useSession()
 
@@ -65,7 +66,7 @@ export function OrderRequestsTable({
         ),
       },
       {
-        accessorKey: "status",
+        accessorKey: "order_status_id",
         enableSorting: false,
         enableHiding: false,
         header: ({ column }) => (
@@ -252,6 +253,20 @@ export function OrderRequestsTable({
       data={data}
       pageCount={pageCount}
       includeSearch={true}
+      filterableColumns={[
+        {
+          id: "order_status_id",
+          title: "Status",
+          options: [
+            { label: "Waiting For Pharmacy", value: "1" },
+            { label: "Processed", value: "2" },
+            { label: "Sent", value: "3" },
+            { label: "Order Confirmed", value: "4" },
+            { label: "Canceled by Pharmacy", value: "5" },
+            { label: "Canceled by User", value: "6" },
+          ],
+        },
+      ]}
     />
   )
 }

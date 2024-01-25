@@ -945,13 +945,10 @@ export async function updatePayment(
     }
 
     const res = await fetch(url, options)
-
     if (!res.ok) {
       const errorResponse = await res.json()
       throw new Error(errorResponse.errors || "An error occurred")
     }
-
-    mutate(url)
 
     return {
       success: true,
