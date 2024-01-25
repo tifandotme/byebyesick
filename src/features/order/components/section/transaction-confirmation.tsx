@@ -1,6 +1,6 @@
 import React from "react"
 import { useRouter } from "next/router"
-import { CopyIcon } from "lucide-react"
+import { CopyIcon, Trash2Icon, TrashIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import type { ITransactionConfirmation } from "@/types/api"
@@ -21,7 +21,17 @@ function TransacrionConfirmationSection(props: ITransactionConfirmation) {
       toast.error("File size must be less than 500Kb")
       return
     }
-    if (file.type !== "image/png" && file.type !== "image/jpeg") {
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"]
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only jpg, jpeg, and png files are allowed")
+      return
+    }
+    if (
+      file.type !== "image/png" &&
+      file.type !== "image/jpeg" &&
+      file.type !== "image/jpg"
+    ) {
       toast.error("File must be image")
       return
     }
@@ -31,6 +41,11 @@ function TransacrionConfirmationSection(props: ITransactionConfirmation) {
     if (!e.target.files) return
     const file = e.target.files[0]
     if (!file) return
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"]
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only jpg, jpeg, and png files are allowed")
+      return
+    }
     const temp = URL.createObjectURL(file)
     if (file.size > 500000) {
       toast.error("File size must be less than 500Kb")
@@ -122,6 +137,15 @@ function TransacrionConfirmationSection(props: ITransactionConfirmation) {
             handleDrop={handleImageDrop}
             onChange={handleChange}
           />
+          {image && (
+            <Button
+              className="mt-2 space-x-2"
+              variant={"destructive"}
+              onClick={() => setImage(null)}
+            >
+              <span>Remove</span>
+            </Button>
+          )}
         </div>
         <div className="flex justify-center gap-2 lg:px-20">
           <Button
