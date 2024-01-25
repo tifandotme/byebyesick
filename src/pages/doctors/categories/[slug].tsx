@@ -8,6 +8,7 @@ import { unslugify } from "@/lib/utils"
 import ChartLoader from "@/components/chart/chartLoader"
 import { MainLayout } from "@/components/layouts/main"
 import DoctorSearch from "@/features/consultation/component/doctorSearch/doctorSearch"
+import PaginationComponent from "@/features/products/components/pagination-product"
 
 export const getServerSideProps: GetServerSideProps<{
   category: Specialization[]
@@ -37,7 +38,13 @@ export const getServerSideProps: GetServerSideProps<{
 function DoctorsByCategoryPage({
   category,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { doctorIsLoading, doctorList } = useDoctorList(category[0]?.name)
+  const [page, setPage] = React.useState(1)
+  const limit = 10
+  const { doctorIsLoading, doctorList } = useDoctorList(
+    category[0]?.name,
+    page,
+    limit.toString(),
+  )
 
   return (
     <div className="flex h-full min-h-full justify-center gap-10">
@@ -50,10 +57,15 @@ function DoctorsByCategoryPage({
             <ChartLoader />
           ) : (
             category && (
-              <DoctorSearch
-                title={category[0]?.name}
-                DoctorList={doctorList?.data.items}
-              />
+              <>
+                <DoctorSearch
+                  title={category[0]?.name}
+                  DoctorList={doctorList?.data.items}
+                />
+                {doctorList && doctorList?.data.items.length > limit && (
+                  <PaginationComponent page={page} setCurrentPage={setPage} />
+                )}
+              </>
             )
           )}
         </div>
