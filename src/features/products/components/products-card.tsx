@@ -45,6 +45,7 @@ export function ProductCard({
 
     setIsLoading(false)
   }
+
   return (
     <Card
       className={cn("size-full overflow-hidden rounded-sm", className)}
@@ -68,7 +69,6 @@ export function ProductCard({
             )}
           </AspectRatio>
         </CardHeader>
-        <span className="sr-only">{product.name}</span>
       </Link>
       <Link href={`/products/${product.id}`} tabIndex={-1}>
         <CardContent className="space-y-1.5 p-4">
