@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import React, { useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadCloudIcon } from "lucide-react"
@@ -121,8 +122,13 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
         className="flex w-full flex-col space-y-6"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <label htmlFor="profile" className="self-center ">
-          <img
+        <label
+          htmlFor="profile"
+          className="flex cursor-pointer flex-col items-center gap-2 self-center"
+        >
+          <Image
+            width={160}
+            height={160}
             alt="Man"
             src={
               image?.url ||
@@ -138,6 +144,7 @@ function DoctorProfileForm({ userProfile }: { userProfile?: IProfileDoctor }) {
             id="profile"
             onChange={handleChangeImage}
           />
+          <div className="text-blue-500">Change Profile</div>
         </label>
         <FormField
           control={form.control}
