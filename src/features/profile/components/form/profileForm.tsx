@@ -62,6 +62,10 @@ function ProfileForm({ userProfile }: { userProfile?: IProfileUser }) {
     if (!files) return
     const file = files[0]
     if (!file) return
+    if (file.size > 500000) {
+      toast.error("File size must be less than 500Kb")
+      return
+    }
     setImage({
       url: URL.createObjectURL(file),
       image: file,
