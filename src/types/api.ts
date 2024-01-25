@@ -160,7 +160,7 @@ export type IncomingRequest = Request & {
   }
 }
 
-// GET /v1/products/admin
+// GET /v1/products/global
 
 export type Product = Omit<
   IProduct,
